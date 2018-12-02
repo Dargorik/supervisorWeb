@@ -1,0 +1,82 @@
+<html>
+
+<body>
+<div>
+    <form action="/logout" method="post">
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+        <input type="submit" value="Sign Out"/>
+    </form>
+</div>
+<div>
+    <form method="post" action="/addTable">
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+        <button type="submit">Редактирование таблиц</button>
+    </form>
+</div>
+</form>
+
+<div>
+    <form method="post" action="add">
+        <input type="text" name="comments" placeholder="введите комментарий">
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+        <button type="submit">добавить комментарий</button>
+    </form>
+</div>
+</form>
+{{#listOfCompletedWork}}
+    <div>
+        <b>{{id}}</b>
+        <span>{{comments}}</span>
+        <strong>{{user.firstName}}</strong>
+    </div>
+{{/listOfCompletedWork}}
+</div>
+</body>
+</html>
+
+
+
+
+
+
+{{!</html>
+<head>
+</head>
+
+<body>
+
+<div>
+    <button onclick="location.href='/add'">Заполнение таблиц</button>
+</div>
+
+<div>
+    <form method="post">
+        <input type="text" name="firstName" placeholder=="Имя">
+        <input type="text" name="lastName" placeholder=="Фамилия">
+        <button type="submit">Добавить</button>
+    </form>
+</div>
+<div>
+    <form method="post" action="add">
+        <input type="text" name="firstName" placeholder=="Имя">
+        <input type="text" name="lastName" placeholder=="Фамилия">
+        <button type="submit">Добавить</button>
+    </form>
+</div>
+<div>Список работников</div>
+<form method="post" action="filter">
+    <input type="text" name="fFirstName">
+    <input type="text" name="fLastName">
+    <button type="submit">Найти</button>
+</form>
+
+<div>
+    <form method="post" action="ab">
+        <button type="submit">Добавить</button>
+    </form>
+</div>
+
+
+</body>
+</html>
+}}
