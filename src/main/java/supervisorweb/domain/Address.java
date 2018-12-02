@@ -20,14 +20,24 @@ public class Address {
     private Integer numberFloors;
     private Integer numberEntrances;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "priority_id")
+    private PriorityList priorityList;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "region_id")
+    private Region region;
+
     public Address(){}
 
-    public Address(City city, Street street, String houseNumber, Integer numberFloors, Integer numberEntrances){
+    public Address(City city, Street street, String houseNumber, Integer numberFloors, Integer numberEntrances, PriorityList priorityList, Region region){
         this.city=city;
         this.street=street;
         this.houseNumber=houseNumber;
         this.numberFloors=numberFloors;
         this.numberEntrances=numberEntrances;
+        this.priorityList=priorityList;
+        this.region=region;
     }
 
     public Integer getIdAddress() {
@@ -76,5 +86,21 @@ public class Address {
 
     public void setNumberEntrances(Integer numberEntrances) {
         this.numberEntrances = numberEntrances;
+    }
+
+    public PriorityList getPriorityList() {
+        return priorityList;
+    }
+
+    public void setPriorityList(PriorityList priorityList) {
+        this.priorityList = priorityList;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
     }
 }

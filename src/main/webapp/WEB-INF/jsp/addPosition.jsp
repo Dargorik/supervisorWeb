@@ -22,6 +22,7 @@
 </div>
 
 <h2>Добавление должности</h2>
+${message}
 <div>
     <form method="post" action="/add/addPosition">
         <input type="hidden" name="_csrf" value=${_csrf.token} />

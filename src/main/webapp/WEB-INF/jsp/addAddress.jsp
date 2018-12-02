@@ -38,6 +38,16 @@ ${message}
         <input type="text" name="houseNumber" placeholder="Номер дома">
         <input type="text" name="numberFloors" placeholder="Кол-во этажей">
         <input type="text" name="numberEntrances" placeholder="Кол-во подъездов">
+        <select name="priorityList">
+            <c:forEach items="${prioritiesList}" var="priorityList">
+                <option value="${priorityList.name}"><c:out value="${priorityList.name}" /></option>
+            </c:forEach>
+        </select>
+        <select name="region">
+            <c:forEach items="${regions}" var="region">
+                <option value="${region.name}"><c:out value="${region.name}" /></option>
+            </c:forEach>
+        </select>
         <button type="submit">Добавить</button>
     </form>
 </div>
@@ -53,6 +63,8 @@ ${message}
                 <th>Номер дома</th>
                 <th>Кол-во этажей</th>
                 <th>Кол-во подъездов</th>
+                <th>Приоритетность</th>
+                <th>Регион</th>
             </tr>
             <c:forEach  items="${addresses}" var ="address">
                 <tr>
@@ -62,6 +74,8 @@ ${message}
                     <td>${address.houseNumber}</td>
                     <td>${address.numberFloors}</td>
                     <td>${address.numberEntrances}</td>
+                    <td>${address.priorityList.number}</td>
+                    <td>${address.region.name}</td>
                 </tr>
             </c:forEach>
         </table>

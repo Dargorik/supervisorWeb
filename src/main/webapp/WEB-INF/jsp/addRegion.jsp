@@ -21,16 +21,16 @@
     <button class="b1" onclick="location.href='/addTable/'">Назад</button>
 </div>
 
-<h2>Добавление должности</h2>
+<h2>Добавление региона</h2>
 ${message}
 <div>
-    <form method="post" action="/add/addStreet">
+    <form method="post" action="/add/addRegion">
         <input type="hidden" name="_csrf" value=${_csrf.token} />
-        <input type="text" name="name" placeholder="Название улицы">
+        <input type="text" name="name" placeholder="Название региона">
         <button type="submit">Добавить</button>
     </form>
 </div>
-<h2>Список должностей</h2>
+<h2>Список регионов</h2>
 <div>
     <form method="post" action="deletePosition">
         <input type="hidden" name="_csrf" value=${_csrf.token} />
@@ -40,10 +40,10 @@ ${message}
                 <th>Наименование</th>
                 <th>Удаление</th>
             </tr>
-            <c:forEach  items="${streets}" var ="street">
+            <c:forEach  items="${regions}" var ="region">
                 <tr>
-                    <td>${street.idStreet}</td>
-                    <td>${street.name}</td>
+                    <td>${region.idRegion}</td>
+                    <td>${region.name}</td>
                 </tr>
             </c:forEach>
         </table>

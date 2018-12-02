@@ -33,7 +33,16 @@
     <button class="b1" onclick="location.href='/add/Street'">Таблица улиц</button>
 </div>
 <div>
+    <button class="b1" onclick="location.href='/add/PriorityList'">Таблица приоритетности</button>
+</div>
+<div>
+    <button class="b1" onclick="location.href='/add/Region'">Таблица регионов</button>
+</div>
+<div>
     <button class="b1" onclick="location.href='/add/Address'">Таблица адресов</button>
+</div>
+<div>
+    <button class="b1" onclick="location.href='/add/RegionsByUsers'">Задать работникам регионы</button>
 </div>
 <%--<div>
     <button class="b1" onclick="location.href='/add/City'">Таблица работников</button>

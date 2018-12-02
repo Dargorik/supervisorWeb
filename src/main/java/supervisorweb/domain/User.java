@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import supervisorweb.domain.Role;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -25,7 +26,15 @@ public class User implements UserDetails {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "position_id")
     private Position position;
-
+/*
+    @ManyToMany
+    @JoinTable(
+            name = "regionsByUsers",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "region_id")}
+    )
+    private Set<RegionsByUsers> regionsByUsers=new HashSet<>();
+*/
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
@@ -137,4 +146,12 @@ public class User implements UserDetails {
     public void setPosition(Position position) {
         this.position = position;
     }
+/*
+    public Set<RegionsByUsers> getRegionsByUsers() {
+        return regionsByUsers;
+    }
+
+    public void setRegionsByUsers(Set<RegionsByUsers> regionsByUsers) {
+        this.regionsByUsers = regionsByUsers;
+    }*/
 }

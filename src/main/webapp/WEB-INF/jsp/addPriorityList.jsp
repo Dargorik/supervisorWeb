@@ -21,16 +21,17 @@
     <button class="b1" onclick="location.href='/addTable/'">Назад</button>
 </div>
 
-<h2>Добавление должности</h2>
+<h2>Добавление приоритетности</h2>
 ${message}
 <div>
-    <form method="post" action="/add/addStreet">
+    <form method="post" action="/add/addPriorityList">
         <input type="hidden" name="_csrf" value=${_csrf.token} />
-        <input type="text" name="name" placeholder="Название улицы">
+        <input type="text" name="name" placeholder="Название приоритетности">
+        <input type="text" name="number" placeholder="Частота обхода">
         <button type="submit">Добавить</button>
     </form>
 </div>
-<h2>Список должностей</h2>
+<h2>Список приоритетностей</h2>
 <div>
     <form method="post" action="deletePosition">
         <input type="hidden" name="_csrf" value=${_csrf.token} />
@@ -38,12 +39,17 @@ ${message}
             <tr>
                 <th>id</th>
                 <th>Наименование</th>
-                <th>Удаление</th>
+                <th>Частота обхода</th>
             </tr>
-            <c:forEach  items="${streets}" var ="street">
+            <c:forEach  items="${prioritiesList}" var ="priorityList">
                 <tr>
-                    <td>${street.idStreet}</td>
-                    <td>${street.name}</td>
+                    <td>${priorityList.idPriorityList}</td>
+                    <td>${priorityList.name}</td>
+                    <td>${priorityList.number}</td>
+                    <td>
+                        <button class="b1" onclick="location.href='/add/Position/Delete/'"> Таблица должность</button>
+                    </td>
+
                 </tr>
             </c:forEach>
         </table>
