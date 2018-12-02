@@ -20,7 +20,7 @@
 <div>
     <button class="b1" onclick="location.href='/addTable/'">Назад</button>
 </div>
-<h2>Добавление должности</h2>
+<h2>Добавление адреса</h2>
 ${message}
 <div>
     <form method="post" action="/add/addAddress">
@@ -41,7 +41,7 @@ ${message}
         <button type="submit">Добавить</button>
     </form>
 </div>
-<h2>Список должностей</h2>
+<h2>Список адресов</h2>
 <div>
     <form method="post" action="deletePosition">
         <input type="hidden" name="_csrf" value=${_csrf.token} />
