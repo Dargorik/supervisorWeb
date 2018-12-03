@@ -42,8 +42,18 @@
     <button class="b1" onclick="location.href='/add/Address'">Таблица адресов</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/RegionsByUsers'">Задать работникам регионы</button>
+    <button class="b1" onclick="location.href='/add/UserRegions'">Задать работникам регионы</button>
 </div>
+<div>
+    <button class="b1" onclick="location.href='/add/TypeOfWorkPerformed'">Задать виды выполняемых работ</button>
+</div>
+<div>
+    <button class="b1" onclick="location.href='/add/TypeOfWork'">Задать тип работ</button>
+</div>
+<div>
+    <button class="b1" onclick="location.href='/add/ListTypesInPerfomedWork'">Задать работы для видов выполнения</button>
+</div>
+
 <%--<div>
     <button class="b1" onclick="location.href='/add/City'">Таблица работников</button>
 </div>--%>

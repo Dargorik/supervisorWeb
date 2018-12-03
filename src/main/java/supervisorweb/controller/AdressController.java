@@ -25,6 +25,14 @@ public class AdressController  {
     private PriorityListRepos priorityListRepos;
     @Autowired
     private RegionRepos regionRepos;
+    @Autowired
+    private UserRegionsRepos userRegionsRepos;
+    @Autowired
+    private TypeOfWorkPerformedRepos typeOfWorkPerformedRepos;
+    @Autowired
+    private TypeOfWorkRepos typeOfWorkRepos;
+    @Autowired
+    private ListTypesInPerfomedWorkRepos listTypesInPerfomedWorkRepos;
 
     @RequestMapping("/add/Cities")
     public String addCity(Map<String, Object> model) {
@@ -149,18 +157,104 @@ public class AdressController  {
         return "addRegion";
     }
 
-    @RequestMapping("/add/RegionsByUsers")
+    @RequestMapping("/add/UserRegions")
     public String addRegionsByUsers(Map<String, Object> model) {
+        model.put("usersRegions", userRegionsRepos.findAll());
         model.put("regions", regionRepos.findAll());
         model.put("users", userRepos.findAll());
-        return "addRegion";
+        return "addUserRegions";
     }
 
-    @PostMapping("/add/addRegionsByUsers")
-    public String addNewRegionsByUsers(Map<String, Object> model) {
+    @PostMapping("/add/addUserRegions")
+    public String addNewRegionsByUsers(@RequestParam String user,
+                                       @RequestParam String region,
+                                       Map<String, Object> model) {
+        UserRegions userRegions=new UserRegions(userRepos.findByUsername(user),regionRepos.findByName(region));
+        UserRegions usr=userRegionsRepos.findAllByUserAndRegion(userRegions.getUser(),userRegions.getRegion());
+        if(usr!=null){
+            model.put("message", "Данная зависимость уже есть в базе данных!");
+            model.put("usersRegions", userRegionsRepos.findAll());
+            model.put("regions", regionRepos.findAll());
+            model.put("users", userRepos.findAll());
+            return "addUserRegions";
+        }
+        userRegionsRepos.save(userRegions);
+        model.put("usersRegions", userRegionsRepos.findAll());
         model.put("regions", regionRepos.findAll());
         model.put("users", userRepos.findAll());
-        return "addRegion";
+        return "addUserRegions";
+    }
+
+    @RequestMapping("/add/TypeOfWorkPerformed")
+    public String addTypeOfWorkPerformed(Map<String, Object> model) {
+        model.put("typesOfWorkPerformed", typeOfWorkPerformedRepos.findAll());
+        return "addTypeOfWorkPerformed";
+    }
+
+    @PostMapping("/add/addTypeOfWorkPerformed")
+    public String addNewTypeOfWorkPerformed(@RequestParam String name,
+                                       Map<String, Object> model) {
+        TypeOfWorkPerformed typeOfWorkPerformed=new TypeOfWorkPerformed(name);
+        TypeOfWorkPerformed towp=typeOfWorkPerformedRepos.findByName(name);
+        if(towp!=null){
+            model.put("message", "Данный вид выполняемых работ уже есть в базе данных!");
+            model.put("typesOfWorkPerformed", typeOfWorkPerformedRepos.findAll());
+            return "addTypeOfWorkPerformed";
+        }
+
+        typeOfWorkPerformedRepos.save(typeOfWorkPerformed);
+        model.put("typesOfWorkPerformed", typeOfWorkPerformedRepos.findAll());
+        return "addTypeOfWorkPerformed";
+    }
+
+    @RequestMapping("/add/TypeOfWork")
+    public String addTypeOfWork(Map<String, Object> model) {
+        model.put("typesOfWork", typeOfWorkRepos.findAll());
+        return "addTypeOfWork";
+    }
+
+    @PostMapping("/add/addTypeOfWork")
+    public String addNewTypeOfWork(@RequestParam String name,
+                                            Map<String, Object> model) {
+        TypeOfWork typeOfWork=new TypeOfWork(name);
+        TypeOfWork towp=typeOfWorkRepos.findByName(name);
+        if(towp!=null){
+            model.put("message", "Данный вид выполняемых работ уже есть в базе данных!");
+            model.put("typesOfWork", typeOfWorkRepos.findAll());
+            return "addTypeOfWork";
+        }
+
+        typeOfWorkRepos.save(typeOfWork);
+        model.put("typesOfWork", typeOfWorkRepos.findAll());
+        return "addTypeOfWork";
+    }
+
+    @RequestMapping("/add/ListTypesInPerfomedWork")
+    public String addListTypesInPerfomedWork(Map<String, Object> model) {
+        model.put("listsTypesInPerfomedWork", listTypesInPerfomedWorkRepos.findAll());
+        model.put("typesOfWorkPerformed", typeOfWorkPerformedRepos.findAll());
+        model.put("typesOfWork", typeOfWorkRepos.findAll());
+        return "addListTypesInPerfomedWork";
+    }
+
+    @PostMapping("/add/addListTypesInPerfomedWork")
+    public String addNewListTypesInPerfomedWork(@RequestParam String typeOfWorkPerformed,
+                                       @RequestParam String typeOfWork,
+                                       Map<String, Object> model) {
+        ListTypesInPerfomedWork listTypesInPerfomedWork=new ListTypesInPerfomedWork(typeOfWorkPerformedRepos.findByName(typeOfWorkPerformed),typeOfWorkRepos.findByName(typeOfWork));
+        ListTypesInPerfomedWork ltinpw=listTypesInPerfomedWorkRepos.findAllByTypeOfWorkPerformedAndTypeOfWork(listTypesInPerfomedWork.getTypeOfWorkPerformed(),listTypesInPerfomedWork.getTypeOfWork());
+        if(ltinpw!=null){
+            model.put("message", "Данная зависимость уже есть в базе данных!");
+            model.put("listsTypesInPerfomedWork", listTypesInPerfomedWorkRepos.findAll());
+            model.put("typesOfWorkPerformed", typeOfWorkPerformedRepos.findAll());
+            model.put("typesOfWork", typeOfWorkRepos.findAll());
+            return "addListTypesInPerfomedWork";
+        }
+        listTypesInPerfomedWorkRepos.save(listTypesInPerfomedWork);
+        model.put("listsTypesInPerfomedWork", listTypesInPerfomedWorkRepos.findAll());
+        model.put("typesOfWorkPerformed", typeOfWorkPerformedRepos.findAll());
+        model.put("typesOfWork", typeOfWorkRepos.findAll());
+        return "addListTypesInPerfomedWork";
     }
 
 }
