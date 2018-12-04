@@ -20,11 +20,11 @@ public class ListOfCompletedWork {
         this.user=user;
     }
 
-    public Integer getIdusers() {
+    public Integer getId() {
         return id;
     }
 
-    public void setIdusers(Integer idusers) {
+    public void setId(Integer idusers) {
         this.id = idusers;
     }
 

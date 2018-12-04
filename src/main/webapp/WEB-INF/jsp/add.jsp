@@ -27,7 +27,7 @@
     <button class="b1" onclick="location.href='/add/User'">Таблица работников</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/Cities'">Таблица городов</button>
+    <button class="b1" onclick="location.href='/add/City'">Таблица городов</button>
 </div>
 <div>
     <button class="b1" onclick="location.href='/add/Street'">Таблица улиц</button>
@@ -52,6 +52,15 @@
 </div>
 <div>
     <button class="b1" onclick="location.href='/add/ListTypesInPerfomedWork'">Задать работы для видов выполнения</button>
+</div>
+<div>
+    <button class="b1" onclick="location.href='/add/PositionDuties'">Задать типы работ для должностей</button>
+</div>
+
+
+
+<div>
+    <button class="b1" onclick="location.href='/add/CompletedWorks'">Добавить выполненную работу</button>
 </div>
 
 <%--<div>

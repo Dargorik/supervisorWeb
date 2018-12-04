@@ -103,10 +103,14 @@ public class MainController {
     }
 
     @GetMapping("/main")
-    public String main(Map<String, Object> model) {
-        model.put("listOfCompletedWork",listOfCompletedWorkRepos.findAll());
-        /*Iterable<User> users = userRepos.findAll();
-        model.put("users", users);*/
+    public String main(@RequestParam(required = false, defaultValue = "") String filter,
+            Map<String, Object> model) {
+        Iterable<ListOfCompletedWork> listOfCompletedWorks=listOfCompletedWorkRepos.findAll();
+        if(filter!=null&&!filter.isEmpty()){
+            listOfCompletedWorks=listOfCompletedWorkRepos.findByComments(filter);
+        }
+        model.put("listOfCompletedWork", listOfCompletedWorks);
+        model.put("filter", filter);
         return "main";
     }
 

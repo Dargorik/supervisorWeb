@@ -8,6 +8,7 @@ import supervisorweb.domain.Street;
 public interface AddressRepos extends CrudRepository<Address,Long> {
 
     Address findByCityAndStreetAndHouseNumberLike(City city, Street street, String houseNumber);
+    Address findByIdAddress(Integer idAddress);
 
 
 }
