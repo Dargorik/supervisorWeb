@@ -1,7 +1,7 @@
 package supervisorweb.repos;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import supervisorweb.domain.CompletedWork;
 
-public interface CompletedWorkRepos extends CrudRepository<CompletedWork,Long> {
+public interface CompletedWorkRepos extends JpaRepository<CompletedWork,Integer> {
 }

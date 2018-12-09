@@ -1,9 +1,7 @@
 package supervisorweb.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Region {
@@ -11,6 +9,9 @@ public class Region {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer idRegion;
     private String name;
+
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "region")
+    private List<Address> addresses;
 
     public Region(){}
 

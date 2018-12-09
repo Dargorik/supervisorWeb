@@ -24,16 +24,15 @@
 
 <h2>Добавление должности</h2>
 ${message}
-<%
+    <%
     Boolean flag=false;
     String s = (String) request.getAttribute("getflag");
-    System.out.println(request.getAttribute("filter"));
     if(s.equals("true"))
         flag=true;
     else
         flag=false;
 %>
-<%!
+    <%!
     String someOutput(Boolean flag) {
         if (flag==false)
             return "display:none";
@@ -43,13 +42,13 @@ ${message}
 %>
 
 <div>
-    <form method="post" action="/add/City?action=add&upId=${cytiUp.idCity}&flag=<%=flag==true?"true":"false"%>">
+    <form method="post" action="/tables/add/city?updId=${beanUp.idCity}&flag=<%=flag==true?"true":"false"%>">
         <input type="hidden" name="_csrf" value=${_csrf.token} />
         <input autofocus type="text" name="name" placeholder="Название города">
         <button type="submit">Добавить</button>
     </form>
 </div>
-<h2>Список должностей</h2>
+<h2>Список городов</h2>
 <div>
     <form method="post" action="deletePosition" >
         <input type="hidden" name="_csrf" value=${_csrf.token} />
@@ -57,13 +56,12 @@ ${message}
             <tr>
                 <th>id</th>
                 <th>Названия городов</th>
-                    <%--<select name="filterName" onChange="location.href='/add/City?filter='+this.options[this.selectedIndex].value+'&upId=${cytiUp.idCity}&flag=<%=flag==true?"true":"false"%>'">
-                        <option value="" selected="${filter==null||filter.isEmpty()?"selected":""}" /></option>
-                        <c:forEach items="${cities}" var="city">
-                            <option selected="${filter eq city.name?"selected":""}" value="${city.name}"><c:out value="${city.name}" /></option>
-                        </c:forEach>
-                    </select>--%>
-
+                <%--<select name="filterName" onChange="location.href='/add/City?filter='+this.options[this.selectedIndex].value+'&upId=${beanUp.idCity}&flag=<%=flag==true?"true":"false"%>'">
+                    <option value="" selected="${filter==null||filter.isEmpty()?"selected":""}" /></option>
+                    <c:forEach items="${cities}" var="city">
+                        <option selected="${filter eq city.name?"selected":""}" value="${city.name}"><c:out value="${city.name}" /></option>
+                    </c:forEach>
+                </select>--%>
                 <th>Изменить</th>
                 <th>Удаление</th>
             </tr>
@@ -71,15 +69,15 @@ ${message}
                 <tr>
                     <td >${city.idCity}</td>
                     <td>${city.name}</td>
-                    <td><a href="/add/City?upId=${city.idCity}&flag=${true}">Редактирвоать</a></td></td>
-                    <td><a href="/add/City?action=delete&upId=${cytiUp.idCity}&delId=${city.idCity}&flag=<%=flag==true?"true":"false"%>">Удалить</a></td>
+                    <td><a href="/tables/city?updId=${city.idCity}&flag=${true}">Редактирвоать</a></td>
+                    <td><a href="/tables/delete/city?updId=${beanUp.idCity}&delId=${city.idCity}&flag=<%=flag==true?"true":"false"%>">Удалить</a></td>
                 </tr>
             </c:forEach>
         </table>
     </form>
 </div>
 <div>
-    <form method="post" action="/add/City?action=update&upId=${cytiUp.idCity}" style=<%=someOutput(flag)%> >
+    <form method="post" action="/tables/update/city?updId=${beanUp.idCity}" style=<%=someOutput(flag)%> >
         <h2>Изменение записи</h2>
         <input type="hidden" name="_csrf" value=${_csrf.token} />
         <table border="1"  >
@@ -89,11 +87,12 @@ ${message}
                 <th>Сохранить</th>
             </tr>
             <tr>
-                <td >${cytiUp.idCity}</td>
-                <td><input type="text" name="upName" placeholder="Название города" value="${cytiUp.name}"></td>
+                <td >${beanUp.idCity}</td>
+                <td><input type="text" name="updName" placeholder="Название города" value="${beanUp.name}"></td>
                 <td><button type=submit>Обновить</button></td>
             </tr>
         </table>
     </form>
 </div>
+</body>
 </html>

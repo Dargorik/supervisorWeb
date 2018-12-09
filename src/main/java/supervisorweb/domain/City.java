@@ -1,14 +1,17 @@
 package supervisorweb.domain;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
-public class City {
+public class City  {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer idCity;
     private String name;
+
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "city")
+    private List<Address> addresses;
 
     public City(String name){
         this.name=name;

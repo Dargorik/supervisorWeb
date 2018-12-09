@@ -2,6 +2,7 @@ package supervisorweb.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 public class Position {
@@ -9,6 +10,9 @@ public class Position {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer idPosition;
     private String name;
+
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "position")
+    private List<User> users;
 
     public Position(String name){
         this.name=name;

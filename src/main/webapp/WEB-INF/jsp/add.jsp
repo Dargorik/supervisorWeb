@@ -21,40 +21,40 @@
     <button class="b1" onclick="location.href='/'">Главное меню</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/Position'">Таблица должностей</button>
+    <button class="b1" onclick="location.href='/tables/position'">Таблица должностей</button>
 </div>
 <div>
     <button class="b1" onclick="location.href='/add/User'">Таблица работников</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/City'">Таблица городов</button>
+    <button class="b1" onclick="location.href='/tables/city'">Таблица городов</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/Street'">Таблица улиц</button>
+    <button class="b1" onclick="location.href='/tables/street'">Таблица улиц</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/PriorityList'">Таблица приоритетности</button>
+    <button class="b1" onclick="location.href='/tables/priorityList'">Таблица приоритетности</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/Region'">Таблица регионов</button>
+    <button class="b1" onclick="location.href='/tables/region'">Таблица регионов</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/Address'">Таблица адресов</button>
+    <button class="b1" onclick="location.href='/tables/address'">Таблица адресов</button>
 </div>
 <div>
     <button class="b1" onclick="location.href='/add/UserRegions'">Задать работникам регионы</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/TypeOfWorkPerformed'">Задать виды выполняемых работ</button>
+    <button class="b1" onclick="location.href='/tables/typeOfWorkPerformed'">Задать виды выполняемых работ</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/TypeOfWork'">Задать тип работ</button>
+    <button class="b1" onclick="location.href='/tables/typeOfWork'">Задать тип работ</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/ListTypesInPerfomedWork'">Задать работы для видов выполнения</button>
+    <button class="b1" onclick="location.href='/tables/listTypesInPerfomedWork'">Задать работы для видов выполнения</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/PositionDuties'">Задать типы работ для должностей</button>
+    <button class="b1" onclick="location.href='/tables/positionDuties'">Задать типы работ для должностей</button>
 </div>
 
 

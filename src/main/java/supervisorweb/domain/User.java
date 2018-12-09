@@ -23,7 +23,7 @@ public class User implements UserDetails {
    // @Type(type = "org.hibernate.type.NumericBooleanType")
     private boolean activ;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "position_id")
     private Position position;
 /*

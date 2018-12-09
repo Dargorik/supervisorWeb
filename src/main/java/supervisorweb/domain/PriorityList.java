@@ -1,10 +1,8 @@
 package supervisorweb.domain;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class PriorityList {
@@ -13,6 +11,10 @@ public class PriorityList {
     private Integer idPriorityList;
     private String name;
     private Integer number;
+
+
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "priorityList")
+    private List<Address> addresses;
 
     public PriorityList(String name, Integer number){
         this.name=name;
