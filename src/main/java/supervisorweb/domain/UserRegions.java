@@ -7,10 +7,10 @@ public class UserRegions {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer idUserRegions;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "region_id")
     private Region region;
 

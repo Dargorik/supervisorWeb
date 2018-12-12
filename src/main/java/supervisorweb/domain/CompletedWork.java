@@ -9,14 +9,14 @@ public class CompletedWork {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer idCompletedWork;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "user")
     private User user;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "address")
     private Address address;
     private Integer numberCompletedEntrances;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "typeOfWorkPerformed")
     private TypeOfWorkPerformed typeOfWorkPerformed;
     private String comment;
@@ -32,6 +32,8 @@ public class CompletedWork {
         this.comment = comment;
         this.timestamp_send = timestamp_send;
     }
+
+
 
     public Integer getIdCompletedWork() {
         return idCompletedWork;

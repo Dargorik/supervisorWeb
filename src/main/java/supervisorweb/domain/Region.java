@@ -12,6 +12,8 @@ public class Region {
 
     @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "region")
     private List<Address> addresses;
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "region")
+    private List<UserRegions> userRegions;
 
     public Region(){}
 

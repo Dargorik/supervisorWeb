@@ -1,6 +1,5 @@
 package supervisorweb.service;
 
-import supervisorweb.domain.Position;
 import supervisorweb.domain.PositionDuties;
 
 import java.util.List;

@@ -1,9 +1,7 @@
 package supervisorweb.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class TypeOfWorkPerformed {
@@ -11,6 +9,11 @@ public class TypeOfWorkPerformed {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer idTypeOfWorkPerformed;
     private String name;
+
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "typeOfWorkPerformed")
+    private List<CompletedWork> completedWork;
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "typeOfWorkPerformed")
+    private List<ListTypesInPerfomedWork> listTypesInPerfomedWork;
 
     public TypeOfWorkPerformed(){};
 

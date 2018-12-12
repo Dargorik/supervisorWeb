@@ -8,10 +8,10 @@ public class PositionDuties {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer idPositionDuties;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "position_id")
     private Position position;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "typeOfWork_id")
     private TypeOfWork typeOfWork;
 

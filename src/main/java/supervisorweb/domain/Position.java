@@ -13,6 +13,8 @@ public class Position {
 
     @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "position")
     private List<User> users;
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "position")
+    private List<PositionDuties> positionDuties;
 
     public Position(String name){
         this.name=name;

@@ -1,6 +1,7 @@
 package supervisorweb.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,20 +11,8 @@ import supervisorweb.service.*;
 import java.util.Map;
 
 @Controller
+@PreAuthorize("hasAuthority('ADMIN')")
 public class AdressController {
-    @Autowired
-    private UserRepos userRepos;
-
-
-    @Autowired
-    private UserRegionsRepos userRegionsRepos;
-
-    @Autowired
-    private CompletedWorkRepos completedWorkRepos;
-
-
-
-
     @Autowired
     private CityService cityService;
     @Autowired
@@ -44,6 +33,11 @@ public class AdressController {
     private PositionDutiesService positionDutiesService;
     @Autowired
     private ListTypesInPerfomedWorkService listTypesInPerfomedWorkService;
+    @Autowired
+    private UserRegionsService userRegionsService;
+    @Autowired
+    private UserService userService;
+
 
     /**
      * methods for changing the City table
@@ -621,7 +615,6 @@ public class AdressController {
     @RequestMapping("/tables/listTypesInPerfomedWork")
     public String listTypesInPerfomedWork(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
                                  @RequestParam(name = "flag", required = false, defaultValue = "false") String flag, Map<String, Object> model) {
-        System.out.println(updId);
         if (flag.equals("true"))
             model.put("beanUp", listTypesInPerfomedWorkService.findById(updId));
         model.put("typesInPerfomedWork", listTypesInPerfomedWorkService.findAll());
@@ -683,236 +676,70 @@ public class AdressController {
         return "addListTypesInPerfomedWork";
     }
 
-    /*
-    @RequestMapping("/add/Cities")
-    public String addCity(
-            @RequestParam(name = "id", required = false, defaultValue = "0") String idCity,
-            @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
-            @RequestParam(name = "filter", defaultValue = "") String filter,
-            Map<String, Object> model) {
-
-        System.out.println(flag);
+    /**
+     * methods for changing the UserRegions table
+     */
+    @RequestMapping("/tables/userRegions")
+    public String userRegions(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
+                                          @RequestParam(name = "flag", required = false, defaultValue = "false") String flag, Map<String, Object> model) {
         if (flag.equals("true"))
-            model.put("beanUp", cityRepos.findById(Integer.parseInt(idCity)).orElse(null));
-        model.put("cities", cityRepos.findAll());
-        model.put("idCity", Integer.parseInt(idCity));
-        model.put("getflag", flag);
-        return "addCities";
-    }
-
-    @PostMapping("/add/addCities")
-    public String addNewCity(
-            @RequestParam(name = "id", required = false, defaultValue = "0") String idCity,
-            @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
-            @RequestParam String name, Map<String, Object> model) {
-
-        if (flag.equals("true"))
-            model.put("beanUp", cityRepos.findById(Integer.parseInt(idCity)).orElse(null));
-        model.put("cities", cityRepos.findAll());
-        model.put("idCity", idCity);
-        model.put("flag", flag);
-
-        City city = new City(name);
-        City c = cityRepos.findByName(city.getName());
-        if (c != null) {
-            model.put("message", "Данный город есть в базе данных!");
-            model.put("cities", cityRepos.findAll());
-            model.put("getflag", flag);
-            return "addCities";
-        }
-        cityRepos.save(city);
-        model.put("cities", cityRepos.findAll());
-        model.put("getflag", flag);
-        return "addCities";
-    }
-
-    @PostMapping("/add/upCities")
-    public String addUpCity(
-            @RequestParam(name = "id", required = false, defaultValue = "0") Integer idCity,
-            @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
-            @RequestParam String name, Map<String, Object> model) {
-
-
-        City city = cityRepos.findById(idCity).orElse(null);
-        if (city != null) {
-            city.setName(name);
-            model.put("message", "Изменение прошло успешно!");
-
-            cityRepos.save(city);
-        } else {
-            model.put("message", "Изменение не произошло!");
-        }
-        System.out.println(flag + "--");
-        model.put("idCity", idCity);
-        model.put("getflag", flag);
-        model.put("cities", cityRepos.findAll());
-        return "addCities";
-    }
-
-
-    @RequestMapping("/add/deleteCities")
-    public String del(
-            @RequestParam(name = "id", required = false, defaultValue = "0") String idCity,
-            @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
-            Map<String, Object> model) {
-        City city = cityRepos.findById(Integer.parseInt(idCity)).orElse(null);
-        if (city == null) {
-            model.put("message", "Данный город не найден!");
-            model.put("cities", cityRepos.findAll());
-            model.put("cities", cityRepos.findAll());
-            model.put("idCity", idCity);
-            model.put("getflag", flag);
-            return "addCities";
-        }
-        cityRepos.delete(city);
-        model.put("message", city.getName() + " удалён!");
-        model.put("cities", cityRepos.findAll());
-        model.put("idCity", idCity);
-        model.put("getflag", flag);
-        return "addCities";
-    }
-*/
-/*
-
-    @RequestMapping("/add/UserRegions")
-    public String addRegionsByUsers(Map<String, Object> model) {
-        model.put("usersRegions", userRegionsRepos.findAll());
+            model.put("beanUp", userRegionsService.findById(updId));
+        model.put("usersRegions", userRegionsService.findAll());
+        model.put("users", userService.findAll());
         model.put("regions", regionService.findAll());
-        model.put("users", userRepos.findAll());
+        model.put("getflag", flag);
         return "addUserRegions";
     }
 
-    @PostMapping("/add/addUserRegions")
-    public String addNewRegionsByUsers(@RequestParam String user,
-                                       @RequestParam String region,
-                                       Map<String, Object> model) {
-        UserRegions userRegions = new UserRegions(userRepos.findByUsername(user), regionService.findByName(region));
-        UserRegions usr = userRegionsRepos.findAllByUserAndRegion(userRegions.getUser(), userRegions.getRegion());
-        if (usr != null) {
-            model.put("message", "Данная зависимость уже есть в базе данных!");
-            model.put("usersRegions", userRegionsRepos.findAll());
-            model.put("regions", regionService.findAll());
-            model.put("users", userRepos.findAll());
-            return "addUserRegions";
-        }
-        userRegionsRepos.save(userRegions);
-        model.put("usersRegions", userRegionsRepos.findAll());
+    @RequestMapping("/tables/add/userRegions")
+    public String addUserRegions(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
+                                             @RequestParam(name = "idUser", required = false, defaultValue = "") Integer idUser,
+                                             @RequestParam(name = "idRegion", required = false, defaultValue = "") Integer idRegion,
+                                             @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
+                                             Map<String, Object> model) {
+        model.put("message", userRegionsService.add(idUser, idRegion));
+        model.put("updId", updId);
+        model.put("getflag", flag);
+        if (flag.equals("true"))
+            model.put("beanUp", userRegionsService.findById(updId));
+        model.put("usersRegions", userRegionsService.findAll());
+        model.put("users", userService.findAll());
         model.put("regions", regionService.findAll());
-        model.put("users", userRepos.findAll());
         return "addUserRegions";
     }
 
-    @RequestMapping("/add/TypeOfWorkServicePerformed")
-    public String addTypeOfWorkServicePerformed(Map<String, Object> model) {
-        model.put("typesOfWorkPerformed", TypeOfWorkServicePerformedRepos.findAll());
-        return "addTypeOfWorkServicePerformed";
+    @RequestMapping("/tables/update/userRegions")
+    public String updateUserRegions(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
+                                    @RequestParam(name = "updIdUser", required = false, defaultValue = "") Integer updIdUser,
+                                    @RequestParam(name = "updIdRegion", required = false, defaultValue = "") Integer updIdRegion,
+                                    @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
+                                    Map<String, Object> model) {
+        model.put("message", userRegionsService.update(updId, updIdUser, updIdRegion));
+        if (flag.equals("true"))
+            model.put("beanUp", userRegionsService.findById(updId));
+        model.put("usersRegions", userRegionsService.findAll());
+        model.put("users", userService.findAll());
+        model.put("regions", regionService.findAll());
+        model.put("getflag", flag);
+        return "addUserRegions";
     }
 
-    @PostMapping("/add/addTypeOfWorkServicePerformed")
-    public String addNewTypeOfWorkServicePerformed(@RequestParam String name,
-                                            Map<String, Object> model) {
-        TypeOfWorkServicePerformed TypeOfWorkServicePerformed = new TypeOfWorkServicePerformed(name);
-        TypeOfWorkServicePerformed towp = TypeOfWorkServicePerformedRepos.findByName(name);
-        if (towp != null) {
-            model.put("message", "Данный вид выполняемых работ уже есть в базе данных!");
-            model.put("typesOfWorkPerformed", TypeOfWorkServicePerformedRepos.findAll());
-            return "addTypeOfWorkServicePerformed";
-        }
-
-        TypeOfWorkServicePerformedRepos.save(TypeOfWorkServicePerformed);
-        model.put("typesOfWorkPerformed", TypeOfWorkServicePerformedRepos.findAll());
-        return "addTypeOfWorkServicePerformed";
-    }
-
-    
-  /*  @RequestMapping("/add/ListTypesInPerfomedWork")
-    public String addListTypesInPerfomedWork(Map<String, Object> model) {
-        model.put("listsTypesInPerfomedWork", listTypesInPerfomedWorkRepos.findAll());
-        model.put("typesOfWorkPerformed", TypeOfWorkServicePerformedRepos.findAll());
-        model.put("typesOfWork", TypeOfWorkServiceRepos.findAll());
-        return "addListTypesInPerfomedWork";
-    }
-
-    @PostMapping("/add/addListTypesInPerfomedWork")
-    public String addNewListTypesInPerfomedWork(@RequestParam String TypeOfWorkServicePerformed,
-                                                @RequestParam String TypeOfWorkService,
+    @RequestMapping("/tables/delete/userRegions")
+    public String deleteUserRegions(@RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
+                                                @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
+                                                @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                                 Map<String, Object> model) {
-        ListTypesInPerfomedWork listTypesInPerfomedWork = new ListTypesInPerfomedWork(TypeOfWorkServicePerformedRepos.findByName(TypeOfWorkServicePerformed), TypeOfWorkServiceRepos.findByName(TypeOfWorkService));
-        ListTypesInPerfomedWork ltinpw = listTypesInPerfomedWorkRepos.findAllByTypeOfWorkServicePerformedAndTypeOfWorkService(listTypesInPerfomedWork.getTypeOfWorkServicePerformed(), listTypesInPerfomedWork.getTypeOfWorkService());
-        if (ltinpw != null) {
-            model.put("message", "Данная зависимость уже есть в базе данных!");
-            model.put("listsTypesInPerfomedWork", listTypesInPerfomedWorkRepos.findAll());
-            model.put("typesOfWorkPerformed", TypeOfWorkServicePerformedRepos.findAll());
-            model.put("typesOfWork", TypeOfWorkServiceRepos.findAll());
-            return "addListTypesInPerfomedWork";
+        model.put("message", userRegionsService.delete(delId));
+        if (updId.equals(delId)) {
+            model.put("updId", updId);
+            flag = "false";
         }
-        listTypesInPerfomedWorkRepos.save(listTypesInPerfomedWork);
-        model.put("listsTypesInPerfomedWork", listTypesInPerfomedWorkRepos.findAll());
-        model.put("typesOfWorkPerformed", TypeOfWorkServicePerformedRepos.findAll());
-        model.put("typesOfWork", TypeOfWorkServiceRepos.findAll());
-        return "addListTypesInPerfomedWork";
+        if (flag.equals("true"))
+            model.put("beanUp", userRegionsService.findById(updId));
+        model.put("usersRegions", userRegionsService.findAll());
+        model.put("users", userService.findAll());
+        model.put("regions", regionService.findAll());
+        model.put("getflag", flag);
+        return "addUserRegions";
     }
-
-    @RequestMapping("/add/PositionDuties")
-    public String addPositionDuties(Map<String, Object> model) {
-        model.put("positionsDuties", positionDutiesRepos.findAll());
-        model.put("positions", positionRepos.findAll());
-        model.put("typesOfWork", TypeOfWorkServiceRepos.findAll());
-        return "addPositionDuties";
-    }
-
-    @PostMapping("/add/addPositionDuties")
-    public String addNewPositionDuties(@RequestParam String position,
-                                       @RequestParam String TypeOfWorkService,
-                                       Map<String, Object> model) {
-        PositionDuties positionDuties = new PositionDuties(positionRepos.findByName(position), TypeOfWorkServiceRepos.findByName(TypeOfWorkService));
-        PositionDuties pos = positionDutiesRepos.findByPositionAndTypeOfWorkService(positionDuties.getPosition(), positionDuties.getTypeOfWorkService());
-        if (pos != null) {
-            model.put("message", "Данная зависимость уже есть в базе данных!");
-            model.put("positionsDuties", positionDutiesRepos.findAll());
-            model.put("positions", positionRepos.findAll());
-            model.put("typesOfWork", TypeOfWorkServiceRepos.findAll());
-            return "addPositionDuties";
-        }
-        positionDutiesRepos.save(positionDuties);
-        model.put("positionsDuties", positionDutiesRepos.findAll());
-        model.put("positions", positionRepos.findAll());
-        model.put("typesOfWork", TypeOfWorkServiceRepos.findAll());
-        return "addPositionDuties";
-    }
-
-    @RequestMapping("/add/CompletedWorks")
-    public String addCompletedWorks(Map<String, Object> model) {
-        model.put("completedWorksRepos", completedWorkRepos.findAll());
-        model.put("users", userRepos.findAll());
-        model.put("addresses", addressService.findAll());
-        model.put("typesOfWorkPerformed", TypeOfWorkServicePerformedRepos.findAll());
-        return "addCompletedWorks";
-    }/*
-
-    @PostMapping("/add/addCompletedWorks")
-    public String addNewCompletedWorks(@RequestParam String username,
-                                       @RequestParam Integer address,
-                                       @RequestParam Integer numberCompletedEntrances,
-                                       @RequestParam String TypeOfWorkServicePerformed,
-                                       @RequestParam String comment,
-                                       Map<String, Object> model) {
-        CompletedWork completedWork = new CompletedWork(userRepos.findByUsername(username), addressService.findById(address), numberCompletedEntrances, TypeOfWorkServicePerformedRepos.findByName(TypeOfWorkServicePerformed), comment, new Timestamp(System.currentTimeMillis()));
-        /*CompletedWork cw=completedWorkRepos.
-        if(pos!=null){
-            model.put("message", "Данная зависимость уже есть в базе данных!");
-            model.put("completedWorksRepos", completedWorkRepos.findAll());
-            model.put("users", userRepos.findAll());
-            model.put("addresses", addressService.findAll());
-            model.put("typesOfWorkPerformed", TypeOfWorkServicePerformedRepos.findAll());
-            return "addCompletedWorks";
-        }*/ /*
-        completedWorkRepos.save(completedWork);
-        model.put("completedWorksRepos", completedWorkRepos.findAll());
-        model.put("users", userRepos.findAll());
-        model.put("addresses", addressService.findAll());
-        model.put("typesOfWorkPerformed", TypeOfWorkServicePerformedRepos.findAll());
-        return "addCompletedWorks";
-    }*/
-
 }

@@ -1,19 +1,34 @@
 package supervisorweb.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import supervisorweb.repos.UserRepos;
+import supervisorweb.domain.Address;
+import supervisorweb.domain.User;
 
-@Service
-public class UserService implements UserDetailsService {
-    @Autowired
-    private UserRepos userRepo;
+import java.util.List;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByUsername(username);
-    }
+public interface UserService {
+
+    User findById(Integer id);
+
+    List<User> findAll();
+
+    String update(Integer updId,
+                  String firstName,
+                  String lastName,
+                  String username,
+                  String password,
+                  Integer position);
+
+    String delete(Integer delId);
+
+    String add(String firstName,
+               String lastName,
+               String username,
+               String password,
+               Integer position);
+
+    void checkAdminProfile();
+
+    User findByFirstNameAndLastName(String firstName, String lastName);
+    User findByUsername(String username);
+    User findByFirstNameAndLastNameAndUsername(String firstName, String lastName, String username);
 }

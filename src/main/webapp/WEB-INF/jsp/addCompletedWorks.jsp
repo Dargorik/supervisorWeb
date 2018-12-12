@@ -1,3 +1,4 @@
+<%@ page import="supervisorweb.domain.Street" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
@@ -18,64 +19,80 @@
 <body>
 </body>
 <div>
-    <button class="b1" onclick="location.href='/addTable/'">Назад</button>
+    <button class="b1" onclick="location.href='/'">Назад</button>
 </div>
 
 <h2>Добавление работ работ доступных должностям</h2>
 ${message}
+<%--<div>--%>
+    <%--<form method="post" action="/add/addCompletedWorks">--%>
+        <%--<input type="hidden" name="_csrf" value=${_csrf.token} /><select name="address">--%>
+        <%--<c:forEach items="${addresses}" var="address">--%>
+            <%--<option value="${address.idAddress}"><c:out value="${address.city.name} ${address.street.name} ${address.houseNumber}" /></option>--%>
+        <%--</c:forEach>--%>
+        <%--<input type="text" name="numberCompletedEntrances" placeholder="кол-во сделанных подъездов">--%>
+        <%--</select>--%>
+        <%--<select name="typeOfWorkPerformed">--%>
+        <%--<c:forEach items="${typesOfWorkPerformed}" var="typeOfWorkPerformed">--%>
+            <%--<option value="${typeOfWorkPerformed.name}"><c:out value="${typeOfWorkPerformed.name}" /></option>--%>
+        <%--</c:forEach>--%>
+        <%--<input type="text" name="comment" placeholder="комментарий">--%>
+        <%--</select>--%>
+        <%--<button type="submit">Добавить</button>--%>
+    <%--</form>--%>
+<%--</div>--%>
 <div>
-    <form method="post" action="/add/addCompletedWorks">
         <input type="hidden" name="_csrf" value=${_csrf.token} />
-        <select name="username">
-            <c:forEach items="${users}" var="user">
-                <option value="${user.username}"><c:out value="${user.firstName} ${user.lastName}" /></option>
+        Выберите тип работы:
+        <select required form="add" name="idTypeOfWorkPerformed" >
+            <option disabled selected value=""><c:out value="Выберите из вариантов" /></option>
+            <c:forEach items="${typesOfWorkPerformed}" var="typeOfWorkPerformed">
+                <option value="${typeOfWorkPerformed.idTypeOfWorkPerformed}"><c:out value="${typeOfWorkPerformed.name}" /></option>
             </c:forEach>
-        </select><select name="address">
-        <c:forEach items="${addresses}" var="address">
-            <option value="${address.idAddress}"><c:out value="${address.city.name} ${address.street.name} ${address.houseNumber}" /></option>
-        </c:forEach>
-        <input type="text" name="numberCompletedEntrances" placeholder="кол-во сделанных подъездов">
-        </select><select name="typeOfWorkPerformed">
-        <c:forEach items="${typesOfWorkPerformed}" var="typeOfWorkPerformed">
-            <option value="${typeOfWorkPerformed.name}"><c:out value="${typeOfWorkPerformed.name}" /></option>
-        </c:forEach>
-        <input type="text" name="comment" placeholder="комментарий">
-    </select>
-        <button type="submit">Добавить</button>
-    </form>
-</div>
-<h2>Список работ достпных для должностей</h2>
-<div>
-    <form method="post" action="deletePosition">
-        <input type="hidden" name="_csrf" value=${_csrf.token} />
+        </select>
         <table border="1">
             <tr>
-                <th>id</th>
-                <th>Сотрудник</th>
-                <th>Город</th>
-                <th>Улица</th>
-                <th>Дом</th>
-                <th>Кол-во этажей в доме</th>
+                <th hidden>id</th>
+                <th><select name="City">
+                    <c:forEach items="${cities}" var="city">
+                        <option value="${city.idCity}" <c:if test="${beanUp.city.idCity==city.idCity}"> selected </c:if> ><c:out value="${city.name}" /></option>
+                    </c:forEach>
+                </select></th>
+                <td><select name="Street">
+                    <c:forEach items="${streets}" var="street">
+                        <option value="${street.idStreet}" <c:if test="${beanUp.street.idStreet==street.idStreet}"> selected </c:if>><c:out value="${street.name}" /></option>
+                    </c:forEach>
+                </select></td>
+                <th>Номер дома</th>
                 <th>Кол-во выполненных подъездов</th>
-                <th>Тип выполненной работы</th>
                 <th>Комментарий</th>
-                <th>Дата</th>
+                <th>Комментарий</th>
             </tr>
-            <c:forEach  items="${completedWorksRepos}" var ="completedWorkRepos">
+            <c:forEach  items="${addresses}" var ="address" varStatus="ind" >
                 <tr>
-                    <td>${completedWorkRepos.idCompletedWork}</td>
-                    <td>${completedWorkRepos.user.firstName} ${completedWorkRepos.user.lastName}</td>
-                    <td>${completedWorkRepos.address.city.name}</td>
-                    <td>${completedWorkRepos.address.street.name}</td>
-                    <td>${completedWorkRepos.address.houseNumber}</td>
-                    <td>${completedWorkRepos.address.numberFloors}</td>
-                    <td>${completedWorkRepos.numberCompletedEntrances}</td>
-                    <td>${completedWorkRepos.typeOfWorkPerformed.name}</td>
-                    <td>${completedWorkRepos.comment}</td>
-                    <td>${completedWorkRepos.timestamp_send}</td>
+                    <form id="add" method="post" action="/work/add?idUser=${user.idusers}" />
+                    <input form="add" type="hidden" name="_csrf" value=${_csrf.token} />
+                    <td hidden>
+                        <input form="add" type="text" name="idAddress" value="${address.idAddress}">
+                    </td>
+                    <td>${address.city.name}</td>
+                    <td>${address.street.name}</td>
+                    <td>${address.houseNumber}</td>
+                    <td>
+                        <input form="add" type="text" name="numberCompletedEntrances" placeholder="Кол-во выполненных подлъездов">
+                    </td>
+                    <td>
+                        <input form="add" type="text" name="comment" placeholder="Комментарий">
+                    </td>
+                     <td><button name="ind" value="${ind.index}" type=submit >Выполненно</button></td>
                 </tr>
             </c:forEach>
         </table>
-    </form>
-</div>
+<%--</div>--%>
+<%--<script>--%>
+    <%--function myFunc(e){--%>
+        <%--var row = e.parentElement.parentElement;--%>
+        <%--console.log(row.querySelector('input[type=number]').value)--%>
+    <%--}--%>
+<%--</script>--%>
 </html>

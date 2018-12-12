@@ -7,10 +7,10 @@ public class ListTypesInPerfomedWork {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer idListTypesInPerfomedWork;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "typeOfWorkPerformed_id")
     private TypeOfWorkPerformed typeOfWorkPerformed;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "typeOfWork_id")
     private TypeOfWork typeOfWork;
 

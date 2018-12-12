@@ -16,7 +16,12 @@
     </style>
 </head>
 <body>
-</body>
+    <form action="/logout" method="post">
+        <input type="hidden" name="_csrf" value="${_csrf.token}" />
+        <input class="b1" type="submit" value="Выйти"/>
+        <h></h>
+    </form>
+</div>
 <div>
     <button class="b1" onclick="location.href='/'">Главное меню</button>
 </div>
@@ -24,7 +29,7 @@
     <button class="b1" onclick="location.href='/tables/position'">Таблица должностей</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/User'">Таблица работников</button>
+    <button class="b1" onclick="location.href='/users/list'">Таблица работников</button>
 </div>
 <div>
     <button class="b1" onclick="location.href='/tables/city'">Таблица городов</button>
@@ -42,7 +47,7 @@
     <button class="b1" onclick="location.href='/tables/address'">Таблица адресов</button>
 </div>
 <div>
-    <button class="b1" onclick="location.href='/add/UserRegions'">Задать работникам регионы</button>
+    <button class="b1" onclick="location.href='/tables/userRegions'">Задать работникам регионы</button>
 </div>
 <div>
     <button class="b1" onclick="location.href='/tables/typeOfWorkPerformed'">Задать виды выполняемых работ</button>
@@ -56,12 +61,7 @@
 <div>
     <button class="b1" onclick="location.href='/tables/positionDuties'">Задать типы работ для должностей</button>
 </div>
-
-
-
-<div>
-    <button class="b1" onclick="location.href='/add/CompletedWorks'">Добавить выполненную работу</button>
-</div>
+</body>
 
 <%--<div>
     <button class="b1" onclick="location.href='/add/City'">Таблица работников</button>

@@ -2,7 +2,7 @@
 <#import "parts/login.ftl" as l>
 
 <@c.page>
-Login page
+Введите логин и пароль
 <@l.login "/login" />
-<a href="/registration">Add new user</a>
+<#--<a href="/registration">Add new user</a>-->
 </@c.page>

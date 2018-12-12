@@ -4,6 +4,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Address {
@@ -30,6 +31,9 @@ public class Address {
     @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "region_id")
     private Region region;
+
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "address")
+    private List<CompletedWork> completedWork;
 
     public Address(){}
 

@@ -9,6 +9,7 @@ import supervisorweb.domain.Role;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,19 +27,16 @@ public class User implements UserDetails {
     @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "position_id")
     private Position position;
-/*
-    @ManyToMany
-    @JoinTable(
-            name = "regionsByUsers",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "region_id")}
-    )
-    private Set<RegionsByUsers> regionsByUsers=new HashSet<>();
-*/
+
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "user")
+    private List<CompletedWork> completedWork;
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "user")
+    private List<UserRegions> userRegions;
 
     public User() {
     }
