@@ -40,13 +40,17 @@ public class AddWorkController {
     }
     @RequestMapping("/add")
     public String add(@AuthenticationPrincipal User user,
-                      @RequestParam(name = "idTypeOfWorkPerformed", required = false, defaultValue = "") Integer idTypeOfWorkPerformed,
-                      @RequestParam(name = "idAddress", required = false, defaultValue = "") Integer[] idAddress,
-                      @RequestParam(name = "numberCompletedEntrances", required = false, defaultValue = "") String[] numberCompletedEntrances,
-                      @RequestParam(name = "comment", required = false, defaultValue = "") String[] comment,
+                      @RequestParam(name = "idTypeOfWorkPerformed", required = false, defaultValue = "") String idTypeOfWorkPerformed,
+                      @RequestParam(name = "idAddress", required = false, defaultValue = "") Integer idAddress,
+                      @RequestParam(name = "numberCompletedEntrances", required = false, defaultValue = "") String numberCompletedEntrances,
+                      @RequestParam(name = "comment", required = false, defaultValue = "") String comment,
                       @RequestParam(name = "ind", required = false, defaultValue = "") Integer ind,
                        Map<String, Object> model) {
-        model.put("message", completedWorkService.add(user.getIdusers(),idAddress[ind],numberCompletedEntrances[ind],idTypeOfWorkPerformed,comment[ind]));
+       // model.put("message", completedWorkService.add(user.getIdusers(),idAddress[ind],numberCompletedEntrances[ind],idTypeOfWorkPerformed,comment[ind]));
+        System.out.println("idTypeOfWorkPerformed-"+idTypeOfWorkPerformed);
+        System.out.println("idAddress-"+idAddress);
+        System.out.println("numberCompletedEntrances-"+numberCompletedEntrances);
+        System.out.println("comment-"+comment);
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
         model.put("addresses", addressService.findAll());
         model.put("streets", streetService.findAll());

@@ -40,11 +40,7 @@ public class MainController {
     public String main(@AuthenticationPrincipal User user,
                        @RequestParam(required = false, defaultValue = "") String filter,
             Map<String, Object> model) {
-        Iterable<ListOfCompletedWork> listOfCompletedWorks=listOfCompletedWorkRepos.findAll();
-        if(filter!=null&&!filter.isEmpty()){
-            listOfCompletedWorks=listOfCompletedWorkRepos.findByComments(filter);
-        }
-        model.put("listOfCompletedWork", listOfCompletedWorks);
+        userService.checkAdminProfile();
         model.put("filter", filter);
         model.put("user",user);
         if (user!=null)
