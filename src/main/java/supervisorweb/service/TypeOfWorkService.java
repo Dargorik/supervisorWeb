@@ -1,6 +1,5 @@
 package supervisorweb.service;
 
-import supervisorweb.domain.City;
 import supervisorweb.domain.TypeOfWork;
 
 import java.util.List;
@@ -10,10 +9,9 @@ public interface TypeOfWorkService {
 
     List<TypeOfWork> findAll();
 
+    String update(Integer updId, String updName);
 
-    String update(Integer updIdTypeOfWorkRepos, String updName);
-
-    String delete(Integer delIdTypeOfWorkRepos);
+    String delete(Integer delId);
 
     String add(String name);
 

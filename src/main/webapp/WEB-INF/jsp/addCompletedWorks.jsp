@@ -42,16 +42,16 @@
     <tr>
         <th hidden>id</th>
         <th><select id="citySelect" name="City">
-            <option value="all"  <c:if test="${cityFiler==0}"> selected </c:if>  ><c:out value="Все города"/></option>
+            <option value="all"  <c:if test="${cityFilter==0}"> selected </c:if>  ><c:out value="Все города"/></option>
             <c:forEach items="${cities}" var="city">
-                <option value="${city.name}" <c:if test="${city.idCity==cityFiler}"> selected </c:if> ><c:out
+                <option value="${city.name}" <c:if test="${city.idCity==cityFilter}"> selected </c:if> ><c:out
                         value="${city.name}"/></option>
             </c:forEach>
         </select></th>
         <td><select id="streetSelect" name="Street">
-            <option value="all"  <c:if test="${cityFiler==0}"> selected </c:if>  ><c:out value="Все улицы"/></option>
+            <option value="all"  <c:if test="${cityFilter==0}"> selected </c:if>  ><c:out value="Все улицы"/></option>
             <c:forEach items="${streets}" var="street">
-                <option value="${street.name}" <c:if test="${street.idStreet==streetFiler}"> selected </c:if>><c:out
+                <option value="${street.name}" <c:if test="${street.idStreet==streetFilter}"> selected </c:if>><c:out
                         value="${street.name}"/></option>
             </c:forEach>
         </select></td>
@@ -79,15 +79,14 @@
                     <button name="but" value="" type=submit>Выполненно</button></td>
                 <td hidden>
                     <input type="text" id="${ind.index+1}" name="idTypeOfWorkPerformed" value="${ind.index+10}">
-                    <input type="text" id="cf${ind.index+1}" name="cityFiler" value="${cityFiler}">
-                    <input type="text" id="sf${ind.index+1}" name="streetFiler" value="${streetFiler}">
+                    <input type="text" id="cf${ind.index+1}" name="cityFilter" value="${cityFilter}">
+                    <input type="text" id="sf${ind.index+1}" name="streetFilter" value="${streetFilter}">
                 </td>
             </form>
         </tr>
     </c:forEach>
 </table>
 <script>
-    var selection = document.getElementById("selection");
     var languagesSelect = sel.selec;
     var citySelect = document.getElementById("citySelect");
     var streetSelect = document.getElementById("streetSelect");

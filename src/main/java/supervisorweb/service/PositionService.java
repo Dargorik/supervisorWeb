@@ -1,9 +1,6 @@
 package supervisorweb.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import supervisorweb.domain.Position;
-import supervisorweb.domain.TypeOfWork;
-import supervisorweb.repos.PositionRepos;
 
 import java.util.List;
 
@@ -12,10 +9,9 @@ public interface PositionService {
 
     List<Position> findAll();
 
+    String update(Integer updId, String updName);
 
-    String update(Integer updIdPosition, String updName);
-
-    String delete(Integer delIdPosition);
+    String delete(Integer delId);
 
     String add(String name);
 

@@ -3,11 +3,11 @@ package supervisorweb.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import supervisorweb.domain.Address;
-import supervisorweb.domain.City;
-import supervisorweb.domain.Street;
+import supervisorweb.domain.User;
+import supervisorweb.domain.UserRegions;
 import supervisorweb.repos.*;
 
-import javax.swing.text.html.parser.Parser;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +24,8 @@ public class AddressServiceImpl implements AddressService {
     private PriorityListRepos priorityListRepos;
     @Autowired
     private RegionRepos regionRepos;
+    @Autowired
+    private UserRegionsRepos userRegionsRepos;
 
     @Override
     public Address findById(Integer updId) {
@@ -39,7 +41,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<Address> findAll() {
-        return addressRepos.findAll().stream().sorted((x, y) -> x.getHouseNumber().compareTo(y.getHouseNumber())).collect(Collectors.toList());
+        return addressRepos.findAll();
     }
 
     @Override
@@ -107,5 +109,14 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public Address findByCityAndStreetAndHouseNumberLike(Integer cityId, Integer streetId, String houseNumber) {
         return addressRepos.findByCityAndStreetAndHouseNumberLike(cityRepos.findById(cityId).orElse(null),streetRepos.findById(streetId).orElse(null),houseNumber );
+    }
+
+    @Override
+    public List<Address> findForUser(User user) {
+        List<Address> address=new ArrayList<>();
+        for(UserRegions userRegions: userRegionsRepos.findByUser(user)){
+            address.addAll(addressRepos.findByRegion(userRegions.getRegion()));
+        }
+        return address;
     }
 }

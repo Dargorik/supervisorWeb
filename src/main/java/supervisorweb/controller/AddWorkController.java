@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import supervisorweb.domain.User;
-import supervisorweb.repos.CompletedWorkRepos;
 import supervisorweb.service.*;
 
 import java.util.Map;
@@ -32,8 +30,8 @@ public class AddWorkController {
     public String main(@AuthenticationPrincipal User user,
                        @RequestParam(name = "idTypeOfWorkPerformed", required = false, defaultValue = "0") Integer idTypeOfWorkPerformed,
                        Map<String, Object> model) {
-        model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
-        model.put("addresses", addressService.findAll());
+        model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findForUser(user));
+        model.put("addresses", addressService.findForUser(user));
         model.put("streets", streetService.findAll());
         model.put("cities", cityService.findAll());
         model.put("idTypeOfWP", idTypeOfWorkPerformed);
@@ -42,8 +40,8 @@ public class AddWorkController {
     }
     @RequestMapping("/add")
     public String add(@AuthenticationPrincipal User user,
-                      @RequestParam(name = "cityFiler", required = false, defaultValue = "0") String cityFiler,
-                      @RequestParam(name = "streetFiler", required = false, defaultValue = "0") String streetFiler,
+                      @RequestParam(name = "cityFilter", required = false, defaultValue = "0") String cityFilter,
+                      @RequestParam(name = "streetFilter", required = false, defaultValue = "0") String streetFilter,
                       @RequestParam(name = "idTypeOfWorkPerformed", required = false, defaultValue = "0") Integer idTypeOfWorkPerformed,
                       @RequestParam(name = "idAddress", required = false, defaultValue = "") Integer idAddress,
                       @RequestParam(name = "numberCompletedEntrances", required = false, defaultValue = "") String numberCompletedEntrances,
@@ -55,15 +53,15 @@ public class AddWorkController {
         System.out.println("idAddress-"+idAddress);
         System.out.println("numberCompletedEntrances-"+numberCompletedEntrances);
         System.out.println("comment-"+comment);
-        System.out.println("cityFiler-"+cityFiler);
-        System.out.println("streetFiler-"+streetFiler);
+        System.out.println("cityFilter-"+cityFilter);
+        System.out.println("streetFilter-"+streetFilter);
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
-        model.put("addresses", addressService.findAll());
+        model.put("addresses", addressService.findForUser(user));
         model.put("streets", streetService.findAll());
         model.put("cities", cityService.findAll());
         model.put("idTypeOfWP", idTypeOfWorkPerformed);
-        model.put("cityFiler", cityService.findByName(cityFiler)==null?0:cityService.findByName(cityFiler).getIdCity());
-        model.put("streetFiler", streetService.findByName(streetFiler)==null?0:streetService.findByName(streetFiler).getIdStreet());
+        model.put("cityFilter", cityService.findByName(cityFilter)==null?0:cityService.findByName(cityFilter).getIdCity());
+        model.put("streetFilter", streetService.findByName(streetFilter)==null?0:streetService.findByName(streetFilter).getIdStreet());
         model.put("user", user);
         return "addCompletedWorks";
     }

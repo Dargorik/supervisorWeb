@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Controller
 @PreAuthorize("hasAuthority('ADMIN')")
-public class AdressController {
+public class TableUpdateController {
     @Autowired
     private CityService cityService;
     @Autowired
@@ -43,7 +43,7 @@ public class AdressController {
      * methods for changing the City table
      */
     @RequestMapping("/tables/city")
-    public String city(@RequestParam(name = "updId", required = false, defaultValue = "") String updId,
+    public String city(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
                        @RequestParam(name = "flag", required = false, defaultValue = "false") String flag, Map<String, Object> model) {
         if (flag.equals("true"))
             model.put("beanUp", cityService.findById(updId));
@@ -55,7 +55,7 @@ public class AdressController {
     }
 
     @RequestMapping("/tables/add/city")
-    public String addCity(@RequestParam(name = "updId", required = false, defaultValue = "") String updId,
+    public String addCity(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
                           @RequestParam(name = "name", required = false, defaultValue = "") String name,
                           @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                           Map<String, Object> model) {
@@ -69,7 +69,7 @@ public class AdressController {
     }
 
     @RequestMapping("/tables/update/city")
-    public String updateCity(@RequestParam(name = "updId", required = false, defaultValue = "") String updId,
+    public String updateCity(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
                              @RequestParam(name = "updName", required = false, defaultValue = "") String updName,
                              @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                              Map<String, Object> model) {
@@ -83,17 +83,17 @@ public class AdressController {
     }
 
     @RequestMapping("/tables/delete/city")
-    public String deleteCity(@RequestParam(name = "updId", required = false, defaultValue = "0") String updCity,
-                             @RequestParam(name = "delId", required = false, defaultValue = "0") String delId,
+    public String deleteCity(@RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
+                             @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
                              @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                              Map<String, Object> model) {
         model.put("message", cityService.delete(delId));
-        if (updCity.equals(delId)) {
-            model.put("updId", updCity);
+        if (updId.equals(delId)) {
+            model.put("updId", updId);
             flag = "false";
         }
         if (flag.equals("true"))
-            model.put("beanUp", cityService.findById(updCity));
+            model.put("beanUp", cityService.findById(updId));
         model.put("cities", cityService.findAll());
         model.put("getflag", flag);
         return "addCities";
@@ -103,7 +103,7 @@ public class AdressController {
      * methods for changing the Street table
      */
     @RequestMapping("/tables/street")
-    public String street(@RequestParam(name = "updId", required = false, defaultValue = "") String updId,
+    public String street(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
                          @RequestParam(name = "flag", required = false, defaultValue = "false") String flag, Map<String, Object> model) {
         if (flag.equals("true"))
             model.put("beanUp", streetService.findById(updId));
@@ -115,7 +115,7 @@ public class AdressController {
     }
 
     @RequestMapping("/tables/add/street")
-    public String addStreet(@RequestParam(name = "updId", required = false, defaultValue = "") String updId,
+    public String addStreet(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
                             @RequestParam(name = "name", required = false, defaultValue = "") String name,
                             @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                             Map<String, Object> model) {
@@ -129,7 +129,7 @@ public class AdressController {
     }
 
     @RequestMapping("/tables/update/street")
-    public String updateStreet(@RequestParam(name = "updId", required = false, defaultValue = "") String updId,
+    public String updateStreet(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
                                @RequestParam(name = "updName", required = false, defaultValue = "") String updName,
                                @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                Map<String, Object> model) {
@@ -143,8 +143,8 @@ public class AdressController {
     }
 
     @RequestMapping("/tables/delete/street")
-    public String deleteStreet(@RequestParam(name = "updId", required = false, defaultValue = "0") String updId,
-                               @RequestParam(name = "delId", required = false, defaultValue = "0") String delId,
+    public String deleteStreet(@RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
+                               @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
                                @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                Map<String, Object> model) {
         model.put("message", streetService.delete(delId));
@@ -247,7 +247,7 @@ public class AdressController {
      * methods for changing the Region table
      */
     @RequestMapping("/tables/region")
-    public String region(@RequestParam(name = "updId", required = false, defaultValue = "") String updId,
+    public String region(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
                          @RequestParam(name = "flag", required = false, defaultValue = "false") String flag, Map<String, Object> model) {
         if (flag.equals("true"))
             model.put("beanUp", regionService.findById(updId));
@@ -259,7 +259,7 @@ public class AdressController {
     }
 
     @RequestMapping("/tables/add/region")
-    public String addRegion(@RequestParam(name = "updId", required = false, defaultValue = "") String updId,
+    public String addRegion(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
                             @RequestParam(name = "name", required = false, defaultValue = "") String name,
                             @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                             Map<String, Object> model) {
@@ -273,7 +273,7 @@ public class AdressController {
     }
 
     @RequestMapping("/tables/update/region")
-    public String updateRegion(@RequestParam(name = "updId", required = false, defaultValue = "") String updId,
+    public String updateRegion(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
                                @RequestParam(name = "updName", required = false, defaultValue = "") String updName,
                                @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                Map<String, Object> model) {
@@ -287,8 +287,8 @@ public class AdressController {
     }
 
     @RequestMapping("/tables/delete/region")
-    public String deleteRegion(@RequestParam(name = "updId", required = false, defaultValue = "0") String updId,
-                               @RequestParam(name = "delId", required = false, defaultValue = "0") String delId,
+    public String deleteRegion(@RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
+                               @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
                                @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                Map<String, Object> model) {
         model.put("message", regionService.delete(delId));
@@ -321,7 +321,7 @@ public class AdressController {
     @RequestMapping("/tables/add/priorityList")
     public String addPriorityList(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
                                   @RequestParam(name = "name", required = false, defaultValue = "") String name,
-                                  @RequestParam(name = "number", required = false, defaultValue = "") String number,
+                                  @RequestParam(name = "number", required = false, defaultValue = "") Integer number,
                                   @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                   Map<String, Object> model) {
         model.put("message", priorityListService.add(name, number));
@@ -336,7 +336,7 @@ public class AdressController {
     @RequestMapping("/tables/update/priorityList")
     public String updatePriorityList(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
                                      @RequestParam(name = "updName", required = false, defaultValue = "") String updName,
-                                     @RequestParam(name = "updNumber", required = false, defaultValue = "") String number,
+                                     @RequestParam(name = "updNumber", required = false, defaultValue = "") Integer number,
                                      @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                      Map<String, Object> model) {
         model.put("message", priorityListService.update(updId, updName, number));
@@ -350,7 +350,7 @@ public class AdressController {
 
     @RequestMapping("/tables/delete/priorityList")
     public String deletePriorityList(@RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
-                                     @RequestParam(name = "delId", required = false, defaultValue = "0") String delId,
+                                     @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
                                      @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                      Map<String, Object> model) {
         model.put("message", priorityListService.delete(delId));
@@ -360,13 +360,13 @@ public class AdressController {
         }
         if (flag.equals("true"))
             model.put("beanUp", priorityListService.findById(updId));
-        model.put("typesOfWork", priorityListService.findAll());
+        model.put("prioritiesList", priorityListService.findAll());
         model.put("getflag", flag);
         return "addPriorityList";
     }
 
     /**
-     * methods for changing the ЕypeOfWork table
+     * methods for changing the TypeOfWork table
      */
     @RequestMapping("/tables/typeOfWork")
     public String typeOfWork(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
@@ -681,21 +681,37 @@ public class AdressController {
      */
     @RequestMapping("/tables/userRegions")
     public String userRegions(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
-                                          @RequestParam(name = "flag", required = false, defaultValue = "false") String flag, Map<String, Object> model) {
+                              @RequestParam(name = "userFiler", required = false, defaultValue = "0") String userFiler,
+                              @RequestParam(name = "regionFiler", required = false, defaultValue = "0") String regionFiler,
+                              @RequestParam(name = "flag", required = false, defaultValue = "false") String flag, Map<String, Object> model) {
         if (flag.equals("true"))
             model.put("beanUp", userRegionsService.findById(updId));
         model.put("usersRegions", userRegionsService.findAll());
         model.put("users", userService.findAll());
         model.put("regions", regionService.findAll());
         model.put("getflag", flag);
+
+        System.out.println("updId+"+updId);
+
+        System.out.println(userFiler+"-"+regionFiler);
+        if(!userFiler.equals("0")&&!userFiler.equals("all")) {
+            String[] userF = userFiler.split(" ");
+            System.out.println(userF[0] + "+" + userF[1]);
+            model.put("userFiler", userService.findByFirstNameAndLastName(userF[0], userF[1]) == null ? 0 : userService.findByFirstNameAndLastName(userF[0], userF[1]).getIdusers());
+        }
+        else
+            model.put("userFiler", 0);
+        model.put("regionFiler", regionService.findByName(regionFiler)==null?0:regionService.findByName(regionFiler).getIdRegion());
         return "addUserRegions";
     }
 
     @RequestMapping("/tables/add/userRegions")
     public String addUserRegions(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
-                                             @RequestParam(name = "idUser", required = false, defaultValue = "") Integer idUser,
-                                             @RequestParam(name = "idRegion", required = false, defaultValue = "") Integer idRegion,
-                                             @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
+                                 @RequestParam(name = "userFiler", required = false, defaultValue = "0") String userFiler,
+                                 @RequestParam(name = "regionFiler", required = false, defaultValue = "0") String regionFiler,
+                                 @RequestParam(name = "idUser", required = false, defaultValue = "") Integer idUser,
+                                 @RequestParam(name = "idRegion", required = false, defaultValue = "") Integer idRegion,
+                                 @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                              Map<String, Object> model) {
         model.put("message", userRegionsService.add(idUser, idRegion));
         model.put("updId", updId);
@@ -705,11 +721,19 @@ public class AdressController {
         model.put("usersRegions", userRegionsService.findAll());
         model.put("users", userService.findAll());
         model.put("regions", regionService.findAll());
+        System.out.println(userFiler+"-"+regionFiler);
+        if(!userFiler.equals("0")&&!userFiler.equals("all")) {
+            String[] userF = userFiler.split(" ");
+            //System.out.println(userF[0] + "+" + userF[1]);
+            model.put("userFiler", userService.findByFirstNameAndLastName(userF[0], userF[1]) == null ? 0 : userService.findByFirstNameAndLastName(userF[0], userF[1]).getIdusers());
+        }
         return "addUserRegions";
     }
 
     @RequestMapping("/tables/update/userRegions")
     public String updateUserRegions(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
+                                    @RequestParam(name = "userFiler", required = false, defaultValue = "0") String userFiler,
+                                    @RequestParam(name = "regionFiler", required = false, defaultValue = "0") String regionFiler,
                                     @RequestParam(name = "updIdUser", required = false, defaultValue = "") Integer updIdUser,
                                     @RequestParam(name = "updIdRegion", required = false, defaultValue = "") Integer updIdRegion,
                                     @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
@@ -721,13 +745,24 @@ public class AdressController {
         model.put("users", userService.findAll());
         model.put("regions", regionService.findAll());
         model.put("getflag", flag);
+        System.out.println(userFiler+"-"+regionFiler);
+        if(!userFiler.equals("0")&&!userFiler.equals("all")) {
+            String[] userF = userFiler.split(" ");
+            //System.out.println(userF[0] + "+" + userF[1]);
+            model.put("userFiler", userService.findByFirstNameAndLastName(userF[0], userF[1]) == null ? 0 : userService.findByFirstNameAndLastName(userF[0], userF[1]).getIdusers());
+        }
+        else
+            model.put("userFiler", 0);
+        model.put("regionFiler", regionService.findByName(regionFiler)==null?0:regionService.findByName(regionFiler).getIdRegion());
         return "addUserRegions";
     }
 
     @RequestMapping("/tables/delete/userRegions")
     public String deleteUserRegions(@RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
-                                                @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
-                                                @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
+                                    @RequestParam(name = "userFiler", required = false, defaultValue = "0") String userFiler,
+                                    @RequestParam(name = "regionFiler", required = false, defaultValue = "0") String regionFiler,
+                                    @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
+                                    @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                                 Map<String, Object> model) {
         model.put("message", userRegionsService.delete(delId));
         if (updId.equals(delId)) {
@@ -740,6 +775,12 @@ public class AdressController {
         model.put("users", userService.findAll());
         model.put("regions", regionService.findAll());
         model.put("getflag", flag);
+        System.out.println(userFiler+"-"+regionFiler);
+        if(!userFiler.equals("0")&&!userFiler.equals("all")) {
+            String[] userF = userFiler.split(" ");
+            //System.out.println(userF[0] + "+" + userF[1]);
+            model.put("userFiler", userService.findByFirstNameAndLastName(userF[0], userF[1]) == null ? 0 : userService.findByFirstNameAndLastName(userF[0], userF[1]).getIdusers());
+        }
         return "addUserRegions";
     }
 }

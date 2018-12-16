@@ -8,7 +8,6 @@
 <head>
     <meta charset="UTF-8" />
     <title>Person List</title>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css"/>
     <style>
         .b1 {
             background: beige; /* Синий цвет фона */
@@ -18,81 +17,82 @@
     </style>
 </head>
 <body>
-<div>
-    <button class="b1" onclick="location.href='/addTable/'">Назад</button>
-</div>
-
-<h2>Добавление региона</h2>
-${message}
-<%
-    Boolean flag=false;
-    String s = (String) request.getAttribute("getflag");
-    if(s.equals("true"))
-        flag=true;
-    else
-        flag=false;
-%>
-<%!
-    String someOutput(Boolean flag) {
-        if (flag==false)
-            return "display:none";
+    <div>
+        <button class="b1" onclick="location.href='/addTable/'">Back</button>
+    </div>
+    <h2>Region table</h2>
+    ${message}
+    <%
+        Boolean flag=false;
+        String s = (String) request.getAttribute("getflag");
+        if(s.equals("true"))
+            flag=true;
         else
-            return "display:block";
-    }
-%>
-
-<div>
-    <form method="post" action="/tables/add/region?updId=${beanUp.idRegion}&flag=<%=flag==true?"true":"false"%>">
-        <input type="hidden" name="_csrf" value=${_csrf.token} />
-        <input autofocus type="text" name="name" placeholder="Название города">
-        <button type="submit">Добавить</button>
-    </form>
-</div>
-<h2>Список регионов</h2>
-<div>
-    <form method="post" action="deletePosition" >
-        <input type="hidden" name="_csrf" value=${_csrf.token} />
-        <table border="1" >
-            <tr>
-                <th>id</th>
-                <th>Названия региона</th>
-                <%--<select name="filterName" onChange="location.href='/add/region?filter='+this.options[this.selectedIndex].value+'&upId=${beanUp.idCity}&flag=<%=flag==true?"true":"false"%>'">
-                    <option value="" selected="${filter==null||filter.isEmpty()?"selected":""}" /></option>
-                    <c:forEach items="${cities}" var="city">
-                        <option selected="${filter eq city.name?"selected":""}" value="${city.name}"><c:out value="${city.name}" /></option>
-                    </c:forEach>
-                </select>--%>
-                <th>Изменить</th>
-                <th>Удаление</th>
-            </tr>
-            <c:forEach  items="${regions}" var ="region">
+            flag=false;
+    %>
+    <%!
+        String someOutput(Boolean flag) {
+            if (flag==false)
+                return "display:none";
+            else
+                return "display:block";
+        }
+    %>
+    <div>
+        <form method="post" action="/tables/add/region?updId=${beanUp.idRegion}&flag=<%=flag==true?"true":"false"%>">
+            <input type="hidden" name="_csrf" value=${_csrf.token} />
+            <input required autofocus type="text" name="name" placeholder="Region name">
+            <button type="submit">Add</button>
+        </form>
+    </div>
+    <h2>List of regions</h2>
+    <div>
+        <form method="post" action="deletePosition" >
+            <input type="hidden" name="_csrf" value=${_csrf.token} />
+            <table border="1" >
                 <tr>
-                    <td >${region.idRegion}</td>
-                    <td>${region.name}</td>
-                    <td><a href="/tables/region?updId=${region.idRegion}&flag=${true}">Редактирвоать</a></td>
-                    <td><a href="/tables/delete/region?updId=${beanUp.idRegion}&delId=${region.idRegion}&flag=<%=flag==true?"true":"false"%>">Удалить</a></td>
+                    <th hidden>id</th>
+                    <th>НRegion name</th>
+                    <th>Update</th>
+                    <th>Delete</th>
                 </tr>
-            </c:forEach>
-        </table>
-    </form>
-</div>
-<div>
-    <form method="post" action="/tables/update/region?updId=${beanUp.idRegion}" style=<%=someOutput(flag)%> >
-        <h2>Изменение записи</h2>
-        <input type="hidden" name="_csrf" value=${_csrf.token} />
-        <table border="1"  >
-            <tr>
-                <th>id</th>
-                <th>Наименование</th>
-                <th>Сохранить</th>
-            </tr>
-            <tr>
-                <td >${beanUp.idRegion}</td>
-                <td><input type="text" name="updName" placeholder="Название города" value="${beanUp.name}"></td>
-                <td><button type=submit>Обновить</button></td>
-            </tr>
-        </table>
-    </form>
-</div>
+                <c:forEach  items="${regions}" var ="region"  varStatus="ind">
+                    <tr>
+                        <td hidden>${region.idRegion}</td>
+                        <td>${region.name}</td>
+                        <td><a href="/tables/region?updId=${region.idRegion}&flag=${true}">Update</a></td>
+                        <td><a id="delButtom${ind.index}" href="/tables/delete/region?updId=${beanUp.idRegion}&delId=${region.idRegion}&flag=<%=flag==true?"true":"false"%>"  onclick="display(${ind.index}); return false;">Delete</a></td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </form>
+    </div>
+    <div>
+        <form method="post" action="/tables/update/region?updId=${beanUp.idRegion}" style=<%=someOutput(flag)%> >
+            <h2>Update record</h2>
+            <input type="hidden" name="_csrf" value=${_csrf.token} />
+            <table border="1">
+                <tr>
+                    <th hidden>id</th>
+                    <th>Region name</th>
+                    <th>Save</th>
+                </tr>
+                <tr>
+                    <td hidden>${beanUp.idRegion}</td>
+                    <td><input type="text" name="updName" placeholder="Region name" value="${beanUp.name}"></td>
+                    <td><button type=submit>Save</button></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <script>
+        function display(x){
+            var isDelete = confirm("Deleting this entry will delete all entries containing this key. Continue deleting?");
+            if(isDelete==true) {
+                var url = document.getElementById("delButtom" + x)
+                location.href = url.getAttribute("href");
+            }
+        }
+    </script>
 </body>
 </html>

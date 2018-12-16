@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public List<User> findAll() {
-        return userRepo.findAll();
+        return userRepo.findByRoles(Role.USER);
     }
 
     @Override
@@ -113,9 +113,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public void checkAdminProfile() {
-        User user=userRepo.findByRoles(Role.ADMIN);
-        if(user==null){
-            user=new User();
+        int i=userRepo.findByRoles(Role.ADMIN).size();
+        if(i==0){
+            User user=new User();
             user.setFirstName("Admin");
             user.setLastName("Admin");
             user.setUsername("admin");

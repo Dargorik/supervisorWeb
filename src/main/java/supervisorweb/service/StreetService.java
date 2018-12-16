@@ -11,11 +11,11 @@ public interface StreetService {
     List<Street> findAll();
 
 
-    String update(String updIdCity, String updName);
+    String update(Integer updId, String updName);
 
-    String delete(String delIdCity);
+    String delete(Integer delIdCity);
 
     String add(String name);
 
-    Street findById(String updId);
+    Street findById(Integer updId);
 }

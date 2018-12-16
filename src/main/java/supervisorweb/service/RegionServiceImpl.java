@@ -2,12 +2,10 @@ package supervisorweb.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import supervisorweb.domain.City;
 import supervisorweb.domain.Region;
 import supervisorweb.repos.RegionRepos;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class RegionServiceImpl implements RegionService {
@@ -21,31 +19,29 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public List<Region> findAll() {
-        return regionRepos.findAll().stream().sorted((x, y) -> x.getName().compareTo(y.getName())).collect(Collectors.toList());
+        return regionRepos.findAll();
     }
 
     @Override
-    public String update(String updIdRegion, String updName) {
-        Integer id = Integer.parseInt(updIdRegion);
-        if (id == null || updName == null || updName.isEmpty())
-            return "Поле с именем заполненно не корректно!";
-        Region region = regionRepos.findById(id).orElse(null);
+    public String update(Integer updId, String updName) {
+        if (updId == null || updName == null || updName.isEmpty())
+            return "Invalid input!";
+        Region region = regionRepos.findById(updId).orElse(null);
         if (region != null) {
             region.setName(updName);
             regionRepos.save(region);
-            return "Изменение прошло успешно!";
-        } else return "Изменение не произошло!";
+            return "Successful update record!";
+        } else return "This component already exists!";
     }
 
     @Override
-    public String delete(String delIdRegion) {
-        Integer id = Integer.parseInt(delIdRegion);
-        Region region = regionRepos.findById(id).orElse(null);
+    public String delete(Integer delId) {
+        Region region = regionRepos.findById(delId).orElse(null);
         if (region == null) {
-            return "Данный регион не найден!";
+            return "This component already exists!";
         } else {
             regionRepos.delete(region);
-            return "Регион успешно удалён!";
+            return "Successful delete record!";
         }
     }
 
@@ -56,13 +52,13 @@ public class RegionServiceImpl implements RegionService {
             Region r = regionRepos.findByName(region.getName());
             if (r == null) {
                 regionRepos.save(region);
-            } else return "Данный регион уже есть в базе данных!";
-        } else return "Поле с именем заполненно не корректно!";
-        return "Новый регион успешно добавлен!";
+            } else return "This component already exists!";
+        } else return "Invalid input!";
+        return "Successful add record!";
     }
 
     @Override
-    public Region findById(String updId) {
-        return regionRepos.findById(Integer.parseInt(updId)).orElse(null);
+    public Region findById(Integer updId) {
+        return regionRepos.findById(updId).orElse(null);
     }
 }

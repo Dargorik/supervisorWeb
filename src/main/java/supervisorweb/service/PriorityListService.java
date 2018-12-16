@@ -10,11 +10,11 @@ public interface PriorityListService {
     List<PriorityList> findAll();
 
 
-    String update(Integer updIdPriorityList, String updName, String updNumber);
+    String update(Integer updId, String updName, Integer updNumber);
 
-    String delete(String delIdPriorityList);
+    String delete(Integer delId);
 
-    String add(String name, String number);
+    String add(String name, Integer number);
 
     PriorityList findById(Integer updId);
 }

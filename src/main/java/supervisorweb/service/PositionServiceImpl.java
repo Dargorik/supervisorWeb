@@ -6,7 +6,6 @@ import supervisorweb.domain.Position;
 import supervisorweb.repos.PositionRepos;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PositionServiceImpl implements PositionService {
@@ -20,29 +19,29 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public List<Position> findAll() {
-        return positionRepos.findAll().stream().sorted((x, y) -> x.getName().compareTo(y.getName())).collect(Collectors.toList());
+        return positionRepos.findAll();
     }
 
     @Override
-    public String update(Integer updIdPosition, String updName) {
+    public String update(Integer updId, String updName) {
         if (updName == null || updName.isEmpty())
-            return "Поле с именем заполненно не корректно!";
-        Position position  = positionRepos.findById(updIdPosition).orElse(null);
+            return "Invalid input!";
+        Position position  = positionRepos.findById(updId).orElse(null);
         if (position != null) {
             position.setName(updName);
             positionRepos.save(position);
-            return "Изменение прошло успешно!";
-        } else return "Изменение не произошло!";
+            return "Successful update record!";
+        } else return "This component already exists!";
     }
 
     @Override
-    public String delete(Integer delIdPosition) {
-        Position position = positionRepos.findById(delIdPosition).orElse(null);
+    public String delete(Integer delId) {
+        Position position = positionRepos.findById(delId).orElse(null);
         if (position == null) {
-            return "Данная должность не найден!";
+            return "This component already exists!";
         } else {
             positionRepos.delete(position);
-            return "Должность успешно удалён!";
+            return "Successful delete record!";
         }
     }
 
@@ -53,9 +52,9 @@ public class PositionServiceImpl implements PositionService {
             Position c = positionRepos.findByName(position.getName());
             if (c == null) {
                 positionRepos.save(position);
-            } else return "Данная должность уже есть в базе данных!";
-        } else return "Поле с именем заполненно не корректно!";
-        return "Новая должность успешно добавлена!";
+            } else return "This component already exists!";
+        } else return "Invalid input!";
+        return "Successful add record!";
     }
 
     @Override

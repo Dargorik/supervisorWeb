@@ -8,6 +8,7 @@ import supervisorweb.repos.UserRegionsRepos;
 import supervisorweb.repos.UserRepos;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserRegionsServiceImpl implements UserRegionsService {
@@ -27,7 +28,10 @@ public class UserRegionsServiceImpl implements UserRegionsService {
 
     @Override
     public List<UserRegions> findAll() {
-        return userRegionsRepos.findAll();
+        return userRegionsRepos.findAll().stream()
+                .sorted((x, y) -> x.getRegion().getName().compareTo(y.getRegion().getName()))
+                .sorted((x, y) -> x.getUser().getFirstName().compareTo(y.getUser().getFirstName()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -39,15 +43,15 @@ public class UserRegionsServiceImpl implements UserRegionsService {
             userRegions=userRegionsRepos.findAllByUserAndRegion(user, region);
             if(userRegions!=null)
                 if (!userRegions.getIdUserRegions().equals(updIdUserRegions))
-                    return "Изменение не произошло!";
+                    return "This component already exists!";
             userRegions  = userRegionsRepos.findById(updIdUserRegions).orElse(null);
             userRegions.setUser(user);
             userRegions.setRegion(region);
             userRegionsRepos.save(userRegions);
-            return "Изменение прошло успешно!";
+            return "Successful update record!";
         }
         catch (NullPointerException e){
-            return "Введенны некорректные данные";
+            return "Invalid input!";
         }
     }
 
@@ -55,10 +59,10 @@ public class UserRegionsServiceImpl implements UserRegionsService {
     public String delete(Integer delIdUserRegions) {
         UserRegions userRegions = userRegionsRepos.findById(delIdUserRegions).orElse(null);
         if (userRegions == null) {
-            return "Данная связка не найден!";
+            return "This component already exists!";
         } else {
             userRegionsRepos.delete(userRegions);
-            return "Связка успешно удалён!";
+            return "Successful delete record!";
         }
     }
 
@@ -70,8 +74,8 @@ public class UserRegionsServiceImpl implements UserRegionsService {
         UserRegions ur = userRegionsRepos.findAllByUserAndRegion(user,region);
         if (ur == null) {
             userRegionsRepos.save(userRegions);
-        } else return "Данная связка уже есть в базе данных!";
-        return "Новый регион разрешен сотруднику!";
+        } else return "This component already exists!";
+        return "Successful add record!";
     }
 
     @Override

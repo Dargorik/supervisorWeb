@@ -8,7 +8,6 @@
 <head>
     <meta charset="UTF-8" />
     <title>Person List</title>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css"/>
     <style>
         .b1 {
             background: beige; /* Синий цвет фона */
@@ -18,100 +17,184 @@
     </style>
 </head>
 <body>
-<div>
-    <button class="b1" onclick="location.href='/addTable/'">Назад</button>
-</div>
-
-<h2>Добавление региона пользователю</h2>
-${message}
-<%
-    Boolean flag=false;
-    String s = (String) request.getAttribute("getflag");
-    if(s.equals("true"))
-        flag=true;
-    else
-        flag=false;
-%>
-<%!
-    String someOutput(Boolean flag) {
-        if (flag==false)
-            return "display:none";
+    <div>
+        <button class="b1" onclick="location.href='/addTable/'">Back</button>
+    </div>
+    <h2>Table of employee-related regions</h2>
+    ${message}
+    <%
+        Boolean flag=false;
+        String s = (String) request.getAttribute("getflag");
+        if(s.equals("true"))
+            flag=true;
         else
-            return "display:block";
-    }
-%>
-
-<div>
-    <form method="post" action="/tables/add/userRegions?updId=${beanUp.idUserRegions}&flag=<%=flag==true?"true":"false"%>">
-        <input type="hidden" name="_csrf" value=${_csrf.token} />
-        <select name="idUser">
-            <c:forEach items="${users}" var="user">
-                <option  value="${user.idusers}"><c:out value="${user.firstName} ${user.lastName}" /></option>
-            </c:forEach>
-        </select>
-        <select name="idRegion">
-            <c:forEach items="${regions}" var="region">
-                <option  value="${region.idRegion}"><c:out value="${region.name}" /></option>
-            </c:forEach>
-        </select>
-        <button type="submit">Добавить</button>
-    </form>
-</div>
-<h2>Список резрешённых регионов пользователям</h2>
-<div>
-    <form method="post" >
-        <input type="hidden" name="_csrf" value=${_csrf.token} />
-        <table border="1" >
+            flag=false;
+    %>
+    <%!
+        String someOutput(Boolean flag) {
+            if (flag==false)
+                return "display:none";
+            else
+                return "display:block";
+        }
+    %>
+    <div>
+        <form method="post" action="/tables/add/userRegions?updId=${beanUp.idUserRegions}&flag=<%=flag==true?"true":"false"%>">
+            <input type="hidden" name="_csrf" value=${_csrf.token} />
+            <select name="idUser">
+                <option disabled value="all">
+                    <c:out value="Select employee"/>
+                </option>
+                <c:forEach items="${users}" var="user">
+                    <option  value="${user.idusers}">
+                        <c:out value="${user.firstName} ${user.lastName}" />
+                    </option>
+                </c:forEach>
+            </select>
+            <select name="idRegion">
+                <option disabled value="all">
+                    <c:out value="Select region"/>
+                </option>
+                <c:forEach items="${regions}" var="region">
+                    <option  value="${region.idRegion}">
+                        <c:out value="${region.name}" />
+                    </option>
+                </c:forEach>
+            </select>
+            <input hidden type="text" id="uf" name="userFiler" value="${userFiler}">
+            <input hidden type="text" id="rf" name="regionFiler" value="${regionFiler}">
+            <button type="submit">Add</button>
+        </form>
+    </div>
+    <h2>List of regions allowed employees</h2>
+        <table border="1" id="t">
             <tr>
-                <th>id</th>
-                <th>Сотрудник</th>
-                <th>Название региона</th>
-                <th>Изменить</th>
-                <th>Удаление</th>
+                <th hidden>id</th>
+                <th><select id="userSelect" name="User">
+                    <option value="all"  <c:if test="${userFiler==0}"> selected </c:if>  ><c:out value="All employee"/></option>
+                    <c:forEach items="${users}" var="user">
+                        <option value="${user.firstName} ${user.lastName}" <c:if test="${user.idusers==userFiler}"> selected </c:if>>
+                            <c:out value="${user.firstName} ${user.lastName}"/>
+                        </option>
+                    </c:forEach>
+                </select></th>
+                <th><select id="regionSelect" name="Region">
+                    <option value="all"  <c:if test="${regionFiler==0}"> selected </c:if>  ><c:out value="All region"/></option>
+                    <c:forEach items="${regions}" var="region">
+                        <option value="${region.name}" <c:if test="${region.idRegion==regionFiler}"> selected </c:if>>
+                            <c:out value="${region.name}"/>
+                        </option>
+                    </c:forEach>
+                </select></th>
+                <th>Update</th>
+                <th>Delete</th>
+                <th>flag</th>
             </tr>
-            <c:forEach  items="${usersRegions}" var ="usersRegion">
+            <c:forEach  items="${usersRegions}" var ="usersRegion"  varStatus="ind">
                 <tr>
-                    <td>${usersRegion.idUserRegions}</td>
-                    <td>${usersRegion.user.firstName} ${usersRegion.user.lastName}</td>
-                    <td>${usersRegion.region.name}</td>
-                    <td><a href="/tables/userRegions?updId=${usersRegion.idUserRegions}&flag=${true}">Редактирвоать</a></td>
-                    <td><a href="/tables/delete/userRegions?updId=${beanUp.idUserRegions}&delId=${usersRegion.idUserRegions}&flag=<%=flag==true?"true":"false"%>">Удалить</a></td>
+                    <form name="myForm" method="post" action="/work/add?idUser=${user.idusers}" >
+                        <input type="hidden" name="_csrf" value=${_csrf.token} />
+                        <td hidden>${usersRegion.idUserRegions}</td>
+                        <td id="user${ind.index+1}">${usersRegion.user.firstName} ${usersRegion.user.lastName}</td>
+                        <td id="region${ind.index+1}">${usersRegion.region.name}</td>
+                        <td><a href="/tables/userRegions?updId=${usersRegion.idUserRegions}&flag=${true}">Update</a></td>
+                        <td><a id="delButtom${ind.index}" href="/tables/delete/userRegions?updId=${beanUp.idUserRegions}&delId=${usersRegion.idUserRegions}&flag=<%=flag==true?"true":"false"%>" onclick="display(${ind.index}); return false;">Delete</a></td>
+                        <td>
+                            <input type="text" id="uf${ind.index+1}" name="userFiler" value="${userFiler}">
+                            <input type="text" id="rf${ind.index+1}" name="regionFiler" value="${regionFiler}">
+                        </td>
+                    </form>
                 </tr>
             </c:forEach>
         </table>
-    </form>
-</div>
-<div>
-    <form method="post" action="/tables/update/userRegions?updId=${beanUp.idUserRegions}" style=<%=someOutput(flag)%> >
-        <h2>Изменение резрешённого региона дял сотрудника</h2>
-        <input type="hidden" name="_csrf" value=${_csrf.token} />
-        <table border="1"  >
-            <tr>
-                <th>id</th>
-                <th>Сотрудник</th>
-                <th>Наименование региона</th>
-                <th>Сохранить</th>
-            </tr>
-            <tr>
-                <td >${beanUp.idUserRegions}</td>
-                <td>
-                    <select name="updIdUser">
-                        <c:forEach items="${users}" var="user">
-                            <option <c:if test="${beanUp.user.idusers==user.idusers}"> selected </c:if> value="${user.idusers}"><c:out value="${user.firstName} ${user.lastName}" /></option>
-                        </c:forEach>
-                    </select>
-                </td>
-                <td>
-                    <select name="updIdRegion">
-                        <c:forEach items="${regions}" var="region">
-                            <option <c:if test="${beanUp.region.idRegion==region.idRegion}"> selected </c:if> value="${region.idRegion}"><c:out value="${region.name}" /></option>
-                        </c:forEach>
-                    </select>
-                </td>
-                <td><button type=submit>Обновить</button></td>
-            </tr>
-        </table>
-    </form>
-</div>
+    <div>
+        <form method="post" action="/tables/update/userRegions?updId=${beanUp.idUserRegions}" style=<%=someOutput(flag)%> >
+            <h2>ИUpdate record</h2>
+            <input type="hidden" name="_csrf" value=${_csrf.token} />
+            <table border="1">
+                <tr>
+                    <th hidden>id</th>
+                    <th>Employee</th>
+                    <th>Region</th>
+                    <th>Save</th>
+                </tr>
+                <tr>
+                    <td hidden>${beanUp.idUserRegions}</td>
+                    <td>
+                        <select name="updIdUser">
+                            <c:forEach items="${users}" var="user">
+                                <option <c:if test="${beanUp.user.idusers==user.idusers}"> selected </c:if> value="${user.idusers}"><c:out value="${user.firstName} ${user.lastName}" /></option>
+                            </c:forEach>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="updIdRegion">
+                            <c:forEach items="${regions}" var="region">
+                                <option <c:if test="${beanUp.region.idRegion==region.idRegion}"> selected </c:if> value="${region.idRegion}"><c:out value="${region.name}" /></option>
+                            </c:forEach>
+                        </select>
+                    </td>
+                    <td hidden>
+                        <input  type="text" id="ufUp" name="userFiler" value="${userFiler}">
+                        <input  type="text" id="rfUp" name="regionFiler" value="${regionFiler}">
+                    </td>
+                    <td><button type=submit>Save</button></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <script>
+        function display(x){
+            var isDelete = confirm("Deleting this entry will delete all entries containing this key. Continue deleting?");
+            if(isDelete==true) {
+                var url = document.getElementById("delButtom" + x)
+                location.href = url.getAttribute("href");
+            }
+        }
+
+        var userSelect = document.getElementById("userSelect");
+        var regionSelect = document.getElementById("regionSelect");
+
+        function Filter() {
+            var sellUser = userSelect.options[userSelect.selectedIndex];
+            var sellRegion = regionSelect.options[regionSelect.selectedIndex];
+            var table = document.getElementById("t");
+            var allRows = table.getElementsByTagName("tr");
+            for (var index in allRows) {
+                if (index > 0) {
+                    var fieldUser = document.getElementById("user" + index);
+                    var fieldregion = document.getElementById("region" + index);
+                    //alert(fieldUser.innerHTML+"---"+sellUser.value+"+++"+fieldregion.innerHTML+"---"+sellRegion.value);
+                    if (fieldUser != null && fieldregion != null) {
+                        allRows[index].removeAttribute("hidden");
+                        if (!fieldUser.innerHTML.startsWith(sellUser.value) && !sellUser.value.startsWith("all")) {
+                            allRows[index].setAttribute("hidden", "hidden")
+                        }
+                        else
+                        if (!fieldregion.innerHTML.startsWith(sellRegion.value) && !sellRegion.value.startsWith("all")) {
+                            allRows[index].setAttribute("hidden", "hidden")
+                        }
+                    }
+                    var userF = document.getElementById("uf" + index);
+                    userF.setAttribute("value", userSelect.options[userSelect.selectedIndex].value);
+                    var regionF = document.getElementById("rf" + index);
+                    regionF.setAttribute("value", regionSelect.options[regionSelect.selectedIndex].value);
+                }
+            }
+            var userF = document.getElementById("uf");
+            userF.setAttribute("value", userSelect.options[userSelect.selectedIndex].value);
+            var regionF = document.getElementById("rf");
+            regionF.setAttribute("value", regionSelect.options[regionSelect.selectedIndex].value);
+            var userF = document.getElementById("ufUp");
+            userF.setAttribute("value", userSelect.options[userSelect.selectedIndex].value);
+            var regionF = document.getElementById("rfUp");
+            regionF.setAttribute("value", regionSelect.options[regionSelect.selectedIndex].value);
+        }
+
+        userSelect.addEventListener("change", Filter);
+        regionSelect.addEventListener("change", Filter);
+
+        Filter();
+    </script>
 </body>
 </html>

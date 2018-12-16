@@ -15,38 +15,35 @@ public class StreetServiceImpl implements StreetService {
 
     @Override
     public Street findByName(String name) {
-
         return streetRepos.findByName(name);
     }
 
     @Override
     public List<Street> findAll() {
-        return streetRepos.findAll().stream().sorted((x,y)->x.getName().compareTo(y.getName())).collect(Collectors.toList());
+        return streetRepos.findAll();
     }
 
     @Override
-    public String update(String updIdCity, String updName) {
-        Integer id = Integer.parseInt(updIdCity);
-        if (id == null || updName == null || updName.isEmpty())
-            return "Поле с именем заполненно не корректно!";
-        Street street = streetRepos.findById(id).orElse(null);
+    public String update(Integer updIdCity, String updName) {
+        if (updIdCity == null || updName == null || updName.isEmpty())
+            return "Invalid input!";
+        Street street = streetRepos.findById(updIdCity).orElse(null);
         if (street != null) {
             street.setName(updName);
             streetRepos.save(street);
-            return "Изменение прошло успешно!";
+            return "Successful update record!";
         }
-        else return "Изменение не произошло!";
+        else return "This component already exists!";
     }
 
     @Override
-    public String delete(String delIdCity) {
-        Integer id = Integer.parseInt(delIdCity);
-        Street street = streetRepos.findById(id).orElse(null);
+    public String delete(Integer delIdy) {
+        Street street = streetRepos.findById(delIdy).orElse(null);
         if (street == null) {
-            return "Данная улица не найдена!";
+            return "This component already exists!";
         } else {
             streetRepos.delete(street);
-            return "Улица успешно удалёна!";
+            return "Successful delete record!";
         }
     }
 
@@ -57,13 +54,13 @@ public class StreetServiceImpl implements StreetService {
             Street s = streetRepos.findByName(street.getName());
             if (s == null) {
                 streetRepos.save(street);
-            } else return "Данная улица уже есть в базе данных!";
-        } else return "Поле с именем заполненно не корректно!";
-        return "Новая улица успешно добавлена!";
+            } else return "This component already exists!";
+        } else return "Invalid input!";
+        return "Successful add record!";
     }
 
     @Override
-    public Street findById(String updId) {
-        return streetRepos.findById(Integer.parseInt(updId)).orElse(null);
+    public Street findById(Integer updId) {
+        return streetRepos.findById(updId).orElse(null);
     }
 }

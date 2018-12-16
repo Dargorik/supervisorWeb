@@ -2,6 +2,7 @@ package supervisorweb.service;
 
 import supervisorweb.domain.Address;
 import supervisorweb.domain.Street;
+import supervisorweb.domain.User;
 
 import java.util.List;
 
@@ -36,4 +37,5 @@ public interface AddressService {
                                                   String houseNumber);
 
 
+    List<Address> findForUser(User user);
 }

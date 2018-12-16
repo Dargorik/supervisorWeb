@@ -6,7 +6,6 @@ import supervisorweb.domain.City;
 import supervisorweb.repos.CityRepos;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CityServiceImpl implements CityService {
@@ -20,31 +19,29 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public List<City> findAll() {
-        return cityRepos.findAll().stream().sorted((x, y) -> x.getName().compareTo(y.getName())).collect(Collectors.toList());
+        return cityRepos.findAll();
     }
 
     @Override
-    public String update(String updIdCity, String updName) {
-        Integer id = Integer.parseInt(updIdCity);
-        if (id == null || updName == null || updName.isEmpty())
-            return "Поле с именем заполненно не корректно!";
-        City city = cityRepos.findById(id).orElse(null);
+    public String update(Integer updId, String updName) {
+        if (updId == null || updName == null || updName.isEmpty())
+            return "Invalid input!";
+        City city = cityRepos.findById(updId).orElse(null);
         if (city != null) {
             city.setName(updName);
             cityRepos.save(city);
-            return "Изменение прошло успешно!";
-        } else return "Изменение не произошло!";
+            return "Successful update record!";
+        } else return "This component already exists!";
     }
 
     @Override
-    public String delete(String delIdCity) {
-        Integer id = Integer.parseInt(delIdCity);
-        City city = cityRepos.findById(id).orElse(null);
+    public String delete(Integer delId) {
+        City city = cityRepos.findById(delId).orElse(null);
         if (city == null) {
-            return "Данный город не найден!";
+            return "This component already exists!";
         } else {
             cityRepos.delete(city);
-            return "Город успешно удалён!";
+            return "Successful delete record!";
         }
     }
 
@@ -55,13 +52,13 @@ public class CityServiceImpl implements CityService {
             City c = cityRepos.findByName(city.getName());
             if (c == null) {
                 cityRepos.save(city);
-            } else return "Данный город уже есть в базе данных!";
-        } else return "Поле с именем заполненно не корректно!";
-        return "Новый город успешно добавлен!";
+            } else return "This component already exists!";
+        } else return "Invalid input!";
+        return "Successful add record!";
     }
 
     @Override
-    public City findById(String updId) {
-        return cityRepos.findById(Integer.parseInt(updId)).orElse(null);
+    public City findById(Integer updId) {
+        return cityRepos.findById(updId).orElse(null);
     }
 }

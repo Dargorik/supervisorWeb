@@ -9,10 +9,9 @@ public interface UserRegionsService {
 
     List<UserRegions> findAll();
 
+    String update(Integer updId, Integer updIdUser, Integer updIdRegion);
 
-    String update(Integer updIdUserRegions, Integer updIdUser, Integer updIdRegion);
-
-    String delete(Integer delIdUserRegions);
+    String delete(Integer delId);
 
     String add(Integer idUser, Integer idRegion);
 

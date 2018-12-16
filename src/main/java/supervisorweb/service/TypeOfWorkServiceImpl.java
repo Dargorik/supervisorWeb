@@ -2,12 +2,10 @@ package supervisorweb.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import supervisorweb.domain.City;
 import supervisorweb.domain.TypeOfWork;
 import supervisorweb.repos.TypeOfWorkRepos;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TypeOfWorkServiceImpl implements  TypeOfWorkService {
@@ -21,29 +19,29 @@ public class TypeOfWorkServiceImpl implements  TypeOfWorkService {
 
     @Override
     public List<TypeOfWork> findAll() {
-        return typeOfWorkRepos.findAll().stream().sorted((x, y) -> x.getName().compareTo(y.getName())).collect(Collectors.toList());
+        return typeOfWorkRepos.findAll();
     }
 
     @Override
-    public String update(Integer updIdTypeOfWorkRepos, String updName) {
+    public String update(Integer updId, String updName) {
         if (updName == null || updName.isEmpty())
-            return "Поле с именем заполненно не корректно!";
-        TypeOfWork typeOfWork = typeOfWorkRepos.findById(updIdTypeOfWorkRepos).orElse(null);
+            return "Invalid input!";
+        TypeOfWork typeOfWork = typeOfWorkRepos.findById(updId).orElse(null);
         if (typeOfWork != null) {
             typeOfWork.setName(updName);
             typeOfWorkRepos.save(typeOfWork);
-            return "Изменение прошло успешно!";
-        } else return "Изменение не произошло!";
+            return "Successful update record!";
+        } else return "This component already exists!";
     }
 
     @Override
     public String delete(Integer delIdCity) {
         TypeOfWork typeOfWork = typeOfWorkRepos.findById(delIdCity).orElse(null);
         if (typeOfWork == null) {
-            return "Данный тип работы не найден!";
+            return "This component already exists!";
         } else {
             typeOfWorkRepos.delete(typeOfWork);
-            return "тип работы успешно удалён!";
+            return "Successful delete record!";
         }
     }
 
@@ -54,9 +52,9 @@ public class TypeOfWorkServiceImpl implements  TypeOfWorkService {
             TypeOfWork c = typeOfWorkRepos.findByName(typeOfWork.getName());
             if (c == null) {
                 typeOfWorkRepos.save(typeOfWork);
-            } else return "Данный тип работы уже есть в базе данных!";
-        } else return "Поле с именем заполненно не корректно!";
-        return "Новый тип работы успешно добавлен!";
+            } else return "This component already exists!";
+        } else return "Invalid input!";
+        return "Successful add record!";
     }
 
     @Override

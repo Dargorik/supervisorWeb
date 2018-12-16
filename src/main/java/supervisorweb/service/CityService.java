@@ -10,11 +10,11 @@ public interface CityService {
     List<City> findAll();
 
 
-    String update(String updIdCity, String updName);
+    String update(Integer updId, String updName);
 
-    String delete(String delIdCity);
+    String delete(Integer delId);
 
     String add(String name);
 
-    City findById(String updId);
+    City findById(Integer updId);
 }

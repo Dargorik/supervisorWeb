@@ -10,12 +10,11 @@ public interface RegionService {
 
     List<Region> findAll();
 
+    String update(Integer updId, String updName);
 
-    String update(String updIdRegion, String updName);
-
-    String delete(String delIdRegion);
+    String delete(Integer delId);
 
     String add(String name);
 
-    Region findById(String updId);
+    Region findById(Integer updId);
 }
