@@ -44,7 +44,7 @@
                     <td>${completedWork.address.city.name}</td>
                     <td>${completedWork.address.street.name}</td>
                     <td>${completedWork.address.houseNumber}</td>
-                    <td>${completedWork.address.numberFloors}</td>
+                    <td>${completedWork.address.numberEntrances}</td>
                     <td>${completedWork.numberCompletedEntrances}</td>
                     <td>${completedWork.typeOfWorkPerformed.name}</td>
                     <td>${completedWork.comment}</td>
