@@ -18,7 +18,7 @@
 </head>
 <body>
     <div>
-        <button class="b1" onclick="location.href='/addTable/'">Назад</button>
+        <button class="b1" onclick="location.href='/addTable/'">Back</button>
     </div>
     <h2>Work Type Table</h2>
     ${message}

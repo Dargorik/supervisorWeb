@@ -10,6 +10,7 @@ import supervisorweb.repos.PositionRepos;
 import supervisorweb.repos.TypeOfWorkRepos;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PositionDutiesServiceImpl implements PositionDutiesService {
@@ -29,7 +30,10 @@ public class PositionDutiesServiceImpl implements PositionDutiesService {
 
     @Override
     public List<PositionDuties> findAll() {
-        return positionDutiesRepos.findAll();
+        return positionDutiesRepos.findAll().stream()
+                .sorted((x, y) -> x.getTypeOfWork().getName().compareTo(y.getTypeOfWork().getName()))
+                .sorted((x, y) -> x.getPosition().getName().compareTo(y.getPosition().getName()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -41,15 +45,15 @@ public class PositionDutiesServiceImpl implements PositionDutiesService {
             positionDuties=positionDutiesRepos.findByPositionAndTypeOfWork(position, typeOfWork);
             if(positionDuties!=null)
                 if (!positionDuties.getIdPositionDuties().equals(updIdPositionDuties))
-                    return "Изменение не произошло!";
+                    return "This component already exists!";
             positionDuties  = positionDutiesRepos.findById(updIdPositionDuties).orElse(null);
             positionDuties.setPosition(position);
             positionDuties.setTypeOfWork(typeOfWork);
             positionDutiesRepos.save(positionDuties);
-            return "Изменение прошло успешно!";
+            return "Successful update record!";
         }
         catch (NullPointerException e){
-           return "Введенны некорректные данные";
+            return "Invalid input!";
         }
     }
 
@@ -57,10 +61,10 @@ public class PositionDutiesServiceImpl implements PositionDutiesService {
     public String delete(Integer delIdPositionDuties) {
         PositionDuties positionDuties = positionDutiesRepos.findById(delIdPositionDuties).orElse(null);
         if (positionDuties == null) {
-            return "Данная связка не найден!";
+            return "This component already exists!";
         } else {
             positionDutiesRepos.delete(positionDuties);
-            return "Связка успешно удалён!";
+            return "Successful delete record!";
         }
     }
 
@@ -72,8 +76,8 @@ public class PositionDutiesServiceImpl implements PositionDutiesService {
         PositionDuties pd = positionDutiesRepos.findByPositionAndTypeOfWork(position,typeOfWork);
         if (pd == null) {
             positionDutiesRepos.save(positionDutiessn);
-        } else return "Данная связка уже есть в базе данных!";
-        return "Новый тип работы разрешенный должности добавлен!";
+        } else return "This component already exists!";
+        return "Successful add record!";
     }
 
     @Override

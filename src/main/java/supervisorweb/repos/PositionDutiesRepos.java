@@ -8,7 +8,6 @@ import supervisorweb.domain.TypeOfWork;
 import java.util.List;
 
 public interface PositionDutiesRepos extends JpaRepository<PositionDuties, Integer> {
-
     PositionDuties findByPositionAndTypeOfWork(Position position, TypeOfWork typeOfWork);
 
     List<PositionDuties> findByPosition(Position position);

@@ -8,6 +8,7 @@ import supervisorweb.repos.TypeOfWorkPerformedRepos;
 import supervisorweb.repos.TypeOfWorkRepos;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ListTypesInPerfomedWorkServiceImpl implements ListTypesInPerfomedWorkService  {
@@ -27,7 +28,10 @@ public class ListTypesInPerfomedWorkServiceImpl implements ListTypesInPerfomedWo
 
     @Override
     public List<ListTypesInPerfomedWork> findAll() {
-        return listTypesInPerfomedWorkRepos.findAll();
+        return listTypesInPerfomedWorkRepos.findAll().stream()
+                .sorted((x, y) -> x.getTypeOfWork().getName().compareTo(y.getTypeOfWork().getName()))
+                .sorted((x, y) -> x.getTypeOfWorkPerformed().getName().compareTo(y.getTypeOfWorkPerformed().getName()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -39,15 +43,15 @@ public class ListTypesInPerfomedWorkServiceImpl implements ListTypesInPerfomedWo
             listTypesInPerfomedWork=listTypesInPerfomedWorkRepos.findAllByTypeOfWorkPerformedAndTypeOfWork(typeOfWorkPerformed, typeOfWork);
             if(listTypesInPerfomedWork!=null)
                 if (!listTypesInPerfomedWork.getIdListTypesInPerfomedWork().equals(updIdListTypesInPerfomedWork))
-                    return "Изменение не произошло!";
+                    return "This component already exists!";
             listTypesInPerfomedWork  = listTypesInPerfomedWorkRepos.findById(updIdListTypesInPerfomedWork).orElse(null);
             listTypesInPerfomedWork.setTypeOfWorkPerformed(typeOfWorkPerformed);
             listTypesInPerfomedWork.setTypeOfWork(typeOfWork);
             listTypesInPerfomedWorkRepos.save(listTypesInPerfomedWork);
-            return "Изменение прошло успешно!";
+            return "Successful update record!";
         }
         catch (NullPointerException e){
-            return "Введенны некорректные данные";
+            return "Invalid input!";
         }
     }
 
@@ -55,10 +59,10 @@ public class ListTypesInPerfomedWorkServiceImpl implements ListTypesInPerfomedWo
     public String delete(Integer delIdTypeOfWorkPerformed) {
         ListTypesInPerfomedWork listTypesInPerfomedWork = listTypesInPerfomedWorkRepos.findById(delIdTypeOfWorkPerformed).orElse(null);
         if (listTypesInPerfomedWork == null) {
-            return "Данная связка не найден!";
+            return "This component already exists!";
         } else {
             listTypesInPerfomedWorkRepos.delete(listTypesInPerfomedWork);
-            return "Связка успешно удалён!";
+            return "Successful delete record!";
         }
     }
 
@@ -70,9 +74,8 @@ public class ListTypesInPerfomedWorkServiceImpl implements ListTypesInPerfomedWo
         ListTypesInPerfomedWork ltipw = listTypesInPerfomedWorkRepos.findAllByTypeOfWorkPerformedAndTypeOfWork(typeOfWorkPerformed,typeOfWork);
         if (ltipw == null) {
             listTypesInPerfomedWorkRepos.save(listTypesInPerfomedWork);
-        } else return "Данная связка уже есть в базе данных!";
-        return "Новый тип работы для вида выполнения работ добавлен!";
-
+        } else return "This component already exists!";
+        return "Successful add record!";
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import supervisorweb.domain.*;
 import supervisorweb.repos.*;
 import supervisorweb.service.*;
 
@@ -548,6 +549,8 @@ public class TableUpdateController {
      */
     @RequestMapping("/tables/positionDuties")
     public String positionDuties(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
+                                 @RequestParam(name = "positionFilter", required = false, defaultValue = "0") Integer positionFilter,
+                                 @RequestParam(name = "typeOfWorkFilter", required = false, defaultValue = "0") Integer typeOfWorkFilter,
                                  @RequestParam(name = "flag", required = false, defaultValue = "false") String flag, Map<String, Object> model) {
         if (flag.equals("true"))
             model.put("beanUp", positionDutiesService.findById(updId));
@@ -555,11 +558,17 @@ public class TableUpdateController {
         model.put("getflag", flag);
         model.put("positions", positionService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
+        Position position =positionService.findById(positionFilter);
+        model.put("positionFilter", position==null?0:position.getIdPosition());
+        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
         return "addPositionDuties";
     }
 
     @RequestMapping("/tables/add/positionDuties")
     public String addPositionDuties(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
+                                    @RequestParam(name = "positionFilter", required = false, defaultValue = "0") Integer positionFilter,
+                                    @RequestParam(name = "typeOfWorkFilter", required = false, defaultValue = "0") Integer typeOfWorkFilter,
                                     @RequestParam(name = "idPosition", required = false, defaultValue = "") Integer idPosition,
                                     @RequestParam(name = "idTypeOfWork", required = false, defaultValue = "") Integer idTypeOfWork,
                                     @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
@@ -572,11 +581,17 @@ public class TableUpdateController {
             model.put("beanUp", positionDutiesService.findById(updId));
         model.put("positions", positionService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
+        Position position =positionService.findById(positionFilter);
+        model.put("positionFilter", position==null?0:position.getIdPosition());
+        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
         return "addPositionDuties";
     }
 
     @RequestMapping("/tables/update/positionDuties")
     public String updatePositionDuties(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
+                                       @RequestParam(name = "positionFilter", required = false, defaultValue = "0") Integer positionFilter,
+                                       @RequestParam(name = "typeOfWorkFilter", required = false, defaultValue = "0") Integer typeOfWorkFilter,
                                        @RequestParam(name = "updIdPosition", required = false, defaultValue = "") Integer updIdPosition,
                                        @RequestParam(name = "updIdTypeOfWork", required = false, defaultValue = "") Integer updIdTypeOfWork,
                                        @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
@@ -588,11 +603,17 @@ public class TableUpdateController {
             model.put("beanUp", positionDutiesService.findById(updId));
         model.put("positions", positionService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
+        Position position =positionService.findById(positionFilter);
+        model.put("positionFilter", position==null?0:position.getIdPosition());
+        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
         return "addPositionDuties";
     }
 
     @RequestMapping("/tables/delete/positionDuties")
     public String deletePositionDuties(@RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
+                                       @RequestParam(name = "positionFilter", required = false, defaultValue = "0") Integer positionFilter,
+                                       @RequestParam(name = "typeOfWorkFilter", required = false, defaultValue = "0") Integer typeOfWorkFilter,
                                        @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
                                        @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                        Map<String, Object> model) {
@@ -607,6 +628,10 @@ public class TableUpdateController {
         model.put("positions", positionService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
         model.put("getflag", flag);
+        Position position =positionService.findById(positionFilter);
+        model.put("positionFilter", position==null?0:position.getIdPosition());
+        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
         return "addPositionDuties";
     }
     /**
@@ -614,18 +639,26 @@ public class TableUpdateController {
      */
     @RequestMapping("/tables/listTypesInPerfomedWork")
     public String listTypesInPerfomedWork(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
-                                 @RequestParam(name = "flag", required = false, defaultValue = "false") String flag, Map<String, Object> model) {
+                                          @RequestParam(name = "typeOfWorkPerformedFilter", required = false, defaultValue = "0") Integer typeOfWorkPerformedFilter,
+                                          @RequestParam(name = "typeOfWorkFilter", required = false, defaultValue = "0") Integer typeOfWorkFilter,
+                                          @RequestParam(name = "flag", required = false, defaultValue = "false") String flag, Map<String, Object> model) {
         if (flag.equals("true"))
             model.put("beanUp", listTypesInPerfomedWorkService.findById(updId));
         model.put("typesInPerfomedWork", listTypesInPerfomedWorkService.findAll());
         model.put("getflag", flag);
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
+        TypeOfWorkPerformed typeOfWorkPerformed=typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
+        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed==null?0:typeOfWorkPerformed.getIdTypeOfWorkPerformed());
+        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
         return "addListTypesInPerfomedWork";
     }
 
     @RequestMapping("/tables/add/listTypesInPerfomedWork")
     public String addListTypesInPerfomedWork(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
+                                             @RequestParam(name = "typeOfWorkPerformedFilter", required = false, defaultValue = "0") Integer typeOfWorkPerformedFilter,
+                                             @RequestParam(name = "typeOfWorkFilter", required = false, defaultValue = "0") Integer typeOfWorkFilter,
                                              @RequestParam(name = "idTypeOfWorkPerformed", required = false, defaultValue = "") Integer idTypeOfWorkPerformed,
                                     @RequestParam(name = "idTypeOfWork", required = false, defaultValue = "") Integer idTypeOfWork,
                                     @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
@@ -638,11 +671,17 @@ public class TableUpdateController {
             model.put("beanUp", listTypesInPerfomedWorkService.findById(updId));
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
+        TypeOfWorkPerformed typeOfWorkPerformed=typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
+        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed==null?0:typeOfWorkPerformed.getIdTypeOfWorkPerformed());
+        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
         return "addListTypesInPerfomedWork";
     }
 
     @RequestMapping("/tables/update/listTypesInPerfomedWork")
     public String updateListTypesInPerfomedWork(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
+                                                @RequestParam(name = "typeOfWorkPerformedFilter", required = false, defaultValue = "0") Integer typeOfWorkPerformedFilter,
+                                                @RequestParam(name = "typeOfWorkFilter", required = false, defaultValue = "0") Integer typeOfWorkFilter,
                                        @RequestParam(name = "updIdTypeOfWorkPerformed", required = false, defaultValue = "") Integer updIdTypeOfWorkPerformed,
                                        @RequestParam(name = "updIdTypeOfWork", required = false, defaultValue = "") Integer updIdTypeOfWork,
                                        @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
@@ -654,11 +693,17 @@ public class TableUpdateController {
             model.put("beanUp", listTypesInPerfomedWorkService.findById(updId));
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
+        TypeOfWorkPerformed typeOfWorkPerformed=typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
+        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed==null?0:typeOfWorkPerformed.getIdTypeOfWorkPerformed());
+        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
         return "addListTypesInPerfomedWork";
     }
 
     @RequestMapping("/tables/delete/listTypesInPerfomedWork")
     public String deleteListTypesInPerfomedWork(@RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
+                                                @RequestParam(name = "typeOfWorkPerformedFilter", required = false, defaultValue = "0") Integer typeOfWorkPerformedFilter,
+                                                @RequestParam(name = "typeOfWorkFilter", required = false, defaultValue = "0") Integer typeOfWorkFilter,
                                        @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
                                        @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                        Map<String, Object> model) {
@@ -672,6 +717,10 @@ public class TableUpdateController {
         model.put("typesInPerfomedWork", listTypesInPerfomedWorkService.findAll());
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
+        TypeOfWorkPerformed typeOfWorkPerformed=typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
+        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed==null?0:typeOfWorkPerformed.getIdTypeOfWorkPerformed());
+        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
         model.put("getflag", flag);
         return "addListTypesInPerfomedWork";
     }
@@ -681,8 +730,8 @@ public class TableUpdateController {
      */
     @RequestMapping("/tables/userRegions")
     public String userRegions(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
-                              @RequestParam(name = "userFiler", required = false, defaultValue = "0") String userFiler,
-                              @RequestParam(name = "regionFiler", required = false, defaultValue = "0") String regionFiler,
+                              @RequestParam(name = "userFilter", required = false, defaultValue = "0") Integer userFilter,
+                              @RequestParam(name = "regionFilter", required = false, defaultValue = "0") Integer regionFilter,
                               @RequestParam(name = "flag", required = false, defaultValue = "false") String flag, Map<String, Object> model) {
         if (flag.equals("true"))
             model.put("beanUp", userRegionsService.findById(updId));
@@ -690,25 +739,17 @@ public class TableUpdateController {
         model.put("users", userService.findAll());
         model.put("regions", regionService.findAll());
         model.put("getflag", flag);
-
-        System.out.println("updId+"+updId);
-
-        System.out.println(userFiler+"-"+regionFiler);
-        if(!userFiler.equals("0")&&!userFiler.equals("all")) {
-            String[] userF = userFiler.split(" ");
-            System.out.println(userF[0] + "+" + userF[1]);
-            model.put("userFiler", userService.findByFirstNameAndLastName(userF[0], userF[1]) == null ? 0 : userService.findByFirstNameAndLastName(userF[0], userF[1]).getIdusers());
-        }
-        else
-            model.put("userFiler", 0);
-        model.put("regionFiler", regionService.findByName(regionFiler)==null?0:regionService.findByName(regionFiler).getIdRegion());
+        User user =userService.findById(userFilter);
+        model.put("userFilter", user==null?0:user.getIdusers());
+        Region region=regionService.findById(regionFilter);
+        model.put("regionFilter", region==null?0:region.getIdRegion());
         return "addUserRegions";
     }
 
     @RequestMapping("/tables/add/userRegions")
     public String addUserRegions(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
-                                 @RequestParam(name = "userFiler", required = false, defaultValue = "0") String userFiler,
-                                 @RequestParam(name = "regionFiler", required = false, defaultValue = "0") String regionFiler,
+                                 @RequestParam(name = "userFilter", required = false, defaultValue = "0") Integer userFilter,
+                                 @RequestParam(name = "regionFilter", required = false, defaultValue = "0") Integer regionFilter,
                                  @RequestParam(name = "idUser", required = false, defaultValue = "") Integer idUser,
                                  @RequestParam(name = "idRegion", required = false, defaultValue = "") Integer idRegion,
                                  @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
@@ -721,19 +762,17 @@ public class TableUpdateController {
         model.put("usersRegions", userRegionsService.findAll());
         model.put("users", userService.findAll());
         model.put("regions", regionService.findAll());
-        System.out.println(userFiler+"-"+regionFiler);
-        if(!userFiler.equals("0")&&!userFiler.equals("all")) {
-            String[] userF = userFiler.split(" ");
-            //System.out.println(userF[0] + "+" + userF[1]);
-            model.put("userFiler", userService.findByFirstNameAndLastName(userF[0], userF[1]) == null ? 0 : userService.findByFirstNameAndLastName(userF[0], userF[1]).getIdusers());
-        }
+        User user =userService.findById(userFilter);
+        model.put("userFilter", user==null?0:user.getIdusers());
+        Region region=regionService.findById(regionFilter);
+        model.put("regionFilter", region==null?0:region.getIdRegion());
         return "addUserRegions";
     }
 
     @RequestMapping("/tables/update/userRegions")
     public String updateUserRegions(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
-                                    @RequestParam(name = "userFiler", required = false, defaultValue = "0") String userFiler,
-                                    @RequestParam(name = "regionFiler", required = false, defaultValue = "0") String regionFiler,
+                                    @RequestParam(name = "userFilter", required = false, defaultValue = "0") Integer userFilter,
+                                    @RequestParam(name = "regionFilter", required = false, defaultValue = "0") Integer regionFilter,
                                     @RequestParam(name = "updIdUser", required = false, defaultValue = "") Integer updIdUser,
                                     @RequestParam(name = "updIdRegion", required = false, defaultValue = "") Integer updIdRegion,
                                     @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
@@ -745,22 +784,17 @@ public class TableUpdateController {
         model.put("users", userService.findAll());
         model.put("regions", regionService.findAll());
         model.put("getflag", flag);
-        System.out.println(userFiler+"-"+regionFiler);
-        if(!userFiler.equals("0")&&!userFiler.equals("all")) {
-            String[] userF = userFiler.split(" ");
-            //System.out.println(userF[0] + "+" + userF[1]);
-            model.put("userFiler", userService.findByFirstNameAndLastName(userF[0], userF[1]) == null ? 0 : userService.findByFirstNameAndLastName(userF[0], userF[1]).getIdusers());
-        }
-        else
-            model.put("userFiler", 0);
-        model.put("regionFiler", regionService.findByName(regionFiler)==null?0:regionService.findByName(regionFiler).getIdRegion());
+        User user =userService.findById(userFilter);
+        model.put("userFilter", user==null?0:user.getIdusers());
+        Region region=regionService.findById(regionFilter);
+        model.put("regionFilter", region==null?0:region.getIdRegion());
         return "addUserRegions";
     }
 
     @RequestMapping("/tables/delete/userRegions")
     public String deleteUserRegions(@RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
-                                    @RequestParam(name = "userFiler", required = false, defaultValue = "0") String userFiler,
-                                    @RequestParam(name = "regionFiler", required = false, defaultValue = "0") String regionFiler,
+                                    @RequestParam(name = "userFilter", required = false, defaultValue = "0") Integer userFilter,
+                                    @RequestParam(name = "regionFilter", required = false, defaultValue = "0") Integer regionFilter,
                                     @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
                                     @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                                 Map<String, Object> model) {
@@ -775,12 +809,10 @@ public class TableUpdateController {
         model.put("users", userService.findAll());
         model.put("regions", regionService.findAll());
         model.put("getflag", flag);
-        System.out.println(userFiler+"-"+regionFiler);
-        if(!userFiler.equals("0")&&!userFiler.equals("all")) {
-            String[] userF = userFiler.split(" ");
-            //System.out.println(userF[0] + "+" + userF[1]);
-            model.put("userFiler", userService.findByFirstNameAndLastName(userF[0], userF[1]) == null ? 0 : userService.findByFirstNameAndLastName(userF[0], userF[1]).getIdusers());
-        }
+        User user =userService.findById(userFilter);
+        model.put("userFilter", user==null?0:user.getIdusers());
+        Region region=regionService.findById(regionFilter);
+        model.put("regionFilter", region==null?0:region.getIdRegion());
         return "addUserRegions";
     }
 }

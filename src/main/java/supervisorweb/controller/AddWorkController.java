@@ -6,6 +6,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import supervisorweb.domain.City;
+import supervisorweb.domain.Street;
 import supervisorweb.domain.User;
 import supervisorweb.service.*;
 
@@ -60,8 +62,10 @@ public class AddWorkController {
         model.put("streets", streetService.findAll());
         model.put("cities", cityService.findAll());
         model.put("idTypeOfWP", idTypeOfWorkPerformed);
-        model.put("cityFilter", cityService.findByName(cityFilter)==null?0:cityService.findByName(cityFilter).getIdCity());
-        model.put("streetFilter", streetService.findByName(streetFilter)==null?0:streetService.findByName(streetFilter).getIdStreet());
+        City city=cityService.findByName(cityFilter);
+        model.put("cityFilter", city==null?0:city);
+        Street street= streetService.findByName(streetFilter);
+        model.put("streetFilter", street==null?0:street);
         model.put("user", user);
         return "addCompletedWorks";
     }

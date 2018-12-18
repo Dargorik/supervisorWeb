@@ -61,8 +61,8 @@
                     </option>
                 </c:forEach>
             </select>
-            <input hidden type="text" id="uf" name="userFiler" value="${userFiler}">
-            <input hidden type="text" id="rf" name="regionFiler" value="${regionFiler}">
+            <input hidden type="text" id="uf" name="userFilter" value="${userFilter}">
+            <input hidden type="text" id="rf" name="regionFilter" value="${regionFilter}">
             <button type="submit">Add</button>
         </form>
     </div>
@@ -71,38 +71,38 @@
             <tr>
                 <th hidden>id</th>
                 <th><select id="userSelect" name="User">
-                    <option value="all"  <c:if test="${userFiler==0}"> selected </c:if>  ><c:out value="All employee"/></option>
+                    <option name="0" value="all"  <c:if test="${userFilter==0}"> selected </c:if>  ><c:out value="All employee"/></option>
                     <c:forEach items="${users}" var="user">
-                        <option value="${user.firstName} ${user.lastName}" <c:if test="${user.idusers==userFiler}"> selected </c:if>>
+                        <option name="${user.idusers}" value="${user.firstName} ${user.lastName}" <c:if test="${user.idusers==userFilter}"> selected </c:if>>
                             <c:out value="${user.firstName} ${user.lastName}"/>
                         </option>
                     </c:forEach>
                 </select></th>
                 <th><select id="regionSelect" name="Region">
-                    <option value="all"  <c:if test="${regionFiler==0}"> selected </c:if>  ><c:out value="All region"/></option>
+                    <option name="0" value="all"  <c:if test="${regionFilter==0}"> selected </c:if>  ><c:out value="All region"/></option>
                     <c:forEach items="${regions}" var="region">
-                        <option value="${region.name}" <c:if test="${region.idRegion==regionFiler}"> selected </c:if>>
+                        <option name="${region.idRegion}" value="${region.name}" <c:if test="${region.idRegion==regionFilter}"> selected </c:if>>
                             <c:out value="${region.name}"/>
                         </option>
                     </c:forEach>
                 </select></th>
                 <th>Update</th>
                 <th>Delete</th>
-                <th>flag</th>
+                <%--<th>flag</th>--%>
             </tr>
             <c:forEach  items="${usersRegions}" var ="usersRegion"  varStatus="ind">
                 <tr>
-                    <form name="myForm" method="post" action="/work/add?idUser=${user.idusers}" >
+                    <form name="myForm" method="post" >
                         <input type="hidden" name="_csrf" value=${_csrf.token} />
                         <td hidden>${usersRegion.idUserRegions}</td>
                         <td id="user${ind.index+1}">${usersRegion.user.firstName} ${usersRegion.user.lastName}</td>
                         <td id="region${ind.index+1}">${usersRegion.region.name}</td>
-                        <td><a href="/tables/userRegions?updId=${usersRegion.idUserRegions}&flag=${true}">Update</a></td>
+                        <td><a id="updButtom${ind.index}" href="/tables/userRegions?updId=${usersRegion.idUserRegions}&flag=${true}" onclick="displayUpd(${ind.index}); return false;">Update</a></td>
                         <td><a id="delButtom${ind.index}" href="/tables/delete/userRegions?updId=${beanUp.idUserRegions}&delId=${usersRegion.idUserRegions}&flag=<%=flag==true?"true":"false"%>" onclick="display(${ind.index}); return false;">Delete</a></td>
-                        <td>
-                            <input type="text" id="uf${ind.index+1}" name="userFiler" value="${userFiler}">
-                            <input type="text" id="rf${ind.index+1}" name="regionFiler" value="${regionFiler}">
-                        </td>
+                        <%--<td>--%>
+                            <%--<input type="text" id="uf${ind.index+1}" name="userFilter" value="${userFilter}">--%>
+                            <%--<input type="text" id="rf${ind.index+1}" name="regionFilter" value="${regionFilter}">--%>
+                        <%--</td>--%>
                     </form>
                 </tr>
             </c:forEach>
@@ -135,8 +135,8 @@
                         </select>
                     </td>
                     <td hidden>
-                        <input  type="text" id="ufUp" name="userFiler" value="${userFiler}">
-                        <input  type="text" id="rfUp" name="regionFiler" value="${regionFiler}">
+                        <input type="text" id="ufUp" name="userFilter" value="${userFilter}">
+                        <input type="text" id="rfUp" name="regionFilter" value="${regionFilter}">
                     </td>
                     <td><button type=submit>Save</button></td>
                 </tr>
@@ -147,9 +147,13 @@
         function display(x){
             var isDelete = confirm("Deleting this entry will delete all entries containing this key. Continue deleting?");
             if(isDelete==true) {
-                var url = document.getElementById("delButtom" + x)
-                location.href = url.getAttribute("href");
+                var url = document.getElementById("delButtom" + x);
+                location.href = url.getAttribute("href")+"&userFilter="+document.getElementById("uf").value+"&regionFilter="+document.getElementById("rf").value;
             }
+        }
+        function displayUpd(x){
+             var url = document.getElementById("updButtom" + x);
+             location.href = url.getAttribute("href")+"&userFilter="+document.getElementById("uf").value+"&regionFilter="+document.getElementById("rf").value;
         }
 
         var userSelect = document.getElementById("userSelect");
@@ -175,20 +179,21 @@
                             allRows[index].setAttribute("hidden", "hidden")
                         }
                     }
-                    var userF = document.getElementById("uf" + index);
-                    userF.setAttribute("value", userSelect.options[userSelect.selectedIndex].value);
-                    var regionF = document.getElementById("rf" + index);
-                    regionF.setAttribute("value", regionSelect.options[regionSelect.selectedIndex].value);
+                    // var userF = document.getElementById("uf" + index);
+                    // userF.setAttribute("value", userSelect.options[userSelect.selectedIndex].value);
+                    // var regionF = document.getElementById("rf" + index);
+                    // regionF.setAttribute("value", regionSelect.options[regionSelect.selectedIndex].value);
+                   // alert( document.getElementById("uf" + index).value+"---"+document.getElementById("rf" + index).value);
                 }
             }
             var userF = document.getElementById("uf");
-            userF.setAttribute("value", userSelect.options[userSelect.selectedIndex].value);
+            userF.setAttribute("value", userSelect.options[userSelect.selectedIndex].getAttribute("name"));
             var regionF = document.getElementById("rf");
-            regionF.setAttribute("value", regionSelect.options[regionSelect.selectedIndex].value);
+            regionF.setAttribute("value", regionSelect.options[regionSelect.selectedIndex].getAttribute("name"));
             var userF = document.getElementById("ufUp");
-            userF.setAttribute("value", userSelect.options[userSelect.selectedIndex].value);
+            userF.setAttribute("value", userSelect.options[userSelect.selectedIndex].getAttribute("name"));
             var regionF = document.getElementById("rfUp");
-            regionF.setAttribute("value", regionSelect.options[regionSelect.selectedIndex].value);
+            regionF.setAttribute("value", regionSelect.options[regionSelect.selectedIndex].getAttribute("name"));
         }
 
         userSelect.addEventListener("change", Filter);

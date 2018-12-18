@@ -11,9 +11,9 @@ public interface ListTypesInPerfomedWorkService {
     List<ListTypesInPerfomedWork> findAll();
 
 
-    String update(Integer updIdListTypesInPerfomedWork, Integer updIdTypeOfWorkPerformed, Integer updIdTypeOfWork);
+    String update(Integer updId, Integer updIdTypeOfWorkPerformed, Integer updIdTypeOfWork);
 
-    String delete(Integer delIdTypeOfWorkPerformed);
+    String delete(Integer delId);
 
     String add(Integer idTypeOfWorkPerformed, Integer idTypeOfWork);
 
