@@ -27,46 +27,114 @@ public class AddWorkController {
     private TypeOfWorkPerformedService typeOfWorkPerformedService;
     @Autowired
     private CompletedWorkService completedWorkService;
+    @Autowired
+    private  WorksBasketService worksBasketService;
 
     @RequestMapping()
     public String main(@AuthenticationPrincipal User user,
+                       @RequestParam(name = "cityFilter", required = false, defaultValue = "0") Integer cityFilter,
+                       @RequestParam(name = "streetFilter", required = false, defaultValue = "0") Integer streetFilter,
                        @RequestParam(name = "idTypeOfWorkPerformed", required = false, defaultValue = "0") Integer idTypeOfWorkPerformed,
+                       @RequestParam(name = "relevance", required = false, defaultValue = "false") Boolean relevance,
                        Map<String, Object> model) {
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findForUser(user));
-        model.put("addresses", addressService.findForUser(user));
+        if(relevance==false)
+            model.put("addresses", worksBasketService.findOtherAddresses(user));
+        else
+            model.put("addresses", worksBasketService.findRelevanceOtherAddresses(user, idTypeOfWorkPerformed));
         model.put("streets", streetService.findAll());
         model.put("cities", cityService.findAll());
         model.put("idTypeOfWP", idTypeOfWorkPerformed);
+        model.put("relevance", relevance);
+        City city=cityService.findById(cityFilter);
+        model.put("cityFilter", city==null?0:city.getIdCity());
+        Street street= streetService.findById(streetFilter);
+        model.put("streetFilter", street==null?0:street.getIdStreet());
         model.put("user", user);
         return "addCompletedWorks";
     }
+
     @RequestMapping("/add")
     public String add(@AuthenticationPrincipal User user,
-                      @RequestParam(name = "cityFilter", required = false, defaultValue = "0") String cityFilter,
-                      @RequestParam(name = "streetFilter", required = false, defaultValue = "0") String streetFilter,
+                      @RequestParam(name = "cityFilter", required = false, defaultValue = "0") Integer cityFilter,
+                      @RequestParam(name = "streetFilter", required = false, defaultValue = "0") Integer streetFilter,
                       @RequestParam(name = "idTypeOfWorkPerformed", required = false, defaultValue = "0") Integer idTypeOfWorkPerformed,
+                      @RequestParam(name = "relevance", required = false, defaultValue = "false") Boolean relevance,
                       @RequestParam(name = "idAddress", required = false, defaultValue = "") Integer idAddress,
                       @RequestParam(name = "numberCompletedEntrances", required = false, defaultValue = "") String numberCompletedEntrances,
                       @RequestParam(name = "comment", required = false, defaultValue = "") String comment,
                       @RequestParam(name = "ind", required = false, defaultValue = "") Integer ind,
                        Map<String, Object> model) {
-        //model.put("message", completedWorkService.add(user.getIdusers(),idAddress,numberCompletedEntrances,idTypeOfWorkPerformed,comment));
-        System.out.println("idTypeOfWorkPerformed-"+idTypeOfWorkPerformed);
-        System.out.println("idAddress-"+idAddress);
-        System.out.println("numberCompletedEntrances-"+numberCompletedEntrances);
-        System.out.println("comment-"+comment);
-        System.out.println("cityFilter-"+cityFilter);
-        System.out.println("streetFilter-"+streetFilter);
-        model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
-        model.put("addresses", addressService.findForUser(user));
+        model.put("message", worksBasketService.add(user.getIdusers(),idAddress,numberCompletedEntrances,idTypeOfWorkPerformed,comment));
+        model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findForUser(user));
+        model.put("addresses", worksBasketService.findOtherAddresses(user));
         model.put("streets", streetService.findAll());
         model.put("cities", cityService.findAll());
         model.put("idTypeOfWP", idTypeOfWorkPerformed);
-        City city=cityService.findByName(cityFilter);
-        model.put("cityFilter", city==null?0:city);
-        Street street= streetService.findByName(streetFilter);
-        model.put("streetFilter", street==null?0:street);
+        model.put("relevance", relevance);
+        City city=cityService.findById(cityFilter);
+        model.put("cityFilter", city==null?0:city.getIdCity());
+        Street street= streetService.findById(streetFilter);
+        model.put("streetFilter", street==null?0:street.getIdStreet());
         model.put("user", user);
         return "addCompletedWorks";
+    }
+
+    @RequestMapping("/basket")
+    public String listBasket(@AuthenticationPrincipal User user,
+                             @RequestParam(name = "cityFilter", required = false, defaultValue = "0") Integer cityFilter,
+                             @RequestParam(name = "streetFilter", required = false, defaultValue = "0") Integer streetFilter,
+                             Map<String, Object> model) {
+        model.put("completedWorks", worksBasketService.findByUser(user));
+        model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
+        model.put("addresses", addressService.findAll());
+        model.put("streets", streetService.findAll());
+        model.put("cities", cityService.findAll());
+        City city=cityService.findById(cityFilter);
+        model.put("cityFilter", city==null?0:city.getIdCity());
+        Street street= streetService.findById(streetFilter);
+        model.put("streetFilter", street==null?0:street.getIdStreet());
+        model.put("user", user);
+        return "basket";
+    }
+
+    @RequestMapping("/basket/delete")
+    public String deleteBasket(@AuthenticationPrincipal User user,
+                               @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
+                               @RequestParam(name = "cityFilter", required = false, defaultValue = "0") Integer cityFilter,
+                               @RequestParam(name = "streetFilter", required = false, defaultValue = "0") Integer streetFilter,
+                               Map<String, Object> model) {
+        model.put("message", worksBasketService.delete(delId));
+        model.put("completedWorks", worksBasketService.findByUser(user));
+        model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
+        model.put("addresses", addressService.findAll());
+        model.put("streets", streetService.findAll());
+        model.put("cities", cityService.findAll());
+        City city=cityService.findById(cityFilter);
+        model.put("cityFilter", city==null?0:city.getIdCity());
+        Street street= streetService.findById(streetFilter);
+        model.put("streetFilter", street==null?0:street.getIdStreet());
+        model.put("user", user);
+        return "basket";
+    }
+
+    @RequestMapping("/basket/report")
+    public String report(@AuthenticationPrincipal User user,
+                               @RequestParam(name = "cityFilter", required = false, defaultValue = "0") Integer cityFilter,
+                               @RequestParam(name = "streetFilter", required = false, defaultValue = "0") Integer streetFilter,
+                               Map<String, Object> model) {
+        model.put("message", completedWorkService.report(user));
+        //model.put("message", worksBasketService.delete(delId));
+        model.put("completedWorks", worksBasketService.findByUser(user));
+        model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
+        model.put("addresses", addressService.findAll());
+        model.put("streets", streetService.findAll());
+        model.put("cities", cityService.findAll());
+        City city=cityService.findById(cityFilter);
+        model.put("cityFilter", city==null?0:city.getIdCity());
+        Street street= streetService.findById(streetFilter);
+        model.put("streetFilter", street==null?0:street.getIdStreet());
+        model.put("user", user);
+        return "basket";
     }
 }

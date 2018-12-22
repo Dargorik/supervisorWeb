@@ -36,6 +36,12 @@
                         <button type="submit">Добавление записей о проделанной работе</button>
                     </form>
                 </div>
+                <div>
+                    <form method="post" action="/work/basket?userId=${user.getIdusers()}" >
+                        <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                        <button type="submit">Корзина</button>
+                    </form>
+                </div>
             </#if>
          </#if>
     </#if>

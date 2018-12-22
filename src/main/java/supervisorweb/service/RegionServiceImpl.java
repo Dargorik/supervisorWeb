@@ -38,7 +38,7 @@ public class RegionServiceImpl implements RegionService {
     public String delete(Integer delId) {
         Region region = regionRepos.findById(delId).orElse(null);
         if (region == null) {
-            return "This component already exists!";
+            return "This component does not exist!";
         } else {
             regionRepos.delete(region);
             return "Successful delete record!";

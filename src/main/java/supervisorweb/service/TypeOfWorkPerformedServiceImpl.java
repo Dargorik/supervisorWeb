@@ -46,7 +46,7 @@ public class TypeOfWorkPerformedServiceImpl implements TypeOfWorkPerformedServic
     public String delete(Integer delId) {
         TypeOfWorkPerformed typeOfWorkPerformed = typeOfWorkPerformedRepos.findById(delId).orElse(null);
         if (typeOfWorkPerformed == null) {
-            return "This component already exists!";
+            return "This component does not exist!";
         } else {
             typeOfWorkPerformedRepos.delete(typeOfWorkPerformed);
             return "Successful delete record!";

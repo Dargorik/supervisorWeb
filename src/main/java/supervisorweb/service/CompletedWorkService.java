@@ -1,6 +1,7 @@
 package supervisorweb.service;
 
 import supervisorweb.domain.CompletedWork;
+import supervisorweb.domain.User;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -12,4 +13,6 @@ public interface CompletedWorkService {
     List<CompletedWork> findById(Integer id);
 
     String add(Integer idUsers, Integer idAddress, String numberCompletedEntrances, Integer idTypeOfWorkPerformed, String comment);
+
+    String report(User user);
 }

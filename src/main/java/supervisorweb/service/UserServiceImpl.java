@@ -14,6 +14,7 @@ import supervisorweb.repos.UserRepos;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserDetailsService, UserService {
@@ -33,12 +34,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepo.findByRoles(Role.USER);
+    public List<User> findAll(){
+        return userRepo.findAll();
     }
 
     @Override
-    public String update(Integer updId, String firstName, String lastName, String username, String password, Integer idPosition) {
+    public List<User> findAllUser() {
+        return userRepo.findByRoles(Role.USER).stream()
+                .sorted((x, y) -> x.getLastName().compareTo(y.getLastName()))
+                .sorted((x, y) -> x.getFirstName().compareTo(y.getFirstName()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String update(Integer updId, String firstName, String lastName, String username, String password, Integer idPosition, Boolean activ) {
         User user;
         try {
 
@@ -46,31 +55,32 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                     lastName==null||lastName.isEmpty()||
                     username==null||username.isEmpty()||
                     password==null||password.isEmpty())
-                return "Введенны некорректные данные";
+                return "Invalid input!";
             user=userRepo.findByUsername(username);
             if(user!=null)
                 if(!user.getIdusers().equals(updId))
-                    return "Сотрудник с таким Логином уже есть";
+                    return "This component already exists!";
             user=userRepo.findByFirstNameAndLastNameAndUsername(firstName, lastName, username);
             if(user!=null)
                 if(!user.getIdusers().equals(updId))
-                return "Пользователь с такой Фамилией, Менем и Логином уже есть";
+                    return "This component already exists!";
             user=userRepo.findById(updId).orElse(null);
             if(user==null)
-                return "Пользователь с таким id  не найден";
+                return "This component does not exist!";
             Position position=positionRepos.findById(idPosition).orElse(null);
             if (position==null)
-                return "Указанная должность не найдена!";
+                return "This component does not exist!";
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setUsername(username);
             user.setPassword(password);
             user.setPosition(position);
+            user.setActiv(activ);
             userRepo.save(user);
-            return "Изменение прошло успешно!";
+            return "Successful update record!";
         }
         catch (NullPointerException e){
-            return "Введенны некорректные данные";
+            return "Invalid input!";
         }
     }
 
@@ -82,10 +92,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             if(user==null)
                 throw new NullPointerException();
         }catch (NullPointerException e){
-            return "Данный сотрудник не удлалён!";
+            return "This component does not exist!";
         }
         userRepo.delete(user);
-        return "Сотрудник успешно удлалён!";
+        return "Successful delete record!";
     }
 
     @Override
@@ -94,21 +104,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 lastName==null||lastName.isEmpty()||
                 username==null||username.isEmpty()||
                 password==null||password.isEmpty())
-            return "Введенны некорректные данные";
+            return "Invalid input!";
         User user=userRepo.findByUsername(username);
         if(user!=null)
-            return "Сотрудник с Логином уже есть";
+            return "This component already exists!";
         user=userRepo.findByFirstNameAndLastNameAndUsername(username, password, username);
         if(user!=null)
-            return "Сотрудник с такой Фамилией, Менем и Логином уже есть";
+            return "This component already exists!";
         Position position=positionRepos.findById(idPosition).orElse(null);
         if (position==null)
-            return "Указанный сотрудник не найдена!";
+            return "Invalid input!";
         user=new User(firstName,lastName,username, password, position);
         user.setActiv(true);
         user.setRoles(Collections.singleton(Role.USER));
         userRepo.save(user);
-        return "Новый сотрудник добавлен";
+        return "Successful add record!";
     }
 
     @Override

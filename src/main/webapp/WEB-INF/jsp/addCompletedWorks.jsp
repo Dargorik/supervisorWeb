@@ -21,45 +21,45 @@
 </div>
 
 <div name="mess">
-    <h2>Добавление выполненных работ</h2>
+    <h2>Adding completed work</h2>
     ${message}
 </div>
 
 <form name="sel">
-    Выберите тип работы:
+    Select the type of work performed:
     <select required name="selec">
         <option disabled <c:if test="${idTypeOfWP==0}"> selected </c:if> value="all"><c:out
-                value="Выберите из вариантов"/></option>
+                value="Select"/></option>
         <c:forEach items="${typesOfWorkPerformed}" var="typeOfWorkPerformed">
             <option <c:if test="${typeOfWorkPerformed.idTypeOfWorkPerformed==idTypeOfWP}"> selected </c:if>
                     value="${typeOfWorkPerformed.idTypeOfWorkPerformed}"><c:out
                     value="${typeOfWorkPerformed.name}"/></option>
         </c:forEach>
     </select>
+    <input type="checkbox" id="relevance" name="relevance" <c:if test="${relevance=='true'}"> checked </c:if>> only relevance
 </form>
 
 <table hidden  border="1" id="t">
     <tr>
         <th hidden>id</th>
         <th><select id="citySelect" name="City">
-            <option value="all"  <c:if test="${cityFilter==0}"> selected </c:if>  ><c:out value="Все города"/></option>
+            <option name="0" value="all"  <c:if test="${cityFilter==0}"> selected </c:if>  ><c:out value="All city"/></option>
             <c:forEach items="${cities}" var="city">
-                <option value="${city.name}" <c:if test="${city.idCity==cityFilter}"> selected </c:if> ><c:out
+                <option name="${city.idCity}" value="${city.name}" <c:if test="${city.idCity==cityFilter}"> selected </c:if> ><c:out
                         value="${city.name}"/></option>
             </c:forEach>
         </select></th>
         <td><select id="streetSelect" name="Street">
-            <option value="all"  <c:if test="${cityFilter==0}"> selected </c:if>  ><c:out value="Все улицы"/></option>
+            <option name="0" value="all"  <c:if test="${cityFilter==0}"> selected </c:if>  ><c:out value="All street"/></option>
             <c:forEach items="${streets}" var="street">
-                <option value="${street.name}" <c:if test="${street.idStreet==streetFilter}"> selected </c:if>><c:out
+                <option name="${street.idStreet}" value="${street.name}" <c:if test="${street.idStreet==streetFilter}"> selected </c:if>><c:out
                         value="${street.name}"/></option>
             </c:forEach>
         </select></td>
-        <th>Номер дома</th>
-        <th>Кол-во выполненных подъездов</th>
-        <th>Комментарий</th>
-        <th>Отправить</th>
-        <th hidden>флаг</th>
+        <th>House number</th>
+        <th>Number of entrances completed</th>
+        <th>Comment</th>
+        <th>Action</th>
     </tr>
     <c:forEach  items="${addresses}" var ="address" varStatus="ind" >
         <tr>
@@ -76,9 +76,10 @@
                     <input type="text" name="comment" placeholder="Комментарий">
                 </td>
                 <td>
-                    <button name="but" value="" type=submit>Выполненно</button></td>
+                    <button name="but" value="" type=submit>add</button></td>
                 <td hidden>
-                    <input type="text" id="${ind.index+1}" name="idTypeOfWorkPerformed" value="${ind.index+10}">
+                    <input type="text" id="relevance${ind.index+1}" name="relevance" value=${relevance}>>
+                    <input type="text" id="${ind.index+1}" name="idTypeOfWorkPerformed" value="${ind.index}">
                     <input type="text" id="cf${ind.index+1}" name="cityFilter" value="${cityFilter}">
                     <input type="text" id="sf${ind.index+1}" name="streetFilter" value="${streetFilter}">
                 </td>
@@ -90,6 +91,7 @@
     var languagesSelect = sel.selec;
     var citySelect = document.getElementById("citySelect");
     var streetSelect = document.getElementById("streetSelect");
+    var relevance = document.getElementById("relevance");
 
     function openTable() {
         var selectedOption = languagesSelect.options[languagesSelect.selectedIndex];
@@ -98,6 +100,21 @@
             table.removeAttribute("hidden")
     }
 
+    function relevanceCheck(e) {
+        var enabled = e.target.checked;
+        var table = document.getElementById("t");
+        var allRows = table.getElementsByTagName("tr");
+        for (var index in allRows) {
+            if (index > 0) {
+                document.getElementById("relevance" + index).setAttribute("value", enabled);
+            }
+        }
+        if(languagesSelect.options[languagesSelect.selectedIndex].value!="all")
+            location.href = "/work?idTypeOfWorkPerformed="+languagesSelect.options[languagesSelect.selectedIndex].value+
+                "&relevance="+enabled+
+                "&cityFilter="+citySelect.options[citySelect.selectedIndex].getAttribute("name")+
+                "&streetFilter="+streetSelect.options[streetSelect.selectedIndex].getAttribute("name");
+    }
 
     function changeOption() {
         var selectedOption = languagesSelect.options[languagesSelect.selectedIndex];
@@ -113,10 +130,8 @@
             }
         }
     }
-    languagesSelect.addEventListener("change", changeOption);
 
-
-    function cityFilter() {
+    function Filter() {
         var sellCity = citySelect.options[citySelect.selectedIndex];
         var sellStreet = streetSelect.options[streetSelect.selectedIndex];
         var table = document.getElementById("t");
@@ -135,20 +150,28 @@
                         allRows[index].setAttribute("hidden", "hidden")
                     }
                 }
-                var cityF = document.getElementById("cf" + index);
-                cityF.setAttribute("value", citySelect.options[citySelect.selectedIndex].value)
-                var streetF = document.getElementById("sf" + index);
-                streetF.setAttribute("value", streetSelect.options[streetSelect.selectedIndex].value)
+                document.getElementById("cf" + index).setAttribute("value", citySelect.options[citySelect.selectedIndex].getAttribute("name"))
+                document.getElementById("sf" + index).setAttribute("value", streetSelect.options[streetSelect.selectedIndex].getAttribute("name"))
             }
         }
     }
 
-    citySelect.addEventListener("change", cityFilter);
-    streetSelect.addEventListener("change", cityFilter);
+    function selectAction() {
+        if(languagesSelect.options[languagesSelect.selectedIndex].value!="all")
+           location.href = "/work?idTypeOfWorkPerformed="+languagesSelect.options[languagesSelect.selectedIndex].value+
+                "&relevance="+relevance.checked+
+                "&cityFilter="+citySelect.options[citySelect.selectedIndex].getAttribute("name")+
+                "&streetFilter="+streetSelect.options[streetSelect.selectedIndex].getAttribute("name");
+    }
+
+    languagesSelect.addEventListener("change", selectAction);
+    citySelect.addEventListener("change", Filter);
+    streetSelect.addEventListener("change", Filter);
+    relevance.addEventListener("click",relevanceCheck);
 
     changeOption();
     openTable();
-    cityFilter();
+    Filter();
 </script>
 
 </body>

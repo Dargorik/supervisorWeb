@@ -14,6 +14,8 @@ public class TypeOfWork {
     private List<PositionDuties> positionDuties;
     @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "typeOfWork")
     private List<ListTypesInPerfomedWork> listTypesInPerfomedWork;
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "typeOfWork")
+    private List<LastComletedDateAddress> lastComletedDateAddresses;
 
     public TypeOfWork(){}
 

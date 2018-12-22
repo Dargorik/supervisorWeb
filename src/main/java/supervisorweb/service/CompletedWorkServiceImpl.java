@@ -9,12 +9,14 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CompletedWorkServiceImpl implements CompletedWorkService {
+    @Autowired
+    private WorksBasketRepos worksBasketRepos;
     @Autowired
     private CompletedWorkRepos completedWorkRepos;
     @Autowired
@@ -23,6 +25,10 @@ public class CompletedWorkServiceImpl implements CompletedWorkService {
     private UserRepos userRepos;
     @Autowired
     private TypeOfWorkPerformedRepos typeOfWorkPerformedRepos;
+    @Autowired
+    private LastComletedDateAddressRepos lastComletedDateAddressRepos;
+    @Autowired
+    private ListTypesInPerfomedWorkRepos listTypesInPerfomedWorkRepos;
 
     @Override
     public List<CompletedWork> findAll() {
@@ -56,5 +62,38 @@ public class CompletedWorkServiceImpl implements CompletedWorkService {
         CompletedWork completedWork=new CompletedWork(user, address, number, typeOfWorkPerformed, comment, timestamp);
         completedWorkRepos.save(completedWork);
         return "Новый запись добавлена";
+    }
+
+
+    @Override
+    public String report(User user) {
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date;
+        try {
+            date = formatter.parse(formatter.format(new Date()));
+        } catch (ParseException e) {
+            return "Error!";
+        }
+        Timestamp timestamp=new Timestamp(date.getTime());
+        for(WorksBasket worksBasket: worksBasketRepos.findByUser(user)){
+            CompletedWork completedWork=new CompletedWork(worksBasket.getUser(),
+                    worksBasket.getAddress(),
+                    worksBasket.getNumberCompletedEntrances(),
+                    worksBasket.getTypeOfWorkPerformed(),
+                    worksBasket.getComment(),
+                    timestamp);
+            completedWorkRepos.save(completedWork);
+            addLastCompletedDataAddress( worksBasket.getAddress(), worksBasket.getTypeOfWorkPerformed(),  timestamp);
+            }
+        worksBasketRepos.deleteAll();
+        return "Successful!";
+    }
+
+    public void addLastCompletedDataAddress(Address address, TypeOfWorkPerformed typeOfWorkPerformed, Timestamp lastData){
+        for(TypeOfWork typeOfWork: listTypesInPerfomedWorkRepos.findByTypeOfWorkPerformed(typeOfWorkPerformed).stream()
+                .map(x->x.getTypeOfWork())
+                .collect(Collectors.toList())){
+            lastComletedDateAddressRepos.findByAddressAndTypeOfWork(address,typeOfWork).setLastData(lastData);
+        }
     }
 }

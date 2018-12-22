@@ -38,7 +38,7 @@ public class PositionServiceImpl implements PositionService {
     public String delete(Integer delId) {
         Position position = positionRepos.findById(delId).orElse(null);
         if (position == null) {
-            return "This component already exists!";
+            return "This component does not exist!";
         } else {
             positionRepos.delete(position);
             return "Successful delete record!";

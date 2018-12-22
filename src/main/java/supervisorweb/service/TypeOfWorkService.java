@@ -16,4 +16,6 @@ public interface TypeOfWorkService {
     String add(String name);
 
     TypeOfWork findById(Integer updId);
+
+    void addAllLastComletedDateAddress();
 }

@@ -2,9 +2,7 @@ package supervisorweb.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import supervisorweb.domain.Address;
-import supervisorweb.domain.User;
-import supervisorweb.domain.UserRegions;
+import supervisorweb.domain.*;
 import supervisorweb.repos.*;
 
 import java.util.ArrayList;
@@ -26,6 +24,11 @@ public class AddressServiceImpl implements AddressService {
     private RegionRepos regionRepos;
     @Autowired
     private UserRegionsRepos userRegionsRepos;
+    @Autowired
+    private TypeOfWorkRepos typeOfWorkRepos;
+    @Autowired
+    private LastComletedDateAddressRepos lastComletedDateAddressRepos;
+
 
     @Override
     public Address findById(Integer updId) {
@@ -102,7 +105,9 @@ public class AddressServiceImpl implements AddressService {
         Address address=findByCityAndStreetAndHouseNumberLike(cityId, streetId, houseNumber);
         if(address!=null)
             return "Такой адрес уже есть в базе данных";
-        addressRepos.save(new Address(cityRepos.findById(cityId).orElse(null),streetRepos.findById(streetId).orElse(null),houseNumber,numFloors,numEntrances,priorityListRepos.findById(priorityListId).orElse(null),regionRepos.findById(regionId).orElse(null)));
+        address=new Address(cityRepos.findById(cityId).orElse(null),streetRepos.findById(streetId).orElse(null),houseNumber,numFloors,numEntrances,priorityListRepos.findById(priorityListId).orElse(null),regionRepos.findById(regionId).orElse(null));
+        addLastComletedDateAddress(address);
+        addressRepos.save(address);
         return "Новый адрес добавлен";
     }
 
@@ -118,5 +123,11 @@ public class AddressServiceImpl implements AddressService {
             address.addAll(addressRepos.findByRegion(userRegions.getRegion()));
         }
         return address;
+    }
+
+    public void addLastComletedDateAddress(Address address){
+        for(TypeOfWork typeOfWork: typeOfWorkRepos.findAll()){
+            lastComletedDateAddressRepos.save(new LastComletedDateAddress(address, typeOfWork));
+        }
     }
 }

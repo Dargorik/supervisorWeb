@@ -37,6 +37,8 @@ public class User implements UserDetails {
     private List<CompletedWork> completedWork;
     @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "user")
     private List<UserRegions> userRegions;
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "user")
+    private List<WorksBasket> WorksBasket;
 
     public User() {
     }

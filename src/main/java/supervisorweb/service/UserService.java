@@ -11,12 +11,15 @@ public interface UserService {
 
     List<User> findAll();
 
+    List<User> findAllUser();
+
     String update(Integer updId,
                   String firstName,
                   String lastName,
                   String username,
                   String password,
-                  Integer position);
+                  Integer position,
+                  Boolean activ);
 
     String delete(Integer delId);
 

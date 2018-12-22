@@ -38,7 +38,7 @@ public class CityServiceImpl implements CityService {
     public String delete(Integer delId) {
         City city = cityRepos.findById(delId).orElse(null);
         if (city == null) {
-            return "This component already exists!";
+            return "This component does not exist!";
         } else {
             cityRepos.delete(city);
             return "Successful delete record!";

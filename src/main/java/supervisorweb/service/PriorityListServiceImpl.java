@@ -26,7 +26,7 @@ public class PriorityListServiceImpl implements PriorityListService {
     public String update(Integer updId, String updName, Integer updNumber) {
         if (updNumber == null || updName == null || updName.isEmpty())
             return "Invalid input!";
-        PriorityList priorityList = priorityListRepos.findById(updNumber).orElse(null);
+        PriorityList priorityList = priorityListRepos.findById(updId).orElse(null);
         if (priorityList != null) {
             priorityList.setName(updName);
             priorityList.setNumber(updNumber);
@@ -40,7 +40,7 @@ public class PriorityListServiceImpl implements PriorityListService {
     public String delete(Integer delId) {
         PriorityList priorityList = priorityListRepos.findById(delId).orElse(null);
         if (priorityList == null) {
-            return "This component already exists!";
+            return "This component does not exist!";
         } else {
             priorityListRepos.delete(priorityList);
             return "Successful delete record!";

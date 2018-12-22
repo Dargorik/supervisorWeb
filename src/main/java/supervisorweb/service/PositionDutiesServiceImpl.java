@@ -61,7 +61,7 @@ public class PositionDutiesServiceImpl implements PositionDutiesService {
     public String delete(Integer delIdPositionDuties) {
         PositionDuties positionDuties = positionDutiesRepos.findById(delIdPositionDuties).orElse(null);
         if (positionDuties == null) {
-            return "This component already exists!";
+            return "This component does not exist!";
         } else {
             positionDutiesRepos.delete(positionDuties);
             return "Successful delete record!";

@@ -59,7 +59,7 @@ public class UserRegionsServiceImpl implements UserRegionsService {
     public String delete(Integer delIdUserRegions) {
         UserRegions userRegions = userRegionsRepos.findById(delIdUserRegions).orElse(null);
         if (userRegions == null) {
-            return "This component already exists!";
+            return "This component does not exist!";
         } else {
             userRegionsRepos.delete(userRegions);
             return "Successful delete record!";

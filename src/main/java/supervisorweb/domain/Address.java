@@ -35,6 +35,12 @@ public class Address {
     @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "address")
     private List<CompletedWork> completedWork;
 
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "address")
+    private List<WorksBasket> WorksBasket;
+
+    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "address")
+    private List<LastComletedDateAddress> lastComletedDateAddresses;
+
     public Address(){}
 
     public Address(City city, Street street, String houseNumber, Integer numberFloors, Integer numberEntrances, PriorityList priorityList, Region region){

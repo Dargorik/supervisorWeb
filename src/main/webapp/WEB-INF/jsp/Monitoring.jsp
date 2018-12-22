@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8" />
     <title>Person List</title>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css"/>
     <style>
         .b1 {
             background: beige; /* Синий цвет фона */
@@ -48,7 +47,7 @@
                     <td>${completedWork.numberCompletedEntrances}</td>
                     <td>${completedWork.typeOfWorkPerformed.name}</td>
                     <td>${completedWork.comment}</td>
-                    <td>${completedWork.timestamp_send}</td>
+                    <td>${completedWork.date}</td>
                 </tr>
             </c:forEach>
         </table>

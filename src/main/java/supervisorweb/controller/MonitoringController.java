@@ -23,6 +23,21 @@ public class MonitoringController {
     @Autowired
     private CompletedWorkService completedWorkService;
 
+    @Autowired
+    private WorksBasketService worksBasketService;
+
+//    @RequestMapping()
+//    public String main(@AuthenticationPrincipal User user,
+//                       Map<String, Object> model) {
+//        model.put("completedWorks", completedWorkService.findAll());
+//        model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
+//        model.put("addresses", addressService.findAll());
+//        model.put("streets", streetService.findAll());
+//        model.put("cities", cityService.findAll());
+//        model.put("user", user);
+//        return "Monitoring";
+//    }
+
     @RequestMapping()
     public String main(@AuthenticationPrincipal User user,
                        Map<String, Object> model) {

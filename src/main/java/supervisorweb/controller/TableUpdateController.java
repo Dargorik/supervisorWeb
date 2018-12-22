@@ -736,7 +736,7 @@ public class TableUpdateController {
         if (flag.equals("true"))
             model.put("beanUp", userRegionsService.findById(updId));
         model.put("usersRegions", userRegionsService.findAll());
-        model.put("users", userService.findAll());
+        model.put("users", userService.findAllUser());
         model.put("regions", regionService.findAll());
         model.put("getflag", flag);
         User user =userService.findById(userFilter);
@@ -760,7 +760,7 @@ public class TableUpdateController {
         if (flag.equals("true"))
             model.put("beanUp", userRegionsService.findById(updId));
         model.put("usersRegions", userRegionsService.findAll());
-        model.put("users", userService.findAll());
+        model.put("users", userService.findAllUser());
         model.put("regions", regionService.findAll());
         User user =userService.findById(userFilter);
         model.put("userFilter", user==null?0:user.getIdusers());
@@ -781,7 +781,7 @@ public class TableUpdateController {
         if (flag.equals("true"))
             model.put("beanUp", userRegionsService.findById(updId));
         model.put("usersRegions", userRegionsService.findAll());
-        model.put("users", userService.findAll());
+        model.put("users", userService.findAllUser());
         model.put("regions", regionService.findAll());
         model.put("getflag", flag);
         User user =userService.findById(userFilter);
@@ -806,7 +806,7 @@ public class TableUpdateController {
         if (flag.equals("true"))
             model.put("beanUp", userRegionsService.findById(updId));
         model.put("usersRegions", userRegionsService.findAll());
-        model.put("users", userService.findAll());
+        model.put("users", userService.findAllUser());
         model.put("regions", regionService.findAll());
         model.put("getflag", flag);
         User user =userService.findById(userFilter);

@@ -40,7 +40,7 @@ public class StreetServiceImpl implements StreetService {
     public String delete(Integer delIdy) {
         Street street = streetRepos.findById(delIdy).orElse(null);
         if (street == null) {
-            return "This component already exists!";
+            return "This component does not exist!";
         } else {
             streetRepos.delete(street);
             return "Successful delete record!";

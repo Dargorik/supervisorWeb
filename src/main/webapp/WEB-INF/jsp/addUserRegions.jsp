@@ -99,10 +99,6 @@
                         <td id="region${ind.index+1}">${usersRegion.region.name}</td>
                         <td><a id="updButtom${ind.index}" href="/tables/userRegions?updId=${usersRegion.idUserRegions}&flag=${true}" onclick="displayUpd(${ind.index}); return false;">Update</a></td>
                         <td><a id="delButtom${ind.index}" href="/tables/delete/userRegions?updId=${beanUp.idUserRegions}&delId=${usersRegion.idUserRegions}&flag=<%=flag==true?"true":"false"%>" onclick="display(${ind.index}); return false;">Delete</a></td>
-                        <%--<td>--%>
-                            <%--<input type="text" id="uf${ind.index+1}" name="userFilter" value="${userFilter}">--%>
-                            <%--<input type="text" id="rf${ind.index+1}" name="regionFilter" value="${regionFilter}">--%>
-                        <%--</td>--%>
                     </form>
                 </tr>
             </c:forEach>

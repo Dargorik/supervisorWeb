@@ -1,15 +1,10 @@
 package supervisorweb.domain;
 
-
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Entity
-public class CompletedWork {
+public class WorksBasket {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer idCompletedWork;
@@ -24,22 +19,15 @@ public class CompletedWork {
     @JoinColumn(name = "typeOfWorkPerformed")
     private TypeOfWorkPerformed typeOfWorkPerformed;
     private String comment;
-    private Timestamp timestamp_send;
 
-    public String getDate(){
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        return  formatter.format(timestamp_send);
-    }
+    public WorksBasket(){}
 
-    public CompletedWork(){}
-
-    public CompletedWork(User user, Address address, Integer numberCompletedEntrances, TypeOfWorkPerformed typeOfWorkPerformed, String comment, Timestamp timestamp_send) {
+    public WorksBasket(User user, Address address, Integer numberCompletedEntrances, TypeOfWorkPerformed typeOfWorkPerformed, String comment) {
         this.user = user;
         this.address = address;
         this.numberCompletedEntrances = numberCompletedEntrances;
         this.typeOfWorkPerformed = typeOfWorkPerformed;
         this.comment = comment;
-        this.timestamp_send = timestamp_send;
     }
 
 
@@ -90,13 +78,5 @@ public class CompletedWork {
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public Timestamp getTimestamp_send() {
-        return timestamp_send;
-    }
-
-    public void setTimestamp_send(Timestamp timestamp_send) {
-        this.timestamp_send = timestamp_send;
     }
 }

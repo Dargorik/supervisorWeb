@@ -59,7 +59,7 @@ public class ListTypesInPerfomedWorkServiceImpl implements ListTypesInPerfomedWo
     public String delete(Integer delIdTypeOfWorkPerformed) {
         ListTypesInPerfomedWork listTypesInPerfomedWork = listTypesInPerfomedWorkRepos.findById(delIdTypeOfWorkPerformed).orElse(null);
         if (listTypesInPerfomedWork == null) {
-            return "This component already exists!";
+            return "This component does not exist!";
         } else {
             listTypesInPerfomedWorkRepos.delete(listTypesInPerfomedWork);
             return "Successful delete record!";
