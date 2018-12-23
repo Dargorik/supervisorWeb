@@ -33,7 +33,7 @@ ${message}
 </div>
 <table border="1" id="t">
     <tr>
-        <th>id</th>
+        <th hidden>id</th>
         <th><select id="userSelect" name="User">
             <option name="0" value="all"  <c:if test="${userFilter==0}"> selected </c:if>  ><c:out
                     value="All employee"/></option>
@@ -98,7 +98,7 @@ ${message}
         <tr>
             <form method="post" action="deletePosition">
                 <input type="hidden" name="_csrf" value=${_csrf.token}/>
-                <td>${completedWork.idCompletedWork}</td>
+                <td hidden>${completedWork.idCompletedWork}</td>
                 <td id="user${ind.index+1}">${completedWork.user.firstName} ${completedWork.user.lastName}</td>
                 <td id="city${ind.index+1}">${completedWork.address.city.name}</td>
                 <td id="street${ind.index+1}">${completedWork.address.street.name}</td>

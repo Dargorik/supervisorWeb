@@ -26,6 +26,8 @@ public class CompletedWorkServiceImpl implements CompletedWorkService {
     @Autowired
     private TypeOfWorkPerformedRepos typeOfWorkPerformedRepos;
     @Autowired
+    private TypeOfWorkRepos typeOfWorkRepos;
+    @Autowired
     private LastCompletedDateAddressRepos lastCompletedDateAddressRepos;
     @Autowired
     private ListTypesInPerfomedWorkRepos listTypesInPerfomedWorkRepos;
@@ -43,24 +45,24 @@ public class CompletedWorkServiceImpl implements CompletedWorkService {
     @Override
     public String add(Integer idUsers, Integer idAddress, String numberCompletedEntrances, Integer idTypeOfWorkPerformed, String comment) {
         if (numberCompletedEntrances == null || numberCompletedEntrances.isEmpty())
-            return "Введенны некорректные данные1";
+            return "Invalid input!";
         Integer number = Integer.parseInt(numberCompletedEntrances);
         if (number == null)
-            return "Введенны некорректные данные";
+            return "Invalid input!";
         User user = userRepos.findById(idUsers).orElse(null);
         Address address = addressRepos.findById(idAddress).orElse(null);
         TypeOfWorkPerformed typeOfWorkPerformed = typeOfWorkPerformedRepos.findById(idTypeOfWorkPerformed).orElse(null);
         if (user == null || address == null || typeOfWorkPerformed == null)
-            return "Ошибка!";
+            return "Invalid input!";
         if (number > address.getNumberEntrances() || number < 1)
-            return "Указано неверное кол-во подъездов";
+            return "Invalid input!";
         Date date = new Date();
         long time = 0;
         time = date.getTime();
         Timestamp timestamp = new Timestamp(time);
         CompletedWork completedWork = new CompletedWork(user, address, number, typeOfWorkPerformed, comment, timestamp);
         completedWorkRepos.save(completedWork);
-        return "Новый запись добавлена";
+        return "Successful add record!";
     }
 
 
@@ -107,7 +109,16 @@ public class CompletedWorkServiceImpl implements CompletedWorkService {
         if (completedWork == null) {
             return "This component does not exist!";
         } else {
-            completedWorkRepos.delete(completedWork);
+            for(TypeOfWork typeOfWork: typeOfWorkRepos.findTypeOfWorkByTypeOfWorkPerformed(completedWork.getTypeOfWorkPerformed())) {
+                LastCompletedDateAddress lastCompletedDateAddress = lastCompletedDateAddressRepos.findByAddressAndTypeOfWork(completedWork.getAddress(), typeOfWork);
+                System.out.println("удаляется:"+completedWork.getTimestamp_send()+"была запись:"+lastCompletedDateAddress.getLastData());
+                completedWorkRepos.delete(completedWork);
+                if (completedWork.getTimestamp_send().equals(lastCompletedDateAddress.getLastData())) {
+                    lastCompletedDateAddress.setLastData(completedWorkRepos.findByAddressAndTypeOfWork(completedWork.getAddress(), typeOfWork));
+                    lastCompletedDateAddressRepos.save(lastCompletedDateAddress);
+                    System.out.println(completedWorkRepos.findByAddressAndTypeOfWork(completedWork.getAddress(), typeOfWork));
+                }
+            }
             return "Successful delete record!";
         }
     }

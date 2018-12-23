@@ -17,7 +17,7 @@
 </head>
 <body>
 <div name="back">
-    <button class="b1" onclick="location.href='/'">Назад</button>
+    <button class="b1" onclick="location.href='/'">Back</button>
 </div>
 
 <div name="mess">
@@ -70,10 +70,10 @@
                 <td id="street${ind.index+1}">${address.street.name}</td>
                 <td>${address.houseNumber}</td>
                 <td>
-                    <input type="text" name="numberCompletedEntrances" placeholder="Кол-во выполненных подлъездов">
+                    <input required type="text" name="numberCompletedEntrances" placeholder="Number completed entrances">
                 </td>
                 <td>
-                    <input type="text" name="comment" placeholder="Комментарий">
+                    <input type="text" name="comment" placeholder="Comment">
                 </td>
                 <td>
                     <button name="but" value="" type=submit>add</button></td>

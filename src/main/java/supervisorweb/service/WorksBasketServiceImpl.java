@@ -46,20 +46,20 @@ public class WorksBasketServiceImpl implements WorksBasketService {
     @Override
     public String add(Integer idUsers, Integer idAddress, String numberCompletedEntrances, Integer idTypeOfWorkPerformed, String comment) {
         if (numberCompletedEntrances == null || numberCompletedEntrances.isEmpty())
-            return "Введенны некорректные данные1";
+            return "Invalid input!";
         Integer number = Integer.parseInt(numberCompletedEntrances);
         if (number == null)
-            return "Введенны некорректные данные";
+            return "Invalid input!";
         User user = userRepos.findById(idUsers).orElse(null);
         Address address = addressRepos.findById(idAddress).orElse(null);
         TypeOfWorkPerformed typeOfWorkPerformed = typeOfWorkPerformedRepos.findById(idTypeOfWorkPerformed).orElse(null);
         if (user == null || address == null || typeOfWorkPerformed == null)
-            return "Ошибка!";
+            return "Invalid input!";
         if (number > address.getNumberEntrances() || number < 1)
-            return "Указано неверное кол-во подъездов";
+            return "Invalid input!";
         WorksBasket worksBasket = new WorksBasket(user, address, number, typeOfWorkPerformed, comment);
         worksBasketRepos.save(worksBasket);
-        return "Новый запись добавлена";
+        return "Successful add record!";
     }
 
     @Override
