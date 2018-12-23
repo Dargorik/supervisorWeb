@@ -27,7 +27,7 @@ public class AddressServiceImpl implements AddressService {
     @Autowired
     private TypeOfWorkRepos typeOfWorkRepos;
     @Autowired
-    private LastComletedDateAddressRepos lastComletedDateAddressRepos;
+    private LastCompletedDateAddressRepos lastCompletedDateAddressRepos;
 
 
     @Override
@@ -127,7 +127,7 @@ public class AddressServiceImpl implements AddressService {
 
     public void addLastComletedDateAddress(Address address){
         for(TypeOfWork typeOfWork: typeOfWorkRepos.findAll()){
-            lastComletedDateAddressRepos.save(new LastComletedDateAddress(address, typeOfWork));
+            lastCompletedDateAddressRepos.save(new LastCompletedDateAddress(address, typeOfWork));
         }
     }
 }

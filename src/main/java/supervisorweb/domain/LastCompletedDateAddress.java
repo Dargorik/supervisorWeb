@@ -1,11 +1,14 @@
 package supervisorweb.domain;
 
 import javax.persistence.*;
-import javax.xml.crypto.Data;
+import java.text.ParseException;
+import java.util.Date;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 @Entity
-public class LastComletedDateAddress {
+public class LastCompletedDateAddress {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
@@ -17,15 +20,28 @@ public class LastComletedDateAddress {
     private TypeOfWork typeOfWork;
     private Timestamp lastData;
 
-    public LastComletedDateAddress(){}
+    public String getDate(){
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date;
+        try {
+            date = formatter.parse(formatter.format(new Date()));
+        } catch (ParseException e) {
+            return "none!";
+        }
+        //Timestamp timestamp = new Timestamp(date.getTime());
+        //return  lastData==null?"none":(formatter.format(lastData));
+        return  lastData==null?"none":(String.valueOf((date.getTime()-lastData.getTime())/86400000));
+    }
 
-    public LastComletedDateAddress(Address address, TypeOfWork typeOfWork, Timestamp lastData) {
+    public LastCompletedDateAddress(){}
+
+    public LastCompletedDateAddress(Address address, TypeOfWork typeOfWork, Timestamp lastData) {
         this.address = address;
         this.typeOfWork = typeOfWork;
         this.lastData = lastData;
     }
 
-    public LastComletedDateAddress(Address address, TypeOfWork typeOfWork) {
+    public LastCompletedDateAddress(Address address, TypeOfWork typeOfWork) {
         this.address = address;
         this.typeOfWork = typeOfWork;
     }

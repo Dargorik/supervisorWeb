@@ -3,6 +3,7 @@ package supervisorweb.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import supervisorweb.domain.City;
+import supervisorweb.domain.User;
 import supervisorweb.repos.CityRepos;
 
 import java.util.List;
@@ -60,5 +61,10 @@ public class CityServiceImpl implements CityService {
     @Override
     public City findById(Integer updId) {
         return cityRepos.findById(updId).orElse(null);
+    }
+
+    @Override
+    public List<City> findByUserRegions(User user) {
+        return cityRepos.findByUserRegions(user);
     }
 }

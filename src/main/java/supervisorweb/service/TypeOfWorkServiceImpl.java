@@ -3,10 +3,10 @@ package supervisorweb.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import supervisorweb.domain.Address;
-import supervisorweb.domain.LastComletedDateAddress;
+import supervisorweb.domain.LastCompletedDateAddress;
 import supervisorweb.domain.TypeOfWork;
 import supervisorweb.repos.AddressRepos;
-import supervisorweb.repos.LastComletedDateAddressRepos;
+import supervisorweb.repos.LastCompletedDateAddressRepos;
 import supervisorweb.repos.TypeOfWorkRepos;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class TypeOfWorkServiceImpl implements  TypeOfWorkService {
     @Autowired
     private AddressRepos addressRepos;
     @Autowired
-    private LastComletedDateAddressRepos lastComletedDateAddressRepos;
+    private LastCompletedDateAddressRepos lastCompletedDateAddressRepos;
 
     @Override
     public TypeOfWork findByName(String name) {
@@ -61,6 +61,7 @@ public class TypeOfWorkServiceImpl implements  TypeOfWorkService {
             if (c == null) {
                 addLastComletedDateAddress(typeOfWork);
                 typeOfWorkRepos.save(typeOfWork);
+                //addAllLastComletedDateAddress();
             } else return "This component already exists!";
         } else return "Invalid input!";
         return "Successful add record!";
@@ -73,13 +74,13 @@ public class TypeOfWorkServiceImpl implements  TypeOfWorkService {
 
     public void addLastComletedDateAddress(TypeOfWork typeOfWork){
         for(Address address: addressRepos.findAll()){
-            lastComletedDateAddressRepos.save(new LastComletedDateAddress(address, typeOfWork));
+            lastCompletedDateAddressRepos.save(new LastCompletedDateAddress(address, typeOfWork));
         }
     }
 
     public void addAllLastComletedDateAddress(){
         for (TypeOfWork typeOfWork: typeOfWorkRepos.findAll())
             for(Address address: addressRepos.findAll())
-                lastComletedDateAddressRepos.save(new LastComletedDateAddress(address, typeOfWork));
+                lastCompletedDateAddressRepos.save(new LastCompletedDateAddress(address, typeOfWork));
     }
 }

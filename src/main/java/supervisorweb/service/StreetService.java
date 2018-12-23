@@ -1,6 +1,7 @@
 package supervisorweb.service;
 
 import supervisorweb.domain.Street;
+import supervisorweb.domain.User;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface StreetService {
     String add(String name);
 
     Street findById(Integer updId);
+
+    List<Street> findByUserRegions(User user);
 }

@@ -1,6 +1,8 @@
 package supervisorweb.service;
 
 import supervisorweb.domain.City;
+import supervisorweb.domain.User;
+
 import java.util.List;
 
 public interface CityService {
@@ -17,4 +19,6 @@ public interface CityService {
     String add(String name);
 
     City findById(Integer updId);
+
+    List<City> findByUserRegions(User user);
 }

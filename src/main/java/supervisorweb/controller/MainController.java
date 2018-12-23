@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import supervisorweb.domain.ListOfCompletedWork;
 import supervisorweb.domain.Position;
 import supervisorweb.domain.Role;
 import supervisorweb.domain.User;
-import supervisorweb.repos.ListOfCompletedWorkRepos;
 import supervisorweb.repos.PositionRepos;
 import supervisorweb.repos.UserRepos;
 import supervisorweb.service.UserService;
@@ -18,8 +16,6 @@ import java.util.Map;
 
 @Controller
 public class MainController {
-    @Autowired
-    private ListOfCompletedWorkRepos listOfCompletedWorkRepos;
     @Autowired
     private UserService userService;
 
@@ -56,10 +52,6 @@ public class MainController {
     @PostMapping("add")
     public String add(@AuthenticationPrincipal User user,
             @RequestParam String comments, Map<String, Object> model) {
-        ListOfCompletedWork listOCW = new ListOfCompletedWork(comments, user);
-        listOfCompletedWorkRepos.save(listOCW);
-        model.put("listOfCompletedWork",listOfCompletedWorkRepos.findAll());
-        System.out.println("123");
         //userRepos.save(user);
       //  Iterable<User> users = userRepos.findAll();
       //  model.put("users", users);

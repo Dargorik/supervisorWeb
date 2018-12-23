@@ -27,7 +27,7 @@ public class WorksBasketServiceImpl implements WorksBasketService {
     @Autowired
     private TypeOfWorkRepos typeOfWorkRepos;
     @Autowired
-    private LastComletedDateAddressRepos lastComletedDateAddressRepos;
+    private LastCompletedDateAddressRepos lastCompletedDateAddressRepos;
 
     @Override
     public List<WorksBasket> findAll() {
@@ -92,9 +92,9 @@ public class WorksBasketServiceImpl implements WorksBasketService {
         {
             for (Address address : addressRepos.findByUserRegions(user)) {
                 if(!addresses.contains(address)) {
-                    Timestamp timestamp = lastComletedDateAddressRepos.findByAddressAndTypeOfWork(address, typeOfWork).getLastData();
+                    Timestamp timestamp = lastCompletedDateAddressRepos.findByAddressAndTypeOfWork(address, typeOfWork).getLastData();
                     if (timestamp != null) {
-                        if ((date.getTime() - lastComletedDateAddressRepos.findByAddressAndTypeOfWork(address, typeOfWork).getLastData().getTime()) / 86400000 <= address.getPriorityList().getNumber())
+                        if ((date.getTime() - lastCompletedDateAddressRepos.findByAddressAndTypeOfWork(address, typeOfWork).getLastData().getTime()) / 86400000 <= address.getPriorityList().getNumber())
                             addresses.add(address);
                     } else
                         addresses.add(address);

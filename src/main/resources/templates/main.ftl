@@ -24,9 +24,15 @@
                     </form>
                 </div>
                 <div>
-                    <form method="post" action="/monitoring?userId=${user.getIdusers()}" >
+                    <form method="post" action="/monitoring" >
                         <input type="hidden" name="_csrf" value="${_csrf.token}" />
                         <button type="submit">Мониторинг работ</button>
+                    </form>
+                </div>
+                <div>
+                    <form method="post" action="/status" >
+                        <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                        <button type="submit">Статус всех домов</button>
                     </form>
                 </div>
             <#else>

@@ -3,6 +3,7 @@ package supervisorweb.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import supervisorweb.domain.Street;
+import supervisorweb.domain.User;
 import supervisorweb.repos.StreetRepos;
 
 import java.util.List;
@@ -62,5 +63,10 @@ public class StreetServiceImpl implements StreetService {
     @Override
     public Street findById(Integer updId) {
         return streetRepos.findById(updId).orElse(null);
+    }
+
+    @Override
+    public List<Street> findByUserRegions(User user) {
+        return streetRepos.findByUserRegions(user);
     }
 }

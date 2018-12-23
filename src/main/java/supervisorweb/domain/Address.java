@@ -39,7 +39,7 @@ public class Address {
     private List<WorksBasket> WorksBasket;
 
     @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "address")
-    private List<LastComletedDateAddress> lastComletedDateAddresses;
+    private List<LastCompletedDateAddress> lastCompletedDateAddresses;
 
     public Address(){}
 

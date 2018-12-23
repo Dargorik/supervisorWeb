@@ -15,7 +15,7 @@ public class TypeOfWork {
     @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "typeOfWork")
     private List<ListTypesInPerfomedWork> listTypesInPerfomedWork;
     @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "typeOfWork")
-    private List<LastComletedDateAddress> lastComletedDateAddresses;
+    private List<LastCompletedDateAddress> lastComletedDateAddresses;
 
     public TypeOfWork(){}
 

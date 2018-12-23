@@ -175,21 +175,12 @@
                             allRows[index].setAttribute("hidden", "hidden")
                         }
                     }
-                    // var userF = document.getElementById("uf" + index);
-                    // userF.setAttribute("value", userSelect.options[userSelect.selectedIndex].value);
-                    // var regionF = document.getElementById("rf" + index);
-                    // regionF.setAttribute("value", regionSelect.options[regionSelect.selectedIndex].value);
-                   // alert( document.getElementById("uf" + index).value+"---"+document.getElementById("rf" + index).value);
                 }
             }
-            var userF = document.getElementById("uf");
-            userF.setAttribute("value", userSelect.options[userSelect.selectedIndex].getAttribute("name"));
-            var regionF = document.getElementById("rf");
-            regionF.setAttribute("value", regionSelect.options[regionSelect.selectedIndex].getAttribute("name"));
-            var userF = document.getElementById("ufUp");
-            userF.setAttribute("value", userSelect.options[userSelect.selectedIndex].getAttribute("name"));
-            var regionF = document.getElementById("rfUp");
-            regionF.setAttribute("value", regionSelect.options[regionSelect.selectedIndex].getAttribute("name"));
+            document.getElementById("uf").setAttribute("value", userSelect.options[userSelect.selectedIndex].getAttribute("name"));
+            document.getElementById("rf").setAttribute("value", regionSelect.options[regionSelect.selectedIndex].getAttribute("name"));
+            document.getElementById("ufUp").setAttribute("value", userSelect.options[userSelect.selectedIndex].getAttribute("name"));
+            document.getElementById("rfUp").setAttribute("value", regionSelect.options[regionSelect.selectedIndex].getAttribute("name"));
         }
 
         userSelect.addEventListener("change", Filter);

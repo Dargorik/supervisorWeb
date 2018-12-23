@@ -79,7 +79,7 @@
                     <option name="true" value="true"  <c:if test="${activFilter==1}"> selected </c:if>><c:out value="true"/></option>
                     <option name="false" value="false"  <c:if test="${activFilter==0}"> selected </c:if>><c:out value="false"/></option>
                 </select></th>
-            <th>Activ</th>
+            <th id="">Activ</th>
             <th>Update</th>
             <th>Delete</th>
         </tr>
@@ -93,7 +93,7 @@
                 <td>${user.username}</td>
                 <td>${user.password}</td>
                 <td id="position${ind.index+1}">${user.position.name}</td>
-                <td id="activity${ind.index+1}">${user.activ}</td>
+                <td hidden id="activity${ind.index+1}">${user.activ}</td>
                 <td><input disabled type="checkbox" name="a" value="true" <c:if test="${user.activ=='true'}"> checked </c:if>></td>
                 <td><a id="updButtom${ind.index}" href="/users/list?updId=${user.idusers}&flag=${true}" onclick="displayUpd(${ind.index}); return false;">Update</a></td>
                 <td><a id="delButtom${ind.index}" href="/users/delete?updId=${beanUp.idusers}&delId=${user.idusers}&flag=<%=flag==true?"true":"false"%>" onclick="display(${ind.index}); return false;">Delete</a></td>

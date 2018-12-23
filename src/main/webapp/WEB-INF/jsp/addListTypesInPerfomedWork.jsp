@@ -164,7 +164,6 @@
             var allRows = table.getElementsByTagName("tr");
             for (var index in allRows) {
                 if (index > 0) {
-                   // alert("wefsd");
                     var fieldTypeOfWorkPerformed = document.getElementById("typeOfWorkPerformed" + index);
                     var fieldTypeOfWork = document.getElementById("typeOfWork" + index);
                     if (fieldTypeOfWorkPerformed != null && fieldTypeOfWork != null) {

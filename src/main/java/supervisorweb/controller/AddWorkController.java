@@ -42,8 +42,8 @@ public class AddWorkController {
             model.put("addresses", worksBasketService.findOtherAddresses(user));
         else
             model.put("addresses", worksBasketService.findRelevanceOtherAddresses(user, idTypeOfWorkPerformed));
-        model.put("streets", streetService.findAll());
-        model.put("cities", cityService.findAll());
+        model.put("streets", streetService.findByUserRegions(user));
+        model.put("cities", cityService.findByUserRegions(user));
         model.put("idTypeOfWP", idTypeOfWorkPerformed);
         model.put("relevance", relevance);
         City city=cityService.findById(cityFilter);

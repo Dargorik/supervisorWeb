@@ -3,7 +3,6 @@ package supervisorweb.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import supervisorweb.domain.*;
-import supervisorweb.repos.ListOfCompletedWorkRepos;
 import supervisorweb.repos.ListTypesInPerfomedWorkRepos;
 import supervisorweb.repos.PositionDutiesRepos;
 import supervisorweb.repos.TypeOfWorkPerformedRepos;

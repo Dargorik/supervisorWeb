@@ -26,7 +26,7 @@ public class CompletedWorkServiceImpl implements CompletedWorkService {
     @Autowired
     private TypeOfWorkPerformedRepos typeOfWorkPerformedRepos;
     @Autowired
-    private LastComletedDateAddressRepos lastComletedDateAddressRepos;
+    private LastCompletedDateAddressRepos lastCompletedDateAddressRepos;
     @Autowired
     private ListTypesInPerfomedWorkRepos listTypesInPerfomedWorkRepos;
 
@@ -42,24 +42,23 @@ public class CompletedWorkServiceImpl implements CompletedWorkService {
 
     @Override
     public String add(Integer idUsers, Integer idAddress, String numberCompletedEntrances, Integer idTypeOfWorkPerformed, String comment) {
-        if(numberCompletedEntrances==null||numberCompletedEntrances.isEmpty())
+        if (numberCompletedEntrances == null || numberCompletedEntrances.isEmpty())
             return "Введенны некорректные данные1";
-        Integer number=Integer.parseInt(numberCompletedEntrances);
-        if(number==null)
+        Integer number = Integer.parseInt(numberCompletedEntrances);
+        if (number == null)
             return "Введенны некорректные данные";
-        User user=userRepos.findById(idUsers).orElse(null);
-        Address address=addressRepos.findById(idAddress).orElse(null);
-        TypeOfWorkPerformed typeOfWorkPerformed=typeOfWorkPerformedRepos.findById(idTypeOfWorkPerformed).orElse(null);
-        if (user==null||address==null||typeOfWorkPerformed==null)
+        User user = userRepos.findById(idUsers).orElse(null);
+        Address address = addressRepos.findById(idAddress).orElse(null);
+        TypeOfWorkPerformed typeOfWorkPerformed = typeOfWorkPerformedRepos.findById(idTypeOfWorkPerformed).orElse(null);
+        if (user == null || address == null || typeOfWorkPerformed == null)
             return "Ошибка!";
-        if(number>address.getNumberEntrances()||number<1)
+        if (number > address.getNumberEntrances() || number < 1)
             return "Указано неверное кол-во подъездов";
-        //DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
         long time = 0;
         time = date.getTime();
-        Timestamp timestamp=new Timestamp(time);
-        CompletedWork completedWork=new CompletedWork(user, address, number, typeOfWorkPerformed, comment, timestamp);
+        Timestamp timestamp = new Timestamp(time);
+        CompletedWork completedWork = new CompletedWork(user, address, number, typeOfWorkPerformed, comment, timestamp);
         completedWorkRepos.save(completedWork);
         return "Новый запись добавлена";
     }
@@ -74,26 +73,50 @@ public class CompletedWorkServiceImpl implements CompletedWorkService {
         } catch (ParseException e) {
             return "Error!";
         }
-        Timestamp timestamp=new Timestamp(date.getTime());
-        for(WorksBasket worksBasket: worksBasketRepos.findByUser(user)){
-            CompletedWork completedWork=new CompletedWork(worksBasket.getUser(),
+        Timestamp timestamp = new Timestamp(date.getTime());
+        for (WorksBasket worksBasket : worksBasketRepos.findByUser(user)) {
+            CompletedWork completedWork = new CompletedWork(worksBasket.getUser(),
                     worksBasket.getAddress(),
                     worksBasket.getNumberCompletedEntrances(),
                     worksBasket.getTypeOfWorkPerformed(),
                     worksBasket.getComment(),
                     timestamp);
             completedWorkRepos.save(completedWork);
-            addLastCompletedDataAddress( worksBasket.getAddress(), worksBasket.getTypeOfWorkPerformed(),  timestamp);
-            }
+            addLastCompletedDataAddress(worksBasket.getAddress(), worksBasket.getTypeOfWorkPerformed(), timestamp);
+        }
         worksBasketRepos.deleteAll();
         return "Successful!";
     }
 
-    public void addLastCompletedDataAddress(Address address, TypeOfWorkPerformed typeOfWorkPerformed, Timestamp lastData){
-        for(TypeOfWork typeOfWork: listTypesInPerfomedWorkRepos.findByTypeOfWorkPerformed(typeOfWorkPerformed).stream()
-                .map(x->x.getTypeOfWork())
-                .collect(Collectors.toList())){
-            lastComletedDateAddressRepos.findByAddressAndTypeOfWork(address,typeOfWork).setLastData(lastData);
+    @Override
+    public List<CompletedWork> findByData(Date frome, Date to) {
+        List<CompletedWork> completedWorksList = completedWorkRepos.findAll();
+        List<CompletedWork> completedWorks = completedWorkRepos.findAll();
+        for (CompletedWork completedWork : completedWorksList) {
+            if (frome != null && completedWork.getTimestamp_send().getTime() < frome.getTime())
+                completedWorks.remove(completedWork);
+            if (to != null && completedWork.getTimestamp_send().getTime() > to.getTime())
+                completedWorks.remove(completedWork);
+        }
+        return completedWorks;
+    }
+
+    @Override
+    public String delete(Integer delId) {
+        CompletedWork completedWork = completedWorkRepos.findById(delId).orElse(null);
+        if (completedWork == null) {
+            return "This component does not exist!";
+        } else {
+            completedWorkRepos.delete(completedWork);
+            return "Successful delete record!";
+        }
+    }
+
+    public void addLastCompletedDataAddress(Address address, TypeOfWorkPerformed typeOfWorkPerformed, Timestamp lastData) {
+        for (TypeOfWork typeOfWork : listTypesInPerfomedWorkRepos.findByTypeOfWorkPerformed(typeOfWorkPerformed).stream()
+                .map(x -> x.getTypeOfWork())
+                .collect(Collectors.toList())) {
+            lastCompletedDateAddressRepos.findByAddressAndTypeOfWork(address, typeOfWork).setLastData(lastData);
         }
     }
 }

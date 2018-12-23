@@ -50,7 +50,7 @@
             </c:forEach>
         </select></th>
         <td><select id="streetSelect" name="Street">
-            <option name="0" value="all"  <c:if test="${cityFilter==0}"> selected </c:if>  ><c:out value="All street"/></option>
+            <option name="0" value="all"  <c:if test="${streetFilter==0}"> selected </c:if>  ><c:out value="All street"/></option>
             <c:forEach items="${streets}" var="street">
                 <option name="${street.idStreet}" value="${street.name}" <c:if test="${street.idStreet==streetFilter}"> selected </c:if>><c:out
                         value="${street.name}"/></option>
@@ -114,6 +114,8 @@
                 "&relevance="+enabled+
                 "&cityFilter="+citySelect.options[citySelect.selectedIndex].getAttribute("name")+
                 "&streetFilter="+streetSelect.options[streetSelect.selectedIndex].getAttribute("name");
+        else
+            relevance.checked=false;
     }
 
     function changeOption() {
