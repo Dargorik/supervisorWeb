@@ -8,7 +8,6 @@ import supervisorweb.repos.TypeOfWorkPerformedRepos;
 import supervisorweb.repos.TypeOfWorkRepos;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ListTypesInPerfomedWorkServiceImpl implements ListTypesInPerfomedWorkService  {
@@ -28,10 +27,7 @@ public class ListTypesInPerfomedWorkServiceImpl implements ListTypesInPerfomedWo
 
     @Override
     public List<ListTypesInPerfomedWork> findAll() {
-        return listTypesInPerfomedWorkRepos.findAll().stream()
-                .sorted((x, y) -> x.getTypeOfWork().getName().compareTo(y.getTypeOfWork().getName()))
-                .sorted((x, y) -> x.getTypeOfWorkPerformed().getName().compareTo(y.getTypeOfWorkPerformed().getName()))
-                .collect(Collectors.toList());
+        return listTypesInPerfomedWorkRepos.findAll();
     }
 
     @Override
@@ -40,10 +36,8 @@ public class ListTypesInPerfomedWorkServiceImpl implements ListTypesInPerfomedWo
         try {
             TypeOfWorkPerformed typeOfWorkPerformed=typeOfWorkPerformedRepos.findById(updIdTypeOfWorkPerformed).orElse(null);
             TypeOfWork typeOfWork=typeOfWorkRepos.findById(updIdTypeOfWork).orElse(null);
-            listTypesInPerfomedWork=listTypesInPerfomedWorkRepos.findAllByTypeOfWorkPerformedAndTypeOfWork(typeOfWorkPerformed, typeOfWork);
-            if(listTypesInPerfomedWork!=null)
-                if (!listTypesInPerfomedWork.getIdListTypesInPerfomedWork().equals(updIdListTypesInPerfomedWork))
-                    return "This component already exists!";
+            if(listTypesInPerfomedWorkRepos.findByTypeOfWorkPerformedAndTypeOfWorkAndNotId(typeOfWorkPerformed,typeOfWork,updIdListTypesInPerfomedWork)!=null)
+                return "This component already exists!";
             listTypesInPerfomedWork  = listTypesInPerfomedWorkRepos.findById(updIdListTypesInPerfomedWork).orElse(null);
             listTypesInPerfomedWork.setTypeOfWorkPerformed(typeOfWorkPerformed);
             listTypesInPerfomedWork.setTypeOfWork(typeOfWork);

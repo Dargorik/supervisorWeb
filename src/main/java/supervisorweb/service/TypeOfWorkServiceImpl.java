@@ -34,12 +34,15 @@ public class TypeOfWorkServiceImpl implements  TypeOfWorkService {
     public String update(Integer updId, String updName) {
         if (updName == null || updName.isEmpty())
             return "Invalid input!";
+        if(typeOfWorkRepos.findByNameAndNotId(updName,updId)!=null)
+            return "This component already exists!";
         TypeOfWork typeOfWork = typeOfWorkRepos.findById(updId).orElse(null);
         if (typeOfWork != null) {
             typeOfWork.setName(updName);
             typeOfWorkRepos.save(typeOfWork);
             return "Successful update record!";
-        } else return "This component already exists!";
+        }
+        else return "This component does not exist!";
     }
 
     @Override

@@ -17,8 +17,8 @@ public interface AddressService {
                   Integer cityId,
                   Integer streetId,
                   String houseNumber,
-                  String numberFloors,
-                  String numberEntrances,
+                  Integer numberFloors,
+                  Integer numberEntrances,
                   Integer priorityListId,
                   Integer regionId);
 
@@ -27,8 +27,8 @@ public interface AddressService {
     String add(Integer cityId,
                Integer streetId,
                String houseNumber,
-               String numberFloors,
-               String numberEntrances,
+               Integer numberFloors,
+               Integer numberEntrances,
                Integer priorityListId,
                Integer regionId);
 

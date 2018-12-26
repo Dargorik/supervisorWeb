@@ -24,8 +24,10 @@ public class PriorityListServiceImpl implements PriorityListService {
 
     @Override
     public String update(Integer updId, String updName, Integer updNumber) {
-        if (updNumber == null || updName == null || updName.isEmpty())
+        if (updNumber == null|| updNumber<0 || updName == null || updName.isEmpty())
             return "Invalid input!";
+        if(priorityListRepos.findByNameAndNotId(updName,updId)!=null)
+            return "This component already exists!";
         PriorityList priorityList = priorityListRepos.findById(updId).orElse(null);
         if (priorityList != null) {
             priorityList.setName(updName);
@@ -33,7 +35,7 @@ public class PriorityListServiceImpl implements PriorityListService {
             priorityListRepos.save(priorityList);
             return "Successful update record!";
         }
-        else return "This component already exists!";
+        else return "This component does not exist!";
     }
 
     @Override
@@ -49,7 +51,7 @@ public class PriorityListServiceImpl implements PriorityListService {
 
     @Override
     public String add(String name, Integer number) {
-        if (number != null || name != null || !name.isEmpty())
+        if (number != null && number>0 && name != null && !name.isEmpty())
         {
             PriorityList priorityList = new PriorityList(name, number);
             PriorityList pl = priorityListRepos.findByName(priorityList.getName());

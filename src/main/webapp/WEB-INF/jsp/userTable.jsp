@@ -18,28 +18,12 @@
 </head>
 <body>
     <div>
-        <button class="b1" onclick="location.href='/addTable/'">Back</button>
+        <button class="b1" onclick="location.href='/'">Back</button>
     </div>
     <h2>Table of users</h2>
     ${message}
-    <%
-        Boolean flag=false;
-        String s = (String) request.getAttribute("getflag");
-        if(s.equals("true"))
-            flag=true;
-        else
-            flag=false;
-    %>
-    <%!
-        String someOutput(Boolean flag) {
-            if (flag==false)
-                return "display:none";
-            else
-                return "display:block";
-        }
-    %>
     <div>
-        <form method="post" action="/users/add?updId=${beanUp.idusers}&flag=<%=flag==true?"true":"false"%>">
+        <form method="post" action="/users/add?updId=${beanUp.idusers}">
             <input type="hidden" name="_csrf" value=${_csrf.token} />
             <input required type="text" name="firstName" placeholder="Имя">
             <input required type="text" name="lastName" placeholder="Фамилия">
@@ -79,7 +63,6 @@
                     <option name="true" value="true"  <c:if test="${activFilter==1}"> selected </c:if>><c:out value="true"/></option>
                     <option name="false" value="false"  <c:if test="${activFilter==0}"> selected </c:if>><c:out value="false"/></option>
                 </select></th>
-            <th id="">Activ</th>
             <th>Update</th>
             <th>Delete</th>
         </tr>
@@ -95,14 +78,14 @@
                 <td id="position${ind.index+1}">${user.position.name}</td>
                 <td hidden id="activity${ind.index+1}">${user.activ}</td>
                 <td><input disabled type="checkbox" name="a" value="true" <c:if test="${user.activ=='true'}"> checked </c:if>></td>
-                <td><a id="updButtom${ind.index}" href="/users/list?updId=${user.idusers}&flag=${true}" onclick="displayUpd(${ind.index}); return false;">Update</a></td>
-                <td><a id="delButtom${ind.index}" href="/users/delete?updId=${beanUp.idusers}&delId=${user.idusers}&flag=<%=flag==true?"true":"false"%>" onclick="display(${ind.index}); return false;">Delete</a></td>
+                <td><a id="updButtom${ind.index}" href="/users/list?updId=${user.idusers}" onclick="displayUpd(${ind.index}); return false;">Update</a></td>
+                <td><a id="delButtom${ind.index}" href="/users/delete?updId=${beanUp.idusers}&delId=${user.idusers}" onclick="display(${ind.index}); return false;">Delete</a></td>
                 </form>
             </tr>
         </c:forEach>
     </table>
     <div>
-        <form method="post" action="/users/update?updId=${beanUp.idusers}" style=<%=someOutput(flag)%>>
+        <form method="post" action="/users/update?updId=${beanUp.idusers}" <c:if test="${beanUp==null}"> display:none </c:if> >
             <h2>Update record</h2>
             <input type="hidden" name="_csrf" value=${_csrf.token} />
             <table border="1">

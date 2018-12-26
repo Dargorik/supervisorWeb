@@ -32,14 +32,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address findById(Integer updId) {
-        if (updId == null){
-            throw new IllegalArgumentException("Адреса с тамим ID не найденн!");
-        }
-        Address address =addressRepos.findByIdAddress(updId);
-        if (address == null){
-            throw new IllegalArgumentException("Адреса с тамим ID  не найденн!");
-        }
-            return address;
+            return addressRepos.findByIdAddress(updId);
     }
 
     @Override
@@ -48,31 +41,28 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public String update(Integer updId, Integer updCityId, Integer updStreetId, String updHouseNumber, String updNumberFloors, String updNumberEntrances, Integer updPriorityListId, Integer updRegionId) {
-        Integer numFloors, numEntrances;
+    public String update(Integer updId, Integer updCityId, Integer updStreetId, String updHouseNumber, Integer updNumberFloors, Integer updNumberEntrances, Integer updPriorityListId, Integer updRegionId) {
         Address address;
         try {
-            numFloors = Integer.parseInt(updNumberFloors);
-            numEntrances = Integer.parseInt(updNumberEntrances);
-            if (numFloors <= 0 || numEntrances <= 0 || updHouseNumber == null || updHouseNumber.isEmpty())
-                throw new NullPointerException();
-            address=findByCityAndStreetAndHouseNumberLike(updCityId, updStreetId, updHouseNumber);
-            if(address!=null)
-                if(!address.getIdAddress().equals(updId))
-                    return "Данное изменение невозможно, так как есть такаой адрес в базе данных!";
+            if(updNumberFloors<=0||updNumberEntrances<=0)
+                return "Invalid input!";
+            City city=cityRepos.findById(updCityId).orElseThrow(() -> new NullPointerException());
+            Street street=streetRepos.findById(updStreetId).orElseThrow(() -> new NullPointerException());
+            if(addressRepos.findByCityAndStreetAndHouseNumberAndNotId(city,street,updHouseNumber,updId)!=null)
+                return "This component already exists!";
             address = addressRepos.findById(updId).orElseThrow(() -> new NullPointerException());
-            address.setCity(cityRepos.findById(updCityId).orElseThrow(() -> new NullPointerException()));
-            address.setStreet(streetRepos.findById(updStreetId).orElseThrow(() -> new NullPointerException()));
+            address.setCity(city);
+            address.setStreet(street);
             address.setHouseNumber(updHouseNumber);
-            address.setNumberFloors(numFloors);
-            address.setNumberEntrances(numEntrances);
+            address.setNumberFloors(updNumberFloors);
+            address.setNumberEntrances(updNumberEntrances);
             address.setPriorityList(priorityListRepos.findById(updPriorityListId).orElseThrow(() -> new NullPointerException()));
             address.setRegion(regionRepos.findById(updRegionId).orElseThrow(() -> new NullPointerException()));
             addressRepos.save(address);
-            return "Изменение прошло успешно!";
+            return "Successful update record!";
         }
         catch (NullPointerException e){
-            return "Введенны некорректные данные";
+            return "This component does not exist!";
         }
     }
 
@@ -84,31 +74,38 @@ public class AddressServiceImpl implements AddressService {
             if(address==null)
                 throw new NullPointerException();
         }catch (NullPointerException e){
-            return "Данный адрес не удлалён!";
+            return "This component does not exist!";
         }
         addressRepos.delete(address);
-        return "Адрес успешно удлалён!";
+        return "Successful delete record!";
     }
 
     @Override
-    public String add(Integer cityId, Integer streetId, String houseNumber, String numberFloors, String numberEntrances, Integer priorityListId, Integer regionId) {
-        Integer numFloors, numEntrances;
-        try{
-            numFloors=Integer.parseInt(numberFloors);
-            numEntrances=Integer.parseInt(numberEntrances);
+    public String add(Integer cityId, Integer streetId, String houseNumber, Integer numberFloors, Integer numberEntrances, Integer priorityListId, Integer regionId) {
+        Address address;
+        try {
+            if(numberFloors<=0||numberEntrances<=0)
+                return "Invalid input!";
+
+            City city=cityRepos.findById(cityId).orElseThrow(() -> new NullPointerException());
+            Street street=streetRepos.findById(streetId).orElseThrow(() -> new NullPointerException());
+            if(addressRepos.findByCityAndStreetAndHouseNumberLike(city,street,houseNumber)!=null)
+                return "This component already exists!";
+            address = new Address();
+            address.setCity(city);
+            address.setStreet(street);
+            address.setHouseNumber(houseNumber);
+            address.setNumberFloors(numberFloors);
+            address.setNumberEntrances(numberEntrances);
+            address.setPriorityList(priorityListRepos.findById(priorityListId).orElseThrow(() -> new NullPointerException()));
+            address.setRegion(regionRepos.findById(regionId).orElseThrow(() -> new NullPointerException()));
+            addressRepos.save(address);
+            addLastComletedDateAddress(address);
+            return "Successful update record!";
         }
         catch (NullPointerException e){
-            return "Введенны некорректные данные";
+            return "This component does not exist!";
         }
-        if(numFloors<=0||numEntrances<=0)
-            return "Введенны некорректные данные";
-        Address address=findByCityAndStreetAndHouseNumberLike(cityId, streetId, houseNumber);
-        if(address!=null)
-            return "Такой адрес уже есть в базе данных";
-        address=new Address(cityRepos.findById(cityId).orElse(null),streetRepos.findById(streetId).orElse(null),houseNumber,numFloors,numEntrances,priorityListRepos.findById(priorityListId).orElse(null),regionRepos.findById(regionId).orElse(null));
-        addLastComletedDateAddress(address);
-        addressRepos.save(address);
-        return "Новый адрес добавлен";
     }
 
     @Override
@@ -118,11 +115,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<Address> findForUser(User user) {
-        List<Address> address=new ArrayList<>();
-        for(UserRegions userRegions: userRegionsRepos.findByUser(user)){
-            address.addAll(addressRepos.findByRegion(userRegions.getRegion()));
-        }
-        return address;
+        return addressRepos.findByUserRegions(user);
     }
 
     public void addLastComletedDateAddress(Address address){

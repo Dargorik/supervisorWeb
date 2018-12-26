@@ -11,6 +11,9 @@ import java.util.List;
 public interface CityRepos extends JpaRepository<City, Integer> {
     City findByName(String name);
 
+    @Query(value="select c from City c where c.name=:name and not c.idCity=:id")
+    City findByNameAndNotId(@Param("name") String name, @Param("id") Integer id);
+
     @Override
     @Query(value="select c from City c ORDER BY name")
     List<City> findAll();

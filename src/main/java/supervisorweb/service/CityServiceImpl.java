@@ -27,12 +27,15 @@ public class CityServiceImpl implements CityService {
     public String update(Integer updId, String updName) {
         if (updId == null || updName == null || updName.isEmpty())
             return "Invalid input!";
+        if(cityRepos.findByNameAndNotId(updName, updId)!=null)
+                return "This component already exists!";
         City city = cityRepos.findById(updId).orElse(null);
         if (city != null) {
             city.setName(updName);
             cityRepos.save(city);
             return "Successful update record!";
-        } else return "This component already exists!";
+        }
+        else return "This component does not exist!";
     }
 
     @Override

@@ -33,12 +33,15 @@ public class TypeOfWorkPerformedServiceImpl implements TypeOfWorkPerformedServic
     public String update(Integer updId, String updName) {
         if (updName == null || updName.isEmpty())
             return "Invalid input!";
+        if(typeOfWorkPerformedRepos.findByNameAndNotId(updName,updId)!=null)
+            return "This component already exists!";
         TypeOfWorkPerformed typeOfWorkPerformed  = typeOfWorkPerformedRepos.findById(updId).orElse(null);
         if (typeOfWorkPerformed != null) {
             typeOfWorkPerformed.setName(updName);
             typeOfWorkPerformedRepos.save(typeOfWorkPerformed);
             return "Successful update record!";
-        } else return "This component already exists!";
+        }
+        else return "This component does not exist!";
     }
 
     @Override

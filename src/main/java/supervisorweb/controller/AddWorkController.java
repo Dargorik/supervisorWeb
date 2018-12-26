@@ -50,8 +50,9 @@ public class AddWorkController {
         model.put("cityFilter", city==null?0:city.getIdCity());
         Street street= streetService.findById(streetFilter);
         model.put("streetFilter", street==null?0:street.getIdStreet());
+        model.put("sizeBasket", worksBasketService.findCount(user));
         model.put("user", user);
-        return "addCompletedWorks";
+        return "addCompletedWork";
     }
 
     @RequestMapping("/add")
@@ -67,7 +68,10 @@ public class AddWorkController {
                        Map<String, Object> model) {
         model.put("message", worksBasketService.add(user.getIdusers(),idAddress,numberCompletedEntrances,idTypeOfWorkPerformed,comment));
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findForUser(user));
-        model.put("addresses", worksBasketService.findOtherAddresses(user));
+        if(relevance==false)
+            model.put("addresses", worksBasketService.findOtherAddresses(user));
+        else
+            model.put("addresses", worksBasketService.findRelevanceOtherAddresses(user, idTypeOfWorkPerformed));
         model.put("streets", streetService.findAll());
         model.put("cities", cityService.findAll());
         model.put("idTypeOfWP", idTypeOfWorkPerformed);
@@ -76,8 +80,9 @@ public class AddWorkController {
         model.put("cityFilter", city==null?0:city.getIdCity());
         Street street= streetService.findById(streetFilter);
         model.put("streetFilter", street==null?0:street.getIdStreet());
+        model.put("sizeBasket", worksBasketService.findCount(user));
         model.put("user", user);
-        return "addCompletedWorks";
+        return "addCompletedWork";
     }
 
     @RequestMapping("/basket")
@@ -94,6 +99,7 @@ public class AddWorkController {
         model.put("cityFilter", city==null?0:city.getIdCity());
         Street street= streetService.findById(streetFilter);
         model.put("streetFilter", street==null?0:street.getIdStreet());
+        model.put("sizeBasket", worksBasketService.findCount(user));
         model.put("user", user);
         return "basket";
     }
@@ -114,6 +120,7 @@ public class AddWorkController {
         model.put("cityFilter", city==null?0:city.getIdCity());
         Street street= streetService.findById(streetFilter);
         model.put("streetFilter", street==null?0:street.getIdStreet());
+        model.put("sizeBasket", worksBasketService.findCount(user));
         model.put("user", user);
         return "basket";
     }
@@ -134,6 +141,7 @@ public class AddWorkController {
         model.put("cityFilter", city==null?0:city.getIdCity());
         Street street= streetService.findById(streetFilter);
         model.put("streetFilter", street==null?0:street.getIdStreet());
+        model.put("sizeBasket", worksBasketService.findCount(user));
         model.put("user", user);
         return "basket";
     }

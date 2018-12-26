@@ -3,7 +3,6 @@ package supervisorweb.repos;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import supervisorweb.domain.Address;
 import supervisorweb.domain.Street;
 import supervisorweb.domain.User;
 
@@ -11,6 +10,9 @@ import java.util.List;
 
 public interface StreetRepos extends JpaRepository<Street, Integer> {
     Street findByName(String name);
+
+    @Query(value="select s from Street s where s.name=:name and not s.idStreet=:id")
+    Street findByNameAndNotId(@Param("name") String name, @Param("id") Integer id);
 
     @Override
     @Query(value="select s from Street s ORDER BY name")

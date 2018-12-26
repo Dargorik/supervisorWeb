@@ -1,6 +1,5 @@
 package supervisorweb.repos;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,6 +10,9 @@ import java.util.List;
 
 public interface TypeOfWorkRepos extends JpaRepository<TypeOfWork, Integer>{
     TypeOfWork findByName(String name);
+
+    @Query(value="select tOfW from TypeOfWork tOfW where tOfW.name=:name and not tOfW.idTypeOfWork=:id")
+    TypeOfWork findByNameAndNotId(@Param("name") String name, @Param("id") Integer id);
 
     @Override
     @Query(value="select tOfW from TypeOfWork tOfW ORDER BY name")

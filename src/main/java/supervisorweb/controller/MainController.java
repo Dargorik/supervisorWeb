@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import supervisorweb.domain.Position;
 import supervisorweb.domain.Role;
 import supervisorweb.domain.User;
-import supervisorweb.repos.PositionRepos;
-import supervisorweb.repos.UserRepos;
 import supervisorweb.service.UserService;
+import supervisorweb.service.WorksBasketService;
 
 import java.util.Collections;
 import java.util.Map;
@@ -18,6 +16,8 @@ import java.util.Map;
 public class MainController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private WorksBasketService worksBasketService;
 
 
     @RequestMapping("/addTable")
@@ -44,6 +44,7 @@ public class MainController {
                 model.put("role", "admin");
             else
                 model.put("role", "user");
+        model.put("sizeBasket", worksBasketService.findCount(user));
         return "main";
     }
 
@@ -55,6 +56,7 @@ public class MainController {
         //userRepos.save(user);
       //  Iterable<User> users = userRepos.findAll();
       //  model.put("users", users);
+                model.put("sizeBasket", worksBasketService.findCount(user));
         return "main";
     }
 /*

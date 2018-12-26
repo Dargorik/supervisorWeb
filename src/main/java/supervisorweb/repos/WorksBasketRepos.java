@@ -16,4 +16,7 @@ public interface WorksBasketRepos extends JpaRepository<WorksBasket,Integer>{
 
     @Override
     List<WorksBasket> findAll();
+
+    @Query(value="SELECT COUNT(wb) FROM WorksBasket wb WHERE wb.user=:user")
+    Integer findCount(@Param("user") User user);
 }

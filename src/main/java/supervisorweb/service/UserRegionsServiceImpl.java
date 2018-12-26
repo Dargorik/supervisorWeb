@@ -28,10 +28,7 @@ public class UserRegionsServiceImpl implements UserRegionsService {
 
     @Override
     public List<UserRegions> findAll() {
-        return userRegionsRepos.findAll().stream()
-                .sorted((x, y) -> x.getRegion().getName().compareTo(y.getRegion().getName()))
-                .sorted((x, y) -> x.getUser().getFirstName().compareTo(y.getUser().getFirstName()))
-                .collect(Collectors.toList());
+        return userRegionsRepos.findAll();
     }
 
     @Override
@@ -40,10 +37,8 @@ public class UserRegionsServiceImpl implements UserRegionsService {
         try {
             User user=userRepos.findById(updIdUser).orElse(null);
             Region region=regionRepos.findById(updIdRegion).orElse(null);
-            userRegions=userRegionsRepos.findAllByUserAndRegion(user, region);
-            if(userRegions!=null)
-                if (!userRegions.getIdUserRegions().equals(updIdUserRegions))
-                    return "This component already exists!";
+            if(userRegionsRepos.findByUserAndRegionAndNotId(user,region,updIdUserRegions)!=null)
+                return "This component already exists!";
             userRegions  = userRegionsRepos.findById(updIdUserRegions).orElse(null);
             userRegions.setUser(user);
             userRegions.setRegion(region);

@@ -18,7 +18,7 @@
 <%--</head>--%>
     <%--<body>--%>
         <%--<div>--%>
-            <%--<button class="b1" onclick="location.href='/addTable/'">Назад</button>--%>
+            <%--<button class="b1" onclick="location.href='/'">Назад</button>--%>
         <%--</div>--%>
         <%--<h2>Добавление должности</h2>--%>
         <%--${message}--%>

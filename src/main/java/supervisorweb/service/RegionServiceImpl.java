@@ -26,12 +26,15 @@ public class RegionServiceImpl implements RegionService {
     public String update(Integer updId, String updName) {
         if (updId == null || updName == null || updName.isEmpty())
             return "Invalid input!";
+        if(regionRepos.findByNameAndNotId(updName,updId)!=null)
+            return "This component already exists!";
         Region region = regionRepos.findById(updId).orElse(null);
         if (region != null) {
             region.setName(updName);
             regionRepos.save(region);
             return "Successful update record!";
-        } else return "This component already exists!";
+        }
+        else return "This component does not exist!";
     }
 
     @Override

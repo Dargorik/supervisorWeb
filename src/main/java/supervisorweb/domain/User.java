@@ -40,6 +40,18 @@ public class User implements UserDetails {
     @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "user")
     private List<WorksBasket> WorksBasket;
 
+    public boolean isAdmin(){
+        return roles.contains(Role.ADMIN);
+    }
+
+    public boolean isUser(){
+        return roles.contains(Role.USER);
+    }
+
+    public String getName(){
+        return firstName+" "+lastName;
+    }
+
     public User() {
     }
 

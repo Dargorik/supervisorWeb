@@ -7,7 +7,6 @@ import supervisorweb.domain.User;
 import supervisorweb.repos.StreetRepos;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class StreetServiceImpl implements StreetService {
@@ -25,16 +24,18 @@ public class StreetServiceImpl implements StreetService {
     }
 
     @Override
-    public String update(Integer updIdCity, String updName) {
-        if (updIdCity == null || updName == null || updName.isEmpty())
+    public String update(Integer updId, String updName) {
+        if (updId == null || updName == null || updName.isEmpty())
             return "Invalid input!";
-        Street street = streetRepos.findById(updIdCity).orElse(null);
+        if(streetRepos.findByNameAndNotId(updName, updId)!=null)
+            return "This component already exists!";
+        Street street = streetRepos.findById(updId).orElse(null);
         if (street != null) {
             street.setName(updName);
             streetRepos.save(street);
             return "Successful update record!";
         }
-        else return "This component already exists!";
+        else return "This component does not exist!";
     }
 
     @Override

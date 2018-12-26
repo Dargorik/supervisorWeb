@@ -37,9 +37,7 @@ public class LastCompletedDateAddressServiceImpl implements LastCompletedDateAdd
     public List<LastCompletedDateAddress> findRelevance(Integer idTypeOfWorkPerformed) {
         List<LastCompletedDateAddress> lastCompletedDateAddresses = new ArrayList<>();
         for(LastCompletedDateAddress lastCompletedDateAddress: lastCompletedDateAddressRepos.findAllAddressByTypeWork(typeOfWorkRepos.findById(idTypeOfWorkPerformed).orElse(null))){
-            System.out.println(lastCompletedDateAddress.getLastData());
             if(lastCompletedDateAddress.getLastData()!=null){
-                System.out.println("11");
                 if(Integer.parseInt(lastCompletedDateAddress.getDate())>lastCompletedDateAddress.getAddress().getPriorityList().getNumber())
                     lastCompletedDateAddresses.add(lastCompletedDateAddress);
             }

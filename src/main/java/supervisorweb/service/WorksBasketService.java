@@ -20,4 +20,6 @@ public interface WorksBasketService {
     String delete(Integer delId);
 
     List<Address> findRelevanceOtherAddresses(User user, Integer idTypeOfWorkPerformed);
+
+    Integer findCount(User user);
 }

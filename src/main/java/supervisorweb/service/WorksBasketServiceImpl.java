@@ -94,7 +94,7 @@ public class WorksBasketServiceImpl implements WorksBasketService {
                 if(!addresses.contains(address)) {
                     Timestamp timestamp = lastCompletedDateAddressRepos.findByAddressAndTypeOfWork(address, typeOfWork).getLastData();
                     if (timestamp != null) {
-                        if ((date.getTime() - lastCompletedDateAddressRepos.findByAddressAndTypeOfWork(address, typeOfWork).getLastData().getTime()) / 86400000 <= address.getPriorityList().getNumber())
+                        if ((date.getTime() - lastCompletedDateAddressRepos.findByAddressAndTypeOfWork(address, typeOfWork).getLastData().getTime()) / 86400000 > address.getPriorityList().getNumber())
                             addresses.add(address);
                     } else
                         addresses.add(address);
@@ -102,6 +102,11 @@ public class WorksBasketServiceImpl implements WorksBasketService {
             }
         }
         return addresses;
+    }
+
+    @Override
+    public Integer findCount(User user) {
+        return worksBasketRepos.findCount(user);
     }
 
 

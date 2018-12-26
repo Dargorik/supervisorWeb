@@ -10,7 +10,6 @@ import supervisorweb.repos.PositionRepos;
 import supervisorweb.repos.TypeOfWorkRepos;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PositionDutiesServiceImpl implements PositionDutiesService {
@@ -30,10 +29,7 @@ public class PositionDutiesServiceImpl implements PositionDutiesService {
 
     @Override
     public List<PositionDuties> findAll() {
-        return positionDutiesRepos.findAll().stream()
-                .sorted((x, y) -> x.getTypeOfWork().getName().compareTo(y.getTypeOfWork().getName()))
-                .sorted((x, y) -> x.getPosition().getName().compareTo(y.getPosition().getName()))
-                .collect(Collectors.toList());
+        return positionDutiesRepos.findAll();
     }
 
     @Override
@@ -42,10 +38,8 @@ public class PositionDutiesServiceImpl implements PositionDutiesService {
         try {
             Position position=positionRepos.findById(updIdPosition).orElse(null);
             TypeOfWork typeOfWork=typeOfWorkRepos.findById(updIdTypeOfWork).orElse(null);
-            positionDuties=positionDutiesRepos.findByPositionAndTypeOfWork(position, typeOfWork);
-            if(positionDuties!=null)
-                if (!positionDuties.getIdPositionDuties().equals(updIdPositionDuties))
-                    return "This component already exists!";
+            if(positionDutiesRepos.findByTypeOfWorkAndPositionAndNotId(typeOfWork, position, updIdPositionDuties)!=null)
+                return "This component already exists!";
             positionDuties  = positionDutiesRepos.findById(updIdPositionDuties).orElse(null);
             positionDuties.setPosition(position);
             positionDuties.setTypeOfWork(typeOfWork);

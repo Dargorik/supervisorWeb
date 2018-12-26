@@ -24,16 +24,13 @@ public class UserController {
     private PositionService positionService;
 
     @RequestMapping("/list")
-    public String address(@RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
+    public String address(@RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
                           @RequestParam(name = "positionFilter", required = false, defaultValue = "0") Integer positionFilter,
                           @RequestParam(name = "activFilter", required = false, defaultValue = "0") String activFilter,
-                          @RequestParam(name = "flag", required = false, defaultValue = "false") String flag, Map<String, Object> model) {
-        if (flag.equals("true")) {
-            model.put("beanUp", userService.findById(updId));
-        }
+                          Map<String, Object> model) {
         model.put("users", userService.findAllUser());
         model.put("positions", positionService.findAll());
-        model.put("getflag", flag);
+        model.put("beanUp", userService.findById(updId));
         Position position =positionService.findById(positionFilter);
         model.put("positionFilter", position==null?0:position.getIdPosition());
         model.put("activFilter", activFilter.equals("true")?1:activFilter.equals("false")?0:2);
@@ -49,14 +46,11 @@ public class UserController {
                              @RequestParam(name = "password", required = false, defaultValue = "") String password,
                              @RequestParam(name = "idPosition", required = false, defaultValue = "") Integer idPosition,
                              @RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
-                             @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                              Map<String, Object> model) {
         model.put("message", userService.add(firstName, lastName, username, password, idPosition));
-        if (flag.equals("true"))
-            model.put("beanUp", userService.findById(updId));
         model.put("users", userService.findAllUser());
         model.put("positions", positionService.findAll());
-        model.put("getflag", flag);
+        model.put("beanUp", userService.findById(updId));
         Position position =positionService.findById(positionFilter);
         model.put("positionFilter", position==null?0:position.getIdPosition());
         model.put("activFilter", activFilter.equals("true")?1:activFilter.equals("false")?0:2);
@@ -72,15 +66,11 @@ public class UserController {
                                 @RequestParam(name = "password", required = false, defaultValue = "") String password,
                                 @RequestParam(name = "idPosition", required = false, defaultValue = "") Integer idPosition,
                                 @RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
-                                    @RequestParam(name = "activ", required = false, defaultValue = "false") Boolean activ,
-                                @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
+                                @RequestParam(name = "activ", required = false, defaultValue = "false") Boolean activ,
                                 Map<String, Object> model) {
         model.put("message", userService.update(updId, firstName, lastName, username, password, idPosition, activ));
-        if (flag.equals("true"))
-            model.put("beanUp", userService.findById(updId));
         model.put("users", userService.findAllUser());
         model.put("positions", positionService.findAll());
-        model.put("getflag", flag);
         Position position =positionService.findById(positionFilter);
         model.put("positionFilter", position==null?0:position.getIdPosition());
         model.put("activFilter", activFilter.equals("true")?1:activFilter.equals("false")?0:2);
@@ -92,18 +82,11 @@ public class UserController {
                                 @RequestParam(name = "activFilter", required = false, defaultValue = "0") String activFilter,
                                 @RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
                                 @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
-                                @RequestParam(name = "flag", required = false, defaultValue = "false") String flag,
                                 Map<String, Object> model) {
         model.put("message", userService.delete(delId));
-        if (updId.equals(delId)) {
-            model.put("updId", updId);
-            flag = "false";
-        }
-        if (flag.equals("true"))
-            model.put("beanUp", userService.findById(updId));
         model.put("users", userService.findAllUser());
         model.put("positions", positionService.findAll());
-        model.put("getflag", flag);
+        model.put("beanUp", userService.findById(updId));
         Position position =positionService.findById(positionFilter);
         model.put("positionFilter", position==null?0:position.getIdPosition());
         model.put("activFilter", activFilter.equals("true")?1:activFilter.equals("false")?0:2);

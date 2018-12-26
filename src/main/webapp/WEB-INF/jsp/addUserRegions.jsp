@@ -105,7 +105,7 @@
         </table>
     <div>
         <form method="post" action="/tables/update/userRegions?updId=${beanUp.idUserRegions}" style=<%=someOutput(flag)%> >
-            <h2>ИUpdate record</h2>
+            <h2>Update record</h2>
             <input type="hidden" name="_csrf" value=${_csrf.token} />
             <table border="1">
                 <tr>

@@ -34,87 +34,63 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public List<User> findAll(){
+    public List<User> findAll() {
         return userRepo.findAll();
     }
 
     @Override
     public List<User> findAllUser() {
-        return userRepo.findByRoles(Role.USER).stream()
-                .sorted((x, y) -> x.getLastName().compareTo(y.getLastName()))
-                .sorted((x, y) -> x.getFirstName().compareTo(y.getFirstName()))
-                .collect(Collectors.toList());
+        return userRepo.findByRoles(Role.USER);
     }
 
     @Override
     public String update(Integer updId, String firstName, String lastName, String username, String password, Integer idPosition, Boolean activ) {
         User user;
-        try {
-
-            if(firstName==null||firstName.isEmpty()||
-                    lastName==null||lastName.isEmpty()||
-                    username==null||username.isEmpty()||
-                    password==null||password.isEmpty())
-                return "Invalid input!";
-            user=userRepo.findByUsername(username);
-            if(user!=null)
-                if(!user.getIdusers().equals(updId))
-                    return "This component already exists!";
-            user=userRepo.findByFirstNameAndLastNameAndUsername(firstName, lastName, username);
-            if(user!=null)
-                if(!user.getIdusers().equals(updId))
-                    return "This component already exists!";
-            user=userRepo.findById(updId).orElse(null);
-            if(user==null)
-                return "This component does not exist!";
-            Position position=positionRepos.findById(idPosition).orElse(null);
-            if (position==null)
-                return "This component does not exist!";
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setUsername(username);
-            user.setPassword(password);
-            user.setPosition(position);
-            user.setActiv(activ);
-            userRepo.save(user);
-            return "Successful update record!";
-        }
-        catch (NullPointerException e){
+        if (firstName == null || firstName.isEmpty() ||
+                lastName == null || lastName.isEmpty() ||
+                username == null || username.isEmpty() ||
+                password == null || password.isEmpty())
             return "Invalid input!";
-        }
+        if (userRepo.findByFirstNameAndLastNameAndUsernameAndNotId(firstName, lastName, username, updId) != null)
+            return "This component already exists!";
+        user = userRepo.findById(updId).orElse(null);
+        Position position = positionRepos.findById(idPosition).orElse(null);
+        if (user == null || position == null)
+            return "This component does not exist!";
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setPosition(position);
+        user.setActiv(activ);
+        userRepo.save(user);
+        return "Successful update record!";
     }
 
     @Override
     public String delete(Integer delId) {
-        User user;
-        try {
-            user=userRepo.findById(delId).orElse(null);
-            if(user==null)
-                throw new NullPointerException();
-        }catch (NullPointerException e){
+        User user=userRepo.findById(delId).orElse(null);;
+        if(user==null)
             return "This component does not exist!";
-        }
-        userRepo.delete(user);
+        else{
+            userRepo.delete(user);
         return "Successful delete record!";
+        }
     }
 
     @Override
     public String add(String firstName, String lastName, String username, String password, Integer idPosition) {
-        if(firstName==null||firstName.isEmpty()||
-                lastName==null||lastName.isEmpty()||
-                username==null||username.isEmpty()||
-                password==null||password.isEmpty())
+        if (firstName == null || firstName.isEmpty() ||
+                lastName == null || lastName.isEmpty() ||
+                username == null || username.isEmpty() ||
+                password == null || password.isEmpty())
             return "Invalid input!";
-        User user=userRepo.findByUsername(username);
-        if(user!=null)
+        if(userRepo.findByFirstNameAndLastNameAndUsername(username, password, username)!=null)
             return "This component already exists!";
-        user=userRepo.findByFirstNameAndLastNameAndUsername(username, password, username);
-        if(user!=null)
-            return "This component already exists!";
-        Position position=positionRepos.findById(idPosition).orElse(null);
-        if (position==null)
+        Position position = positionRepos.findById(idPosition).orElse(null);
+        if (position == null)
             return "Invalid input!";
-        user=new User(firstName,lastName,username, password, position);
+        User user = new User(firstName, lastName, username, password, position);
         user.setActiv(true);
         user.setRoles(Collections.singleton(Role.USER));
         userRepo.save(user);
@@ -123,9 +99,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public void checkAdminProfile() {
-        int i=userRepo.findByRoles(Role.ADMIN).size();
-        if(i==0){
-            User user=new User();
+        int i = userRepo.findByRoles(Role.ADMIN).size();
+        if (i == 0) {
+            User user = new User();
             user.setFirstName("Admin");
             user.setLastName("Admin");
             user.setUsername("admin");
@@ -138,7 +114,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public User findByFirstNameAndLastName(String firstName, String lastName) {
-        return userRepo.findByFirstNameAndLastName(firstName,lastName);
+        return userRepo.findByFirstNameAndLastName(firstName, lastName);
     }
 
     @Override

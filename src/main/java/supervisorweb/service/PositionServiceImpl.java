@@ -26,12 +26,15 @@ public class PositionServiceImpl implements PositionService {
     public String update(Integer updId, String updName) {
         if (updName == null || updName.isEmpty())
             return "Invalid input!";
+        if(positionRepos.findByNameAndNotId(updName,updId)!=null)
+            return "This component already exists!";
         Position position  = positionRepos.findById(updId).orElse(null);
         if (position != null) {
             position.setName(updName);
             positionRepos.save(position);
             return "Successful update record!";
-        } else return "This component already exists!";
+        }
+        else return "This component does not exist!";
     }
 
     @Override
