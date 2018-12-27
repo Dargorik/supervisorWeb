@@ -34,7 +34,7 @@ public class UserController {
         Position position =positionService.findById(positionFilter);
         model.put("positionFilter", position==null?0:position.getIdPosition());
         model.put("activFilter", activFilter.equals("true")?1:activFilter.equals("false")?0:2);
-        return "userTable";
+        return "usersList";
     }
 
     @RequestMapping("/add")
@@ -45,7 +45,7 @@ public class UserController {
                              @RequestParam(name = "username", required = false, defaultValue = "") String username,
                              @RequestParam(name = "password", required = false, defaultValue = "") String password,
                              @RequestParam(name = "idPosition", required = false, defaultValue = "") Integer idPosition,
-                             @RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
+                             @RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
                              Map<String, Object> model) {
         model.put("message", userService.add(firstName, lastName, username, password, idPosition));
         model.put("users", userService.findAllUser());
@@ -54,7 +54,7 @@ public class UserController {
         Position position =positionService.findById(positionFilter);
         model.put("positionFilter", position==null?0:position.getIdPosition());
         model.put("activFilter", activFilter.equals("true")?1:activFilter.equals("false")?0:2);
-        return "userTable";
+        return "usersList";
     }
 
     @RequestMapping("/update")
@@ -65,7 +65,7 @@ public class UserController {
                                 @RequestParam(name = "username", required = false, defaultValue = "") String username,
                                 @RequestParam(name = "password", required = false, defaultValue = "") String password,
                                 @RequestParam(name = "idPosition", required = false, defaultValue = "") Integer idPosition,
-                                @RequestParam(name = "updId", required = false, defaultValue = "") Integer updId,
+                                @RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
                                 @RequestParam(name = "activ", required = false, defaultValue = "false") Boolean activ,
                                 Map<String, Object> model) {
         model.put("message", userService.update(updId, firstName, lastName, username, password, idPosition, activ));
@@ -74,7 +74,7 @@ public class UserController {
         Position position =positionService.findById(positionFilter);
         model.put("positionFilter", position==null?0:position.getIdPosition());
         model.put("activFilter", activFilter.equals("true")?1:activFilter.equals("false")?0:2);
-        return "userTable";
+        return "usersList";
     }
 
     @RequestMapping("/delete")
@@ -90,6 +90,6 @@ public class UserController {
         Position position =positionService.findById(positionFilter);
         model.put("positionFilter", position==null?0:position.getIdPosition());
         model.put("activFilter", activFilter.equals("true")?1:activFilter.equals("false")?0:2);
-        return "userTable";
+        return "usersList";
     }
 }

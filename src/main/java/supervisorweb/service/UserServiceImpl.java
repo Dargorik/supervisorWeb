@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import supervisorweb.domain.Address;
 import supervisorweb.domain.Position;
 import supervisorweb.domain.Role;
 import supervisorweb.domain.User;
@@ -14,7 +13,6 @@ import supervisorweb.repos.UserRepos;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserDetailsService, UserService {
@@ -51,7 +49,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 username == null || username.isEmpty() ||
                 password == null || password.isEmpty())
             return "Invalid input!";
-        if (userRepo.findByFirstNameAndLastNameAndUsernameAndNotId(firstName, lastName, username, updId) != null)
+        if (userRepo.findByFirstNameAndLastNameOrUsernameAndNotId(firstName, lastName, username, updId) != null)
             return "This component already exists!";
         user = userRepo.findById(updId).orElse(null);
         Position position = positionRepos.findById(idPosition).orElse(null);
@@ -85,7 +83,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 username == null || username.isEmpty() ||
                 password == null || password.isEmpty())
             return "Invalid input!";
-        if(userRepo.findByFirstNameAndLastNameAndUsername(username, password, username)!=null)
+        if(userRepo.findByFirstNameAndLastNameOrUsername(firstName, lastName, username)!=null)
             return "This component already exists!";
         Position position = positionRepos.findById(idPosition).orElse(null);
         if (position == null)

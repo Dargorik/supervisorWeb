@@ -78,7 +78,7 @@ public class MonitoringController {
         model.put("regionFilter", region==null?0:region.getIdRegion());
         TypeOfWorkPerformed typeOfWorkPerformed= typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
         model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed==null?0:typeOfWorkPerformed.getIdTypeOfWorkPerformed());
-        return "Monitoring";
+        return "reestrWorks";
     }
 
     @RequestMapping("/delete")
@@ -114,6 +114,6 @@ public class MonitoringController {
         model.put("regionFilter", region==null?0:region.getIdRegion());
         TypeOfWorkPerformed typeOfWorkPerformed= typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
         model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed==null?0:typeOfWorkPerformed.getIdTypeOfWorkPerformed());
-        return "Monitoring";
+        return "reestrWorks";
     }
 }

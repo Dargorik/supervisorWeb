@@ -112,7 +112,7 @@
                 </#list>
                 </select></th>
             <th scope="col"><select class="custom-select" id="regionSelect" name="Region">
-                <option name="0" value="all" selected>All types of work</option>
+                <option name="0" value="all" selected>All region</option>
                 <#list regions as region >
                     <option name="${region.idRegion}" value="${region.name}"
                             <#if region.idRegion==regionFilter>selected</#if>>

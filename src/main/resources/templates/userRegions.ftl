@@ -49,7 +49,7 @@
         <thead>
         <tr>
             <th hidden>id</th>
-            <th scope="col">
+            <th>
                 <select class="custom-select" id="userSelect" name="User">
                     <option name="0" value="all" selected>All users</option>
                 <#list users as user >
@@ -60,9 +60,9 @@
                 </#list>
                 </select>
             </th>
-            <th scope="col">
+            <th>
                 <select class="custom-select" id="regionSelect" name="Region">
-                    <option name="0" value="all" selected>All types of work</option>
+                    <option name="0" value="all" selected>All region</option>
                 <#list regions as region >
                     <option name="${region.idRegion}" value="${region.name}"
                             <#if region.idRegion==regionFilter>selected</#if>>
@@ -71,8 +71,8 @@
                 </#list>
                 </select>
             </th>
-            <th scope="col">Update</th>
-            <th scope="col">Delete</th>
+            <th>Update</th>
+            <th>Delete</th>
         </tr>
         </thead>
         <tbody>

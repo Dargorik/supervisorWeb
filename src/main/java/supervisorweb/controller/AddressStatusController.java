@@ -65,6 +65,6 @@ public class AddressStatusController {
         Region region=regionService.findById(regionFilter);
         model.put("regionFilter", region==null?0:region.getIdRegion());
         model.put("relevance", relevance);
-        return "addressStatus";
+        return "addressStat";
     }
 }

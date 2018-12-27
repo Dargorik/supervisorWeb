@@ -103,8 +103,8 @@
             <tr>
                 <form method="post" action="/tables/update/listTypesInPerfomedWork?updId=${beanUp.idListTypesInPerfomedWork}">
                     <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-                    <th hidden>${beanUp.idListTypesInPerfomedWork}</th>
-                    <th><select class="custom-select" name="updIdTypeOfWorkPerformed">
+                    <td hidden>${beanUp.idListTypesInPerfomedWork}</td>
+                    <td><select class="custom-select" name="updIdTypeOfWorkPerformed">
                         <option name="0" value="all" selected>Select type of work performed</option>
                             <#list typesOfWorkPerformed as typeOfWorkPerformed >
                                 <option value="${typeOfWorkPerformed.idTypeOfWorkPerformed}"
@@ -112,8 +112,8 @@
                                     ${typeOfWorkPerformed.name}
                                 </option>
                             </#list>
-                    </select></th>
-                    <th><select class="custom-select" name="updIdTypeOfWork">
+                    </select></td>
+                    <td><select class="custom-select" name="updIdTypeOfWork">
                         <option name="0" value="all" selected>Select type of work</option>
                         <#list typesOfWork as typeOfWork >
                             <option value="${typeOfWork.idTypeOfWork}"
@@ -121,14 +121,14 @@
                                 ${typeOfWork.name}
                             </option>
                         </#list>
-                    </select></th>
+                    </select></td>
                     <td hidden>
                         <input type="text" id="tOfWPfUp" name="typeOfWorkPerformedFilter" value="${typeOfWorkPerformedFilter}">
                         <input type="text" id="tOfWfUp" name="typeOfWorkFilter" value="${typeOfWorkFilter}">
                     </td>
-                    <th>
+                    <td>
                         <button type=submit>Save</button>
-                    </th>
+                    </td>
                 </form>
             </tr>
             </tbody>

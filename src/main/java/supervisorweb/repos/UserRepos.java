@@ -26,10 +26,12 @@ public interface UserRepos extends JpaRepository<User, Integer> {
 
     User findByFirstNameAndLastName(String firstName, String lastName);
 
+    User findByFirstNameAndLastNameOrUsername(String firstName, String lastName, String username);
+
     User findByFirstNameAndLastNameAndUsername(String firstName, String lastName, String username);
 
-    @Query(value = "select u from User u where u.firstName=:firstName and u.lastName=:lastName and u.username=:username and not u.idusers=:id")
-    User findByFirstNameAndLastNameAndUsernameAndNotId(@Param("firstName") String firstName, @Param("lastName") String lastName, @Param("username") String username, @Param("id") Integer id);
+    @Query(value = "select u from User u where (u.firstName=:firstName and u.lastName=:lastName or u.username=:username) and not u.idusers=:id")
+    User findByFirstNameAndLastNameOrUsernameAndNotId(@Param("firstName") String firstName, @Param("lastName") String lastName, @Param("username") String username, @Param("id") Integer id);
 
     List<User> findByRoles(Role role);
 }
