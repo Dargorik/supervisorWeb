@@ -19,18 +19,27 @@ public class MainController {
     @Autowired
     private WorksBasketService worksBasketService;
 
-
     @RequestMapping("/addTable")
     public String addPage(Map<String, Object> model) {
         return "add";
     }
 
+    @RequestMapping("/reset")
+    public String reset(Map<String, Object> model) {
+        model.put("message", userService.resetAdminPasssword());
+        return "login";
+    }
 
-   /* @GetMapping("/")
-    public String greeting(Map<String, Object> model) {
-        userService.checkAdminProfile();
-        return "greeting";
-    }*/
+    @RequestMapping("/resetPassword/{code}")
+    public String resetPassord(@PathVariable String code,
+                               Map<String, Object> model) {
+        boolean isReset = userService.resetPassord(code);
+        if(isReset)
+            model.put("message", "Password has been successfully reset!");
+        else
+            model.put("message", "User is not found");
+        return "login";
+    }
 
     @GetMapping("/")
     public String main(@AuthenticationPrincipal User user,
@@ -53,66 +62,7 @@ public class MainController {
     @PostMapping("add")
     public String add(@AuthenticationPrincipal User user,
             @RequestParam String comments, Map<String, Object> model) {
-        //userRepos.save(user);
-      //  Iterable<User> users = userRepos.findAll();
-      //  model.put("users", users);
-                model.put("sizeBasket", worksBasketService.findCount(user));
+        model.put("sizeBasket", worksBasketService.findCount(user));
         return "main";
     }
-/*
-    @PostMapping("filter")
-    public String filter(@RequestParam String fFirstName, @RequestParam String fLastName, Map<String, Object> model) {
-        Iterable<User> users;
-        if((fFirstName == null || fFirstName.isEmpty()) && (fLastName == null || fLastName.isEmpty())){
-            users = userRepos.findAll();
-        }
-        else
-        if(fFirstName != null && !fFirstName.isEmpty() && (fLastName == null || fLastName.isEmpty())){
-            users = userRepos.findByFirstNameLike("%"+fFirstName+"%");
-        }
-        else
-        if((fFirstName == null || fFirstName.isEmpty()) && fLastName != null && !fLastName.isEmpty()){
-            users = userRepos.findByLastNameLike("%"+fLastName+"%");
-        }
-        else
-            users = userRepos.findByFirstNameLikeAndLastNameLike("%"+fFirstName+"%","%"+fLastName+"%");
-        model.put("users", users);
-        return "main";
-    }*/
-
-
-
-
-
-/*
-    @PostMapping("filter")
-    public String filter(@RequestParam String fFirstName, @RequestParam String fLastName, Map<String, Object> model) {
-        Iterable<User> users;
-        if((fFirstName == null || fFirstName.isEmpty()) && (fLastName == null || fLastName.isEmpty())){
-            users = userRepos.findAll();
-        }
-        else
-        if(fFirstName != null && !fFirstName.isEmpty() && (fLastName == null || fLastName.isEmpty())){
-            users = userRepos.findByFirstNameLike("%"+fFirstName+"%");
-        }
-        else
-        if((fFirstName == null || fFirstName.isEmpty()) && fLastName != null && !fLastName.isEmpty()){
-            users = userRepos.findByLastNameLike("%"+fLastName+"%");
-        }
-        else
-            users = userRepos.findByFirstNameLikeAndLastNameLike("%"+fFirstName+"%","%"+fLastName+"%");
-
-
-       /* if (firstName != null && !firstName.isEmpty()) {
-            users = userRepos.findByFirstNameLike("%"+firstName+"%");
-        } else {
-            users = userRepos.findAll();
-        }*/
-/*
-        model.put("users", users);
-
-
-        return "main";
-    }*/
-
 }

@@ -21,8 +21,9 @@ public class User implements UserDetails {
     private String lastName;
     private String username;
     private String password;
-   // @Type(type = "org.hibernate.type.NumericBooleanType")
     private boolean activ;
+    private String email;
+    private String activationCode;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "position_id")
@@ -158,12 +159,20 @@ public class User implements UserDetails {
     public void setPosition(Position position) {
         this.position = position;
     }
-/*
-    public Set<RegionsByUsers> getRegionsByUsers() {
-        return regionsByUsers;
+
+    public String getEmail() {
+        return email;
     }
 
-    public void setRegionsByUsers(Set<RegionsByUsers> regionsByUsers) {
-        this.regionsByUsers = regionsByUsers;
-    }*/
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
+    }
 }

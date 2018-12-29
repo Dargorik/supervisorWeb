@@ -2,6 +2,7 @@ package supervisorweb.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -91,5 +92,29 @@ public class UserController {
         model.put("positionFilter", position==null?0:position.getIdPosition());
         model.put("activFilter", activFilter.equals("true")?1:activFilter.equals("false")?0:2);
         return "usersList";
+    }
+
+
+    @RequestMapping("/settings")
+    public String adminProfileSettings(@AuthenticationPrincipal User user,
+                                       @RequestParam(name = "firstName", required = false, defaultValue = "") String firstName,
+                                       @RequestParam(name = "lastName", required = false, defaultValue = "") String lastName,
+                                       @RequestParam(name = "email", required = false, defaultValue = "") String email,
+                                       @RequestParam(name = "password", required = false, defaultValue = "") String password,
+                                       Map<String, Object> model) {
+        model.put("user", userService.findById(user.getIdusers()));
+        return "adminProfileConfoguration";
+    }
+
+    @RequestMapping("/settings/save")
+    public String SaveAdminProfileSettings(@AuthenticationPrincipal User user,
+                                       @RequestParam(name = "firstName", required = false, defaultValue = "") String firstName,
+                                       @RequestParam(name = "lastName", required = false, defaultValue = "") String lastName,
+                                       @RequestParam(name = "email", required = false, defaultValue = "") String email,
+                                       @RequestParam(name = "password", required = false, defaultValue = "") String password,
+                                       Map<String, Object> model) {
+        model.put("message", userService.updateAdminProfile(user.getIdusers(), firstName, lastName, email, password));
+        model.put("user", userService.findById(user.getIdusers()));
+        return "adminProfileConfoguration";
     }
 }

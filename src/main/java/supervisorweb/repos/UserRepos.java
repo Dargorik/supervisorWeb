@@ -34,4 +34,6 @@ public interface UserRepos extends JpaRepository<User, Integer> {
     User findByFirstNameAndLastNameOrUsernameAndNotId(@Param("firstName") String firstName, @Param("lastName") String lastName, @Param("username") String username, @Param("id") Integer id);
 
     List<User> findByRoles(Role role);
+
+    User findByActivationCode(String code);
 }

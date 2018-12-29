@@ -13,6 +13,7 @@ import supervisorweb.repos.UserRepos;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserDetailsService, UserService {
@@ -20,6 +21,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private UserRepos userRepo;
     @Autowired
     private PositionRepos positionRepos;
+    @Autowired
+    private MailSender mailSender;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -123,5 +126,51 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public User findByFirstNameAndLastNameAndUsername(String firstName, String lastName, String username) {
         return userRepo.findByFirstNameAndLastNameAndUsername(firstName, lastName, username);
+    }
+
+    @Override
+    public String updateAdminProfile(Integer id, String firstName, String lastName, String email, String password) {
+        User user=userRepo.findById(id).orElse(null);
+        if (user == null)
+            return "This component does not exist!";
+        if (firstName == null || firstName.isEmpty() ||
+                lastName == null || lastName.isEmpty() ||
+                email == null || email.isEmpty() ||
+                password == null || password.isEmpty())
+            return "Invalid input!";
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPassword(password);
+        userRepo.save(user);
+        return "Successful update record!";
+    }
+
+    @Override
+    public String resetAdminPasssword() {
+        User user=userRepo.findByUsername("admin");
+        if(user != null || user.getEmail()!=null) {
+            user.setActivationCode(UUID.randomUUID().toString());
+            userRepo.save(user);
+            String message=String.format(
+                    "Hello, %s! \n" +
+                            "Click on the link to reset the password to \"admin\": http://localhost:8080/resetPassword/%s",
+                    (user.getFirstName()+" "+user.getLastName()),
+                    user.getActivationCode()
+            );
+            mailSender.send(user.getEmail(),"Activation code", message);
+            return "A letter with a link sent to the E-mail!";
+        }else return "Exception32222!";
+    }
+
+    @Override
+    public boolean resetPassord(String code) {
+        User user=userRepo.findByActivationCode(code);
+
+        if(user!=null){
+        user.setPassword("admin");
+        userRepo.save(user);
+        return true ;
+        }else return false;
     }
 }

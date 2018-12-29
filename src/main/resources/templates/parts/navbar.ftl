@@ -51,7 +51,7 @@
     </div>
 
     <#if (user)?has_content>
-        <a class="nav-link">${name}</span></a>
+        <a href="/users/settings" class="nav-link">${name}</span></a>
         <form class="form-inline" action="/logout" method="post">
             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
             <button type="submit" class="btn btn-primary  btn-sm">Sign out</button>
