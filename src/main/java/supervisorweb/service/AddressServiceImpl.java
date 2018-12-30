@@ -1,6 +1,8 @@
 package supervisorweb.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import supervisorweb.domain.*;
 import supervisorweb.repos.*;
@@ -116,6 +118,11 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public List<Address> findForUser(User user) {
         return addressRepos.findByUserRegions(user);
+    }
+
+    @Override
+    public Page<Address> findAllPage(String cityFilter, String streetFilter, String priorityFilter, String regionFilter, Pageable pageable) {
+        return addressRepos.findAllByPage(cityFilter, streetFilter, regionFilter, priorityFilter, pageable);
     }
 
     public void addLastComletedDateAddress(Address address){

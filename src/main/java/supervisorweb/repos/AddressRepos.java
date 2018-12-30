@@ -1,5 +1,7 @@
 package supervisorweb.repos;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,8 +22,24 @@ public interface AddressRepos extends JpaRepository<Address, Integer> {
     @Query(value = "select a from Address a ORDER BY a.city.name,a.street.name,a.houseNumber")
     List<Address> findAll();
 
-    List<Address> findByRegion(Region region);
+    @Query(value = "select a from Address a " +
+            "where a.city.name like :city " +
+            "and a.street.name like :street " +
+            "and a.region.name like :region " +
+            "and a.priorityList.name like :priority " +
+            "ORDER BY a.city.name,a.street.name,a.houseNumber",
+            countQuery = "select count(a) from Address a " +
+                    "where a.city.name like :city " +
+                    "and a.street.name like :street " +
+                    "and a.region.name like :region " +
+                    "and a.priorityList.name like :priority " +
+                    "order by a.city.name,a.street.name,a.houseNumber")
+    Page<Address> findAllByPage(@Param("city")String city, @Param("street")String street, @Param("region")String region, @Param("priority")String priority, Pageable pageable);
 
     @Query(value = "select a from Address a WHERE a.region in (select region from UserRegions where user=:user) AND NOT a.idAddress in (select wb.address from WorksBasket wb where wb.user=:user) order by a.city.name,a.street.name,a.houseNumber")
     List<Address> findByUserRegions(@Param("user") User user);
+
+    List<Address> findByRegion(Region region);
+
+    List<Address> findByPriorityList(PriorityList priorityList);
 }

@@ -1,5 +1,7 @@
 package supervisorweb.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import supervisorweb.domain.Address;
 import supervisorweb.domain.Street;
 import supervisorweb.domain.User;
@@ -38,4 +40,6 @@ public interface AddressService {
 
 
     List<Address> findForUser(User user);
+
+    Page<Address> findAllPage(String cityFilter, String streetFilter, String priorityFilter, String regionFilter, Pageable pageable);
 }

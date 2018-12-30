@@ -1,15 +1,18 @@
 package supervisorweb.service;
 
+import org.springframework.data.domain.Page;
 import supervisorweb.domain.LastCompletedDateAddress;
 import supervisorweb.domain.TypeOfWork;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+
 public interface LastCompletedDateAddressService {
 
-    List<LastCompletedDateAddress> findAllAddress();
+    Page<LastCompletedDateAddress> findAllAddress(String city, String streetFilter, String regionFilter, String priorityFilter, Pageable pageable);
 
-    List<LastCompletedDateAddress> findAllAddressByTypeWork(TypeOfWork typeOfWork);
+    Page<LastCompletedDateAddress> findAllAddressByTypeWork(TypeOfWork typeOfWork, String city, String streetFilter, String regionFilter, String priorityFilter, Pageable pageable);
 
-    List<LastCompletedDateAddress> findRelevance(Integer idTypeOfWorkPerformed);
+    Page<LastCompletedDateAddress> findRelevance(TypeOfWork typeOfWork, String city, String streetFilter, String regionFilter, String priorityFilter, Pageable pageable);
 }

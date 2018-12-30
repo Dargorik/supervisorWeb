@@ -1,6 +1,9 @@
 package supervisorweb.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -48,18 +51,22 @@ public class MonitoringController {
     }
 
     @RequestMapping()
-    public String allWorks(@RequestParam(name = "cityFilter", required = false, defaultValue = "0") Integer cityFilter,
-                       @RequestParam(name = "streetFilter", required = false, defaultValue = "0") Integer streetFilter,
-                       @RequestParam(name = "userFilter", required = false, defaultValue = "0") Integer userFilter,
-                       @RequestParam(name = "regionFilter", required = false, defaultValue = "0") Integer regionFilter,
-                       @RequestParam(name = "typeOfWorkPerformedFilter", required = false, defaultValue = "0") Integer typeOfWorkPerformedFilter,
-                       @RequestParam(name = "fromeData", required = false, defaultValue = "") String fromeData,
-                       @RequestParam(name = "toData", required = false, defaultValue = "") String toData,
+    public String allWorks(@RequestParam(name = "cityFilter", required = false, defaultValue = "%") String cityFilter,
+                           @RequestParam(name = "streetFilter", required = false, defaultValue = "%") String streetFilter,
+                           @RequestParam(name = "userFilter", required = false, defaultValue = "0") Integer userFilter,
+                           @RequestParam(name = "regionFilter", required = false, defaultValue = "%") String regionFilter,
+                           @RequestParam(name = "typeOfWorkPerformedFilter", required = false, defaultValue = "%") String typeOfWorkPerformedFilter,
+                           @RequestParam(name = "fromeData", required = false, defaultValue = "") String fromeData,
+                           @RequestParam(name = "toData", required = false, defaultValue = "") String toData,
+                           @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
                        Map<String, Object> model) {
         Date frome, to;
         frome=convertData(fromeData);
         to=convertData(toData);
-        model.put("completedWorks", completedWorkService.findByData(frome, to));
+
+        model.put("page", completedWorkService.findByDataAndPage(frome, to, userFilter, cityFilter, streetFilter, regionFilter, typeOfWorkPerformedFilter, pageable));
+        model.put("url", "/monitoring");
+
         model.put("fromeData", fromeData);
         model.put("toData", toData);
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
@@ -68,34 +75,31 @@ public class MonitoringController {
         model.put("streets", streetService.findAll());
         model.put("cities", cityService.findAll());
         model.put("regions", regionService.findAll());
-        City city=cityService.findById(cityFilter);
-        model.put("cityFilter", city==null?0:city.getIdCity());
-        Street street= streetService.findById(streetFilter);
-        model.put("streetFilter", street==null?0:street.getIdStreet());
-        User user =userService.findById(userFilter);
-        model.put("userFilter", user==null?0:user.getIdusers());
-        Region region=regionService.findById(regionFilter);
-        model.put("regionFilter", region==null?0:region.getIdRegion());
-        TypeOfWorkPerformed typeOfWorkPerformed= typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
-        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed==null?0:typeOfWorkPerformed.getIdTypeOfWorkPerformed());
+        model.put("userFilter", userFilter);
+        model.put("cityFilter", cityFilter);
+        model.put("streetFilter", streetFilter);
+        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformedFilter);
+        model.put("regionFilter", regionFilter);
         return "reestrWorks";
     }
 
     @RequestMapping("/delete")
     public String deleteWork(@RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
-                             @RequestParam(name = "cityFilter", required = false, defaultValue = "0") Integer cityFilter,
-                             @RequestParam(name = "streetFilter", required = false, defaultValue = "0") Integer streetFilter,
+                             @RequestParam(name = "cityFilter", required = false, defaultValue = "%") String cityFilter,
+                             @RequestParam(name = "streetFilter", required = false, defaultValue = "%") String streetFilter,
                              @RequestParam(name = "userFilter", required = false, defaultValue = "0") Integer userFilter,
-                             @RequestParam(name = "regionFilter", required = false, defaultValue = "0") Integer regionFilter,
-                             @RequestParam(name = "typeOfWorkPerformedFilter", required = false, defaultValue = "0") Integer typeOfWorkPerformedFilter,
+                             @RequestParam(name = "regionFilter", required = false, defaultValue = "%") String regionFilter,
+                             @RequestParam(name = "typeOfWorkPerformedFilter", required = false, defaultValue = "%") String typeOfWorkPerformedFilter,
                              @RequestParam(name = "fromeData", required = false, defaultValue = "") String fromeData,
                              @RequestParam(name = "toData", required = false, defaultValue = "") String toData,
+                             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
                              Map<String, Object> model) {
         model.put("message", completedWorkService.delete(delId));
         Date frome, to;
         frome=convertData(fromeData);
         to=convertData(toData);
-        model.put("completedWorks", completedWorkService.findByData(frome, to));
+        model.put("page", completedWorkService.findByDataAndPage(frome, to, userFilter, cityFilter, streetFilter, regionFilter, typeOfWorkPerformedFilter, pageable));
+        model.put("url", "/monitoring");
         model.put("fromeData", fromeData);
         model.put("toData", toData);
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
@@ -104,16 +108,11 @@ public class MonitoringController {
         model.put("streets", streetService.findAll());
         model.put("cities", cityService.findAll());
         model.put("regions", regionService.findAll());
-        City city=cityService.findById(cityFilter);
-        model.put("cityFilter", city==null?0:city.getIdCity());
-        Street street= streetService.findById(streetFilter);
-        model.put("streetFilter", street==null?0:street.getIdStreet());
-        User user =userService.findById(userFilter);
-        model.put("userFilter", user==null?0:user.getIdusers());
-        Region region=regionService.findById(regionFilter);
-        model.put("regionFilter", region==null?0:region.getIdRegion());
-        TypeOfWorkPerformed typeOfWorkPerformed= typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
-        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed==null?0:typeOfWorkPerformed.getIdTypeOfWorkPerformed());
+        model.put("userFilter", userFilter);
+        model.put("cityFilter", cityFilter);
+        model.put("streetFilter", streetFilter);
+        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformedFilter);
+        model.put("regionFilter", regionFilter);
         return "reestrWorks";
     }
 }

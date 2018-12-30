@@ -1,5 +1,7 @@
 package supervisorweb.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import supervisorweb.domain.CompletedWork;
 import supervisorweb.domain.User;
 
@@ -20,4 +22,6 @@ public interface CompletedWorkService {
     List<CompletedWork> findByData(Date frome, Date to);
 
     String delete(Integer delId);
+
+    Page<CompletedWork> findByDataAndPage(Date frome, Date to, Integer userFilter, String cityFilter, String streetFilter, String regionFilter, String typeOfWorkPerformedFilter, Pageable pageable);
 }

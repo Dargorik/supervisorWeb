@@ -1,6 +1,9 @@
 package supervisorweb.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -125,25 +128,23 @@ public class TableUpdateController {
      */
     @RequestMapping("/tables/address")
     public String address(@RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
-                          @RequestParam(name = "cityFilter", required = false, defaultValue = "0") Integer cityFilter,
-                          @RequestParam(name = "streetFilter", required = false, defaultValue = "0") Integer streetFilter,
-                          @RequestParam(name = "priorityFilter", required = false, defaultValue = "0") Integer priorityFilter,
-                          @RequestParam(name = "regionFilter", required = false, defaultValue = "0") Integer regionFilter,
+                          @RequestParam(name = "cityFilter", required = false, defaultValue = "%") String cityFilter,
+                          @RequestParam(name = "streetFilter", required = false, defaultValue = "%") String streetFilter,
+                          @RequestParam(name = "priorityFilter", required = false, defaultValue = "%") String priorityFilter,
+                          @RequestParam(name = "regionFilter", required = false, defaultValue = "%") String regionFilter,
+                          @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
                           Map<String, Object> model) {
-        model.put("addresses", addressService.findAll());
+        model.put("page", addressService.findAllPage(cityFilter, streetFilter, priorityFilter, regionFilter, pageable));
+        model.put("url", "/tables/address");
         model.put("cities", cityService.findAll());
         model.put("streets", streetService.findAll());
         model.put("priorities", priorityListService.findAll());
         model.put("regions", regionService.findAll());
         model.put("beanUp", addressService.findById(updId));
-        City city=cityService.findById(cityFilter);
-        model.put("cityFilter", city==null?0:city.getIdCity());
-        Street street= streetService.findById(streetFilter);
-        model.put("streetFilter", street==null?0:street.getIdStreet());
-        PriorityList priorityList=priorityListService.findById(priorityFilter);
-        model.put("priorityFilter", priorityList==null?0:priorityList.getIdPriorityList());
-        Region region= regionService.findById(regionFilter);
-        model.put("regionFilter", region==null?0:region.getIdRegion());
+        model.put("cityFilter", cityFilter);
+        model.put("streetFilter", streetFilter);
+        model.put("priorityFilter", priorityFilter);
+        model.put("regionFilter", regionFilter);
         return "address";
     }
 
@@ -156,83 +157,77 @@ public class TableUpdateController {
                              @RequestParam(name = "idPriorityList", required = false, defaultValue = "") Integer idPriorityList,
                              @RequestParam(name = "idRegion", required = false, defaultValue = "") Integer idRegion,
                              @RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
-                             @RequestParam(name = "cityFilter", required = false, defaultValue = "0") Integer cityFilter,
-                             @RequestParam(name = "streetFilter", required = false, defaultValue = "0") Integer streetFilter,
-                             @RequestParam(name = "priorityFilter", required = false, defaultValue = "0") Integer priorityFilter,
-                             @RequestParam(name = "regionFilter", required = false, defaultValue = "0") Integer regionFilter,
+                             @RequestParam(name = "cityFilter", required = false, defaultValue = "%") String cityFilter,
+                             @RequestParam(name = "streetFilter", required = false, defaultValue = "%") String streetFilter,
+                             @RequestParam(name = "priorityFilter", required = false, defaultValue = "%") String priorityFilter,
+                             @RequestParam(name = "regionFilter", required = false, defaultValue = "%") String regionFilter,
+                             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
                              Map<String, Object> model) {
         model.put("message", addressService.add(idCity, idStreet, houseNumber, numberFloors, numberEntrances, idPriorityList, idRegion));
-        model.put("addresses", addressService.findAll());
+        model.put("page", addressService.findAllPage(cityFilter, streetFilter, priorityFilter, regionFilter, pageable));
+        model.put("url", "/tables/address");
         model.put("cities", cityService.findAll());
         model.put("streets", streetService.findAll());
         model.put("priorities", priorityListService.findAll());
         model.put("regions", regionService.findAll());
         model.put("beanUp", addressService.findById(updId));
-        City city=cityService.findById(cityFilter);
-        model.put("cityFilter", city==null?0:city.getIdCity());
-        Street street= streetService.findById(streetFilter);
-        model.put("streetFilter", street==null?0:street.getIdStreet());
-        PriorityList priorityList=priorityListService.findById(priorityFilter);
-        model.put("priorityFilter", priorityList==null?0:priorityList.getIdPriorityList());
-        Region region= regionService.findById(regionFilter);
-        model.put("regionFilter", region==null?0:region.getIdRegion());
+        model.put("cityFilter", cityFilter);
+        model.put("streetFilter", streetFilter);
+        model.put("priorityFilter", priorityFilter);
+        model.put("regionFilter", regionFilter);
         return "address";
     }
 
     @RequestMapping("/tables/update/address")
-    public String updateAddress(@RequestParam(name = "updCityId", required = false, defaultValue = "") Integer updCityId,
-                                @RequestParam(name = "updStreetId", required = false, defaultValue = "") Integer updStreetId,
+    public String updateAddress(@RequestParam(name = "updCityId", required = false, defaultValue = "0") Integer updCityId,
+                                @RequestParam(name = "updStreetId", required = false, defaultValue = "0") Integer updStreetId,
                                 @RequestParam(name = "updHouseNumber", required = false, defaultValue = "") String updHouseNumber,
-                                @RequestParam(name = "updNumberFloors", required = false, defaultValue = "") Integer updNumberFloors,
-                                @RequestParam(name = "updNumberEntrances", required = false, defaultValue = "") Integer updNumberEntrances,
-                                @RequestParam(name = "updPriorityListId", required = false, defaultValue = "") Integer updPriorityListId,
-                                @RequestParam(name = "updRegionId", required = false, defaultValue = "") Integer updRegionId,
+                                @RequestParam(name = "updNumberFloors", required = false, defaultValue = "0") Integer updNumberFloors,
+                                @RequestParam(name = "updNumberEntrances", required = false, defaultValue = "0") Integer updNumberEntrances,
+                                @RequestParam(name = "updPriorityListId", required = false, defaultValue = "0") Integer updPriorityListId,
+                                @RequestParam(name = "updRegionId", required = false, defaultValue = "0") Integer updRegionId,
                                 @RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
-                                @RequestParam(name = "cityFilter", required = false, defaultValue = "0") Integer cityFilter,
-                                @RequestParam(name = "streetFilter", required = false, defaultValue = "0") Integer streetFilter,
-                                @RequestParam(name = "priorityFilter", required = false, defaultValue = "0") Integer priorityFilter,
-                                @RequestParam(name = "regionFilter", required = false, defaultValue = "0") Integer regionFilter,
+                                @RequestParam(name = "cityFilter", required = false, defaultValue = "%") String cityFilter,
+                                @RequestParam(name = "streetFilter", required = false, defaultValue = "%") String streetFilter,
+                                @RequestParam(name = "priorityFilter", required = false, defaultValue = "%") String priorityFilter,
+                                @RequestParam(name = "regionFilter", required = false, defaultValue = "%") String regionFilter,
+                                @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
                                 Map<String, Object> model) {
         model.put("message", addressService.update(updId, updCityId, updStreetId, updHouseNumber, updNumberFloors, updNumberEntrances, updPriorityListId, updRegionId));
-        model.put("addresses", addressService.findAll());
+        model.put("page", addressService.findAllPage(cityFilter, streetFilter, priorityFilter, regionFilter, pageable));
+        model.put("url", "/tables/address");
         model.put("cities", cityService.findAll());
         model.put("streets", streetService.findAll());
         model.put("priorities", priorityListService.findAll());
         model.put("regions", regionService.findAll());
-        City city=cityService.findById(cityFilter);
-        model.put("cityFilter", city==null?0:city.getIdCity());
-        Street street= streetService.findById(streetFilter);
-        model.put("streetFilter", street==null?0:street.getIdStreet());
-        PriorityList priorityList=priorityListService.findById(priorityFilter);
-        model.put("priorityFilter", priorityList==null?0:priorityList.getIdPriorityList());
-        Region region= regionService.findById(regionFilter);
-        model.put("regionFilter", region==null?0:region.getIdRegion());
+        model.put("cityFilter", cityFilter);
+        model.put("streetFilter", streetFilter);
+        model.put("priorityFilter", priorityFilter);
+        model.put("regionFilter", regionFilter);
         return "address";
     }
 
     @RequestMapping("/tables/delete/address")
     public String deleteAddress(@RequestParam(name = "updId", required = false, defaultValue = "0") Integer updId,
                                 @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
-                                @RequestParam(name = "cityFilter", required = false, defaultValue = "0") Integer cityFilter,
-                                @RequestParam(name = "streetFilter", required = false, defaultValue = "0") Integer streetFilter,
-                                @RequestParam(name = "priorityFilter", required = false, defaultValue = "0") Integer priorityFilter,
-                                @RequestParam(name = "regionFilter", required = false, defaultValue = "0") Integer regionFilter,
+                                @RequestParam(name = "cityFilter", required = false, defaultValue = "%") String cityFilter,
+                                @RequestParam(name = "streetFilter", required = false, defaultValue = "%") String streetFilter,
+                                @RequestParam(name = "priorityFilter", required = false, defaultValue = "%") String priorityFilter,
+                                @RequestParam(name = "regionFilter", required = false, defaultValue = "%") String regionFilter,
+                                @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
                                 Map<String, Object> model) {
         model.put("message", addressService.delete(delId));
-        model.put("addresses", addressService.findAll());
+        model.put("page", addressService.findAllPage(cityFilter, streetFilter, priorityFilter, regionFilter, pageable));
+        model.put("url", "/tables/address");
         model.put("cities", cityService.findAll());
         model.put("streets", streetService.findAll());
         model.put("priorities", priorityListService.findAll());
         model.put("regions", regionService.findAll());
         model.put("beanUp", addressService.findById(updId));
-        City city=cityService.findById(cityFilter);
-        model.put("cityFilter", city==null?0:city.getIdCity());
-        Street street= streetService.findById(streetFilter);
-        model.put("streetFilter", street==null?0:street.getIdStreet());
-        PriorityList priorityList=priorityListService.findById(priorityFilter);
-        model.put("priorityFilter", priorityList==null?0:priorityList.getIdPriorityList());
-        Region region= regionService.findById(regionFilter);
-        model.put("regionFilter", region==null?0:region.getIdRegion());
+        model.put("cityFilter", cityFilter);
+        model.put("streetFilter", streetFilter);
+        model.put("priorityFilter", priorityFilter);
+        model.put("regionFilter", regionFilter);
         return "address";
     }
 
@@ -450,10 +445,10 @@ public class TableUpdateController {
         model.put("positions", positionService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
         model.put("beanUp", positionDutiesService.findById(updId));
-        Position position =positionService.findById(positionFilter);
-        model.put("positionFilter", position==null?0:position.getIdPosition());
-        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
-        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
+        Position position = positionService.findById(positionFilter);
+        model.put("positionFilter", position == null ? 0 : position.getIdPosition());
+        TypeOfWork typeOfWork = typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork == null ? 0 : typeOfWork.getIdTypeOfWork());
         return "positionDuties";
     }
 
@@ -469,10 +464,10 @@ public class TableUpdateController {
         model.put("positions", positionService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
         model.put("beanUp", positionDutiesService.findById(updId));
-        Position position =positionService.findById(positionFilter);
-        model.put("positionFilter", position==null?0:position.getIdPosition());
-        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
-        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
+        Position position = positionService.findById(positionFilter);
+        model.put("positionFilter", position == null ? 0 : position.getIdPosition());
+        TypeOfWork typeOfWork = typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork == null ? 0 : typeOfWork.getIdTypeOfWork());
         return "positionDuties";
     }
 
@@ -487,10 +482,10 @@ public class TableUpdateController {
         model.put("positionsDuties", positionDutiesService.findAll());
         model.put("positions", positionService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
-        Position position =positionService.findById(positionFilter);
-        model.put("positionFilter", position==null?0:position.getIdPosition());
-        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
-        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
+        Position position = positionService.findById(positionFilter);
+        model.put("positionFilter", position == null ? 0 : position.getIdPosition());
+        TypeOfWork typeOfWork = typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork == null ? 0 : typeOfWork.getIdTypeOfWork());
         return "positionDuties";
     }
 
@@ -505,12 +500,13 @@ public class TableUpdateController {
         model.put("positions", positionService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
         model.put("beanUp", positionDutiesService.findById(updId));
-        Position position =positionService.findById(positionFilter);
-        model.put("positionFilter", position==null?0:position.getIdPosition());
-        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
-        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
+        Position position = positionService.findById(positionFilter);
+        model.put("positionFilter", position == null ? 0 : position.getIdPosition());
+        TypeOfWork typeOfWork = typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork == null ? 0 : typeOfWork.getIdTypeOfWork());
         return "positionDuties";
     }
+
     /**
      * methods for changing the ListTypesInPerfomedWork table
      */
@@ -523,10 +519,10 @@ public class TableUpdateController {
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
         model.put("beanUp", listTypesInPerfomedWorkService.findById(updId));
-        TypeOfWorkPerformed typeOfWorkPerformed=typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
-        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed==null?0:typeOfWorkPerformed.getIdTypeOfWorkPerformed());
-        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
-        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
+        TypeOfWorkPerformed typeOfWorkPerformed = typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
+        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed == null ? 0 : typeOfWorkPerformed.getIdTypeOfWorkPerformed());
+        TypeOfWork typeOfWork = typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork == null ? 0 : typeOfWork.getIdTypeOfWork());
         return "listTypesInPerfomedWork";
     }
 
@@ -536,16 +532,16 @@ public class TableUpdateController {
                                              @RequestParam(name = "typeOfWorkFilter", required = false, defaultValue = "0") Integer typeOfWorkFilter,
                                              @RequestParam(name = "idTypeOfWorkPerformed", required = false, defaultValue = "") Integer idTypeOfWorkPerformed,
                                              @RequestParam(name = "idTypeOfWork", required = false, defaultValue = "") Integer idTypeOfWork,
-                                    Map<String, Object> model) {
+                                             Map<String, Object> model) {
         model.put("message", listTypesInPerfomedWorkService.add(idTypeOfWorkPerformed, idTypeOfWork));
         model.put("typesInPerfomedWork", listTypesInPerfomedWorkService.findAll());
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
         model.put("beanUp", listTypesInPerfomedWorkService.findById(updId));
-        TypeOfWorkPerformed typeOfWorkPerformed=typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
-        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed==null?0:typeOfWorkPerformed.getIdTypeOfWorkPerformed());
-        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
-        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
+        TypeOfWorkPerformed typeOfWorkPerformed = typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
+        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed == null ? 0 : typeOfWorkPerformed.getIdTypeOfWorkPerformed());
+        TypeOfWork typeOfWork = typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork == null ? 0 : typeOfWork.getIdTypeOfWork());
         return "listTypesInPerfomedWork";
     }
 
@@ -560,10 +556,10 @@ public class TableUpdateController {
         model.put("typesInPerfomedWork", listTypesInPerfomedWorkService.findAll());
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
-        TypeOfWorkPerformed typeOfWorkPerformed=typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
-        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed==null?0:typeOfWorkPerformed.getIdTypeOfWorkPerformed());
-        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
-        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
+        TypeOfWorkPerformed typeOfWorkPerformed = typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
+        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed == null ? 0 : typeOfWorkPerformed.getIdTypeOfWorkPerformed());
+        TypeOfWork typeOfWork = typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork == null ? 0 : typeOfWork.getIdTypeOfWork());
         return "listTypesInPerfomedWork";
     }
 
@@ -578,10 +574,10 @@ public class TableUpdateController {
         model.put("typesOfWorkPerformed", typeOfWorkPerformedService.findAll());
         model.put("typesOfWork", typeOfWorkService.findAll());
         model.put("beanUp", listTypesInPerfomedWorkService.findById(updId));
-        TypeOfWorkPerformed typeOfWorkPerformed=typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
-        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed==null?0:typeOfWorkPerformed.getIdTypeOfWorkPerformed());
-        TypeOfWork typeOfWork=typeOfWorkService.findById(typeOfWorkFilter);
-        model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
+        TypeOfWorkPerformed typeOfWorkPerformed = typeOfWorkPerformedService.findById(typeOfWorkPerformedFilter);
+        model.put("typeOfWorkPerformedFilter", typeOfWorkPerformed == null ? 0 : typeOfWorkPerformed.getIdTypeOfWorkPerformed());
+        TypeOfWork typeOfWork = typeOfWorkService.findById(typeOfWorkFilter);
+        model.put("typeOfWorkFilter", typeOfWork == null ? 0 : typeOfWork.getIdTypeOfWork());
         return "listTypesInPerfomedWork";
     }
 
@@ -597,10 +593,10 @@ public class TableUpdateController {
         model.put("users", userService.findAllUser());
         model.put("regions", regionService.findAll());
         model.put("beanUp", userRegionsService.findById(updId));
-        User user =userService.findById(userFilter);
-        model.put("userFilter", user==null?0:user.getIdusers());
-        Region region=regionService.findById(regionFilter);
-        model.put("regionFilter", region==null?0:region.getIdRegion());
+        User user = userService.findById(userFilter);
+        model.put("userFilter", user == null ? 0 : user.getIdusers());
+        Region region = regionService.findById(regionFilter);
+        model.put("regionFilter", region == null ? 0 : region.getIdRegion());
         return "userRegions";
     }
 
@@ -610,16 +606,16 @@ public class TableUpdateController {
                                  @RequestParam(name = "regionFilter", required = false, defaultValue = "0") Integer regionFilter,
                                  @RequestParam(name = "idUser", required = false, defaultValue = "") Integer idUser,
                                  @RequestParam(name = "idRegion", required = false, defaultValue = "") Integer idRegion,
-                                             Map<String, Object> model) {
+                                 Map<String, Object> model) {
         model.put("message", userRegionsService.add(idUser, idRegion));
         model.put("usersRegions", userRegionsService.findAll());
         model.put("users", userService.findAllUser());
         model.put("regions", regionService.findAll());
         model.put("beanUp", userRegionsService.findById(updId));
-        User user =userService.findById(userFilter);
-        model.put("userFilter", user==null?0:user.getIdusers());
-        Region region=regionService.findById(regionFilter);
-        model.put("regionFilter", region==null?0:region.getIdRegion());
+        User user = userService.findById(userFilter);
+        model.put("userFilter", user == null ? 0 : user.getIdusers());
+        Region region = regionService.findById(regionFilter);
+        model.put("regionFilter", region == null ? 0 : region.getIdRegion());
         return "userRegions";
     }
 
@@ -634,10 +630,10 @@ public class TableUpdateController {
         model.put("usersRegions", userRegionsService.findAll());
         model.put("users", userService.findAllUser());
         model.put("regions", regionService.findAll());
-        User user =userService.findById(userFilter);
-        model.put("userFilter", user==null?0:user.getIdusers());
-        Region region=regionService.findById(regionFilter);
-        model.put("regionFilter", region==null?0:region.getIdRegion());
+        User user = userService.findById(userFilter);
+        model.put("userFilter", user == null ? 0 : user.getIdusers());
+        Region region = regionService.findById(regionFilter);
+        model.put("regionFilter", region == null ? 0 : region.getIdRegion());
         return "userRegions";
     }
 
@@ -646,16 +642,16 @@ public class TableUpdateController {
                                     @RequestParam(name = "userFilter", required = false, defaultValue = "0") Integer userFilter,
                                     @RequestParam(name = "regionFilter", required = false, defaultValue = "0") Integer regionFilter,
                                     @RequestParam(name = "delId", required = false, defaultValue = "0") Integer delId,
-                                                Map<String, Object> model) {
+                                    Map<String, Object> model) {
         model.put("message", userRegionsService.delete(delId));
         model.put("usersRegions", userRegionsService.findAll());
         model.put("users", userService.findAllUser());
         model.put("regions", regionService.findAll());
         model.put("beanUp", userRegionsService.findById(updId));
-        User user =userService.findById(userFilter);
-        model.put("userFilter", user==null?0:user.getIdusers());
-        Region region=regionService.findById(regionFilter);
-        model.put("regionFilter", region==null?0:region.getIdRegion());
+        User user = userService.findById(userFilter);
+        model.put("userFilter", user == null ? 0 : user.getIdusers());
+        Region region = regionService.findById(regionFilter);
+        model.put("regionFilter", region == null ? 0 : region.getIdRegion());
         return "userRegions";
     }
 }

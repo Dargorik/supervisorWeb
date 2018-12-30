@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import supervisorweb.domain.Position;
 import supervisorweb.domain.Role;
 import supervisorweb.domain.User;
 
@@ -36,4 +37,6 @@ public interface UserRepos extends JpaRepository<User, Integer> {
     List<User> findByRoles(Role role);
 
     User findByActivationCode(String code);
+
+    List<User> findByPosition(Position position);
 }

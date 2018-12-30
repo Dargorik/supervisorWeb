@@ -2,7 +2,9 @@ package supervisorweb.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import supervisorweb.domain.Address;
 import supervisorweb.domain.PriorityList;
+import supervisorweb.repos.AddressRepos;
 import supervisorweb.repos.PriorityListRepos;
 
 import java.util.List;
@@ -10,7 +12,9 @@ import java.util.List;
 @Service
 public class PriorityListServiceImpl implements PriorityListService {
     @Autowired
-    PriorityListRepos priorityListRepos;
+    private PriorityListRepos priorityListRepos;
+    @Autowired
+    private AddressRepos addressRepos;
 
     @Override
     public PriorityList findByName(String name) {
@@ -44,6 +48,8 @@ public class PriorityListServiceImpl implements PriorityListService {
         if (priorityList == null) {
             return "This component does not exist!";
         } else {
+//            for(Address address:addressRepos.findByPriorityList(priorityList))
+//                address.setRegion(null);
             priorityListRepos.delete(priorityList);
             return "Successful delete record!";
         }

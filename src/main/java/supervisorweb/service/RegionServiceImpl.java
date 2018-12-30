@@ -2,7 +2,9 @@ package supervisorweb.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import supervisorweb.domain.Address;
 import supervisorweb.domain.Region;
+import supervisorweb.repos.AddressRepos;
 import supervisorweb.repos.RegionRepos;
 
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.List;
 public class RegionServiceImpl implements RegionService {
     @Autowired
     private RegionRepos regionRepos;
+    @Autowired
+    private AddressRepos addressRepos;
 
     @Override
     public Region findByName(String name) {
@@ -43,6 +47,8 @@ public class RegionServiceImpl implements RegionService {
         if (region == null) {
             return "This component does not exist!";
         } else {
+//            for(Address address:addressRepos.findByRegion(region))
+//                address.setRegion(null);
             regionRepos.delete(region);
             return "Successful delete record!";
         }

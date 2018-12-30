@@ -10,9 +10,9 @@ public class Position {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer idPosition;
     private String name;
-
-    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "position")
-    private List<User> users;
+//
+//    @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "position")
+//    private List<User> users;
     @OneToMany(cascade={CascadeType.REMOVE}, mappedBy = "position")
     private List<PositionDuties> positionDuties;
 

@@ -3,7 +3,9 @@ package supervisorweb.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import supervisorweb.domain.Position;
+import supervisorweb.domain.User;
 import supervisorweb.repos.PositionRepos;
+import supervisorweb.repos.UserRepos;
 
 import java.util.List;
 
@@ -11,6 +13,8 @@ import java.util.List;
 public class PositionServiceImpl implements PositionService {
     @Autowired
     private PositionRepos positionRepos;
+    @Autowired
+    private UserRepos userRepos;
 
     @Override
     public Position findByName(String name) {
@@ -43,6 +47,8 @@ public class PositionServiceImpl implements PositionService {
         if (position == null) {
             return "This component does not exist!";
         } else {
+            for(User user:userRepos.findByPosition(position))
+                user.setPosition(null);
             positionRepos.delete(position);
             return "Successful delete record!";
         }

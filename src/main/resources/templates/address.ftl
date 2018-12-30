@@ -1,4 +1,5 @@
 <#import "parts/common.ftl" as c>
+<#import "parts/pager.ftl" as p>
 <@c.page>
 
 <div class="mx-auto">
@@ -86,7 +87,7 @@
             <th><select class="custom-select" id="citySelect" name="City">
                 <option name="0" value="all" selected>All city</option>
             <#list cities as city>
-                <option name="${city.idCity}" value="${city.name}" <#if city.idCity==cityFilter>selected</#if>>
+                <option name="${city.idCity}" value="${city.name}" <#if city.name==cityFilter>selected</#if>>
                     ${city.name}
                 </option>
             </#list>
@@ -94,7 +95,7 @@
             <th><select class="custom-select" id="streetSelect" name="Street">
                 <option name="0" value="all" selected>All street</option>
             <#list streets as street>
-                <option name="${street.idStreet}" value="${street.name}" <#if street.idStreet==streetFilter>selected</#if>>
+                <option name="${street.idStreet}" value="${street.name}" <#if street.name==streetFilter>selected</#if>>
                     ${street.name}
                 </option>
             </#list>
@@ -106,7 +107,7 @@
                 <option name="0" value="all" selected>All priorities</option>
                 <#list priorities as priority >
                     <option name="${priority.idPriorityList}" value="${priority.name}"
-                            <#if priority.idPriorityList==priorityFilter>selected</#if>>
+                            <#if priority.name==priorityFilter>selected</#if>>
                         ${priority.name}
                     </option>
                 </#list>
@@ -115,7 +116,7 @@
                 <option name="0" value="all" selected>All region</option>
                 <#list regions as region >
                     <option name="${region.idRegion}" value="${region.name}"
-                            <#if region.idRegion==regionFilter>selected</#if>>
+                            <#if region.name==regionFilter>selected</#if>>
                         ${region.name}
                     </option>
                 </#list>
@@ -125,7 +126,7 @@
         </tr>
         </thead>
         <tbody>
-        <#list addresses as address >
+        <#list page.content as address >
         <tr>
             <td hidden>${address.idAddress}}</td>
             <td id="city${address ? counter}">${address.city.name}</td>
@@ -143,6 +144,7 @@
         </#list>
         </tbody>
     </table>
+        <@p.pager url page />
     <#if (beanUp)?has_content>
         <table class="table table-bordered table-striped " id="t">
             <h4 class="mt-4">Update record</h4>
@@ -164,7 +166,7 @@
                 <form method="post" action="/tables/update/address?updId=${beanUp.idAddress}">
                     <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                     <td hidden>${beanUp.idAddress}</td>
-                    <td><select class="custom-select" name="idCity">
+                    <td><select class="custom-select" name="updCityId">
                         <option name="0" value="all" disabled>Select city</option>
                         <#list cities as city>
                             <option value="${city.idCity}" <#if city.idCity==beanUp.city.idCity>selected</#if>>
@@ -172,7 +174,7 @@
                             </option>
                         </#list>
                     </select></td>
-                    <td><select class="custom-select" name="idStreet">
+                    <td><select class="custom-select" name="updStreetId">
                         <option name="0" value="all" disabled>Select street</option>
                         <#list streets as street>
                             <option value="${street.idStreet}" <#if street.idStreet==beanUp.street.idStreet>selected</#if>>
@@ -180,13 +182,13 @@
                             </option>
                         </#list>
                     </select></td>
-                    <td><input required autofocus class="form-control form-control-sm" type="text" name="houseNumber"
+                    <td><input required autofocus class="form-control form-control-sm" type="text" name="updHouseNumber"
                                placeholder="Number house" value="${beanUp.houseNumber}"></td>
-                    <td><input required autofocus class="form-control form-control-sm" type="number" name="numberFloors"
+                    <td><input required autofocus class="form-control form-control-sm" type="number" name="updNumberFloors"
                                placeholder="Number floors" value="${beanUp.numberFloors}"></td>
-                    <td><input required autofocus class="form-control form-control-sm" type="number" name="numberEntrances"
+                    <td><input required autofocus class="form-control form-control-sm" type="number" name="updNumberEntrances"
                         placeholder="Number entrances" value="${beanUp.numberEntrances}"></td>
-                    <td><select class="custom-select" name="idPriorityList">
+                    <td><select class="custom-select" name="updPriorityListId">
                         <option name="0" value="all" disabled>Select priority</option>
                         <#list priorities as priority >
                             <option value="${priority.idPriorityList}" <#if priority.idPriorityList==beanUp.priorityList.idPriorityList>selected</#if>>
@@ -194,7 +196,7 @@
                             </option>
                         </#list>
                     </select></td>
-                    <td><select class="custom-select" name="idRegion">
+                    <td><select class="custom-select" name="updRegionId">
                         <option name="0" value="all" disabled>Select type of work</option>
                         <#list regions as region >
                             <option value="${region.idRegion}" <#if region.idRegion==beanUp.region.idRegion>selected</#if>>
@@ -239,55 +241,60 @@
         function chekSelects() {
             var str = "";
             if (citySelect.options[citySelect.selectedIndex].getAttribute("name") != 0)
-                str += "&cityFilter="+ citySelect.options[citySelect.selectedIndex].getAttribute("name");
+                str += "&cityFilter="+ citySelect.options[citySelect.selectedIndex].value;
             if (streetSelect.options[streetSelect.selectedIndex].getAttribute("name") != 0)
-                str += "&streetFilter=" + streetSelect.options[streetSelect.selectedIndex].getAttribute("name");
+                str += "&streetFilter=" + streetSelect.options[streetSelect.selectedIndex].value;
             if (prioritySelect.options[prioritySelect.selectedIndex].getAttribute("name") != 0)
-                str += "&priorityFilter="+ prioritySelect.options[prioritySelect.selectedIndex].getAttribute("name");
+                str += "&priorityFilter="+ prioritySelect.options[prioritySelect.selectedIndex].value;
             if (regionSelect.options[regionSelect.selectedIndex].getAttribute("name") != 0)
-                str += "&regionFilter=" + regionSelect.options[regionSelect.selectedIndex].getAttribute("name");
+                str += "&regionFilter=" + regionSelect.options[regionSelect.selectedIndex].value;
             return str;
         }
 
-        function Filter() {
-            var sellCity = citySelect.options[citySelect.selectedIndex];
-            var sellStreet = streetSelect.options[streetSelect.selectedIndex];
-            var sellPriority = prioritySelect.options[prioritySelect.selectedIndex];
-            var sellRegion = regionSelect.options[regionSelect.selectedIndex];
-            var table = document.getElementById("t");
-            var allRows = table.getElementsByTagName("tr");
-            for (var index in allRows) {
-                if (index > 0) {
-                    var fieldCity = document.getElementById("city" + index);
-                    var fieldStreet = document.getElementById("street" + index);
-                    var fieldPriority = document.getElementById("priority" + index);
-                    var fieldRegion = document.getElementById("region" + index);
-                    if (fieldCity != null && fieldStreet != null && fieldPriority != null && fieldRegion != null) {
-                        allRows[index].removeAttribute("hidden");
-                        if (!fieldCity.innerHTML.startsWith(sellCity.value) && !sellCity.value.startsWith("all")) {
-                            allRows[index].setAttribute("hidden", "hidden")
-                        }
-                        else if (!fieldStreet.innerHTML.startsWith(sellStreet.value) && !sellStreet.value.startsWith("all")) {
-                            allRows[index].setAttribute("hidden", "hidden")
-                        }
-                        else if (!fieldPriority.innerHTML.startsWith(sellPriority.value) && !sellPriority.value.startsWith("all")) {
-                            allRows[index].setAttribute("hidden", "hidden")
-                        }
-                        else if (!fieldRegion.innerHTML.startsWith(sellRegion.value) && !sellRegion.value.startsWith("all")) {
+        // function Filter() {
+        //     var sellCity = citySelect.options[citySelect.selectedIndex];
+        //     var sellStreet = streetSelect.options[streetSelect.selectedIndex];
+        //     var sellPriority = prioritySelect.options[prioritySelect.selectedIndex];
+        //     var sellRegion = regionSelect.options[regionSelect.selectedIndex];
+        //     var table = document.getElementById("t");
+        //     var allRows = table.getElementsByTagName("tr");
+        //     for (var index in allRows) {
+        //         if (index > 0) {
+        //             var fieldCity = document.getElementById("city" + index);
+        //             var fieldStreet = document.getElementById("street" + index);
+        //             var fieldPriority = document.getElementById("priority" + index);
+        //             var fieldRegion = document.getElementById("region" + index);
+        //             if (fieldCity != null && fieldStreet != null && fieldPriority != null && fieldRegion != null) {
+        //                 allRows[index].removeAttribute("hidden");
+        //                 if (!fieldCity.innerHTML.startsWith(sellCity.value) && !sellCity.value.startsWith("all")) {
+        //                     allRows[index].setAttribute("hidden", "hidden")
+        //                 }
+        //                 else if (!fieldStreet.innerHTML.startsWith(sellStreet.value) && !sellStreet.value.startsWith("all")) {
+        //                     allRows[index].setAttribute("hidden", "hidden")
+        //                 }
+        //                 else if (!fieldPriority.innerHTML.startsWith(sellPriority.value) && !sellPriority.value.startsWith("all")) {
+        //                     allRows[index].setAttribute("hidden", "hidden")
+        //                 }
+        //                 else if (!fieldRegion.innerHTML.startsWith(sellRegion.value) && !sellRegion.value.startsWith("all")) {
+        //
+        //                     allRows[index].setAttribute("hidden", "hidden")
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     document.getElementById("cf").setAttribute("value", citySelect.options[citySelect.selectedIndex].getAttribute("name"))
+        //     document.getElementById("sf").setAttribute("value", streetSelect.options[streetSelect.selectedIndex].getAttribute("name"))
+        //     document.getElementById("pf").setAttribute("value", prioritySelect.options[prioritySelect.selectedIndex].getAttribute("name"))
+        //     document.getElementById("rf").setAttribute("value", regionSelect.options[regionSelect.selectedIndex].getAttribute("name"))
+        //     document.getElementById("cfUp").setAttribute("value", citySelect.options[citySelect.selectedIndex].getAttribute("name"))
+        //     document.getElementById("sfUp").setAttribute("value", streetSelect.options[streetSelect.selectedIndex].getAttribute("name"))
+        //     document.getElementById("pfUp").setAttribute("value", prioritySelect.options[prioritySelect.selectedIndex].getAttribute("name"))
+        //     document.getElementById("rfUp").setAttribute("value", regionSelect.options[regionSelect.selectedIndex].getAttribute("name"))
+        // }
 
-                            allRows[index].setAttribute("hidden", "hidden")
-                        }
-                    }
-                }
-            }
-            document.getElementById("cf").setAttribute("value", citySelect.options[citySelect.selectedIndex].getAttribute("name"))
-            document.getElementById("sf").setAttribute("value", streetSelect.options[streetSelect.selectedIndex].getAttribute("name"))
-            document.getElementById("pf").setAttribute("value", prioritySelect.options[prioritySelect.selectedIndex].getAttribute("name"))
-            document.getElementById("rf").setAttribute("value", regionSelect.options[regionSelect.selectedIndex].getAttribute("name"))
-            document.getElementById("cfUp").setAttribute("value", citySelect.options[citySelect.selectedIndex].getAttribute("name"))
-            document.getElementById("sfUp").setAttribute("value", streetSelect.options[streetSelect.selectedIndex].getAttribute("name"))
-            document.getElementById("pfUp").setAttribute("value", prioritySelect.options[prioritySelect.selectedIndex].getAttribute("name"))
-            document.getElementById("rfUp").setAttribute("value", regionSelect.options[regionSelect.selectedIndex].getAttribute("name"))
+        function updPage(){
+            var str="${url}?page=${page.getNumber()}&size=${page.getSize()}";
+            location.href =str +chekSelects() ;
         }
 
         function selectAction() {
@@ -299,11 +306,10 @@
                         "&streetFilter=" + streetSelect.options[streetSelect.selectedIndex].getAttribute("name");
         }
 
-        citySelect.addEventListener("change", Filter);
-        streetSelect.addEventListener("change", Filter);
-        prioritySelect.addEventListener("change", Filter);
-        regionSelect.addEventListener("change", Filter);
+        citySelect.addEventListener("change", updPage);
+        streetSelect.addEventListener("change", updPage);
+        prioritySelect.addEventListener("change", updPage);
+        regionSelect.addEventListener("change", updPage);
 
-        Filter();
     </script>
 </@c.page>

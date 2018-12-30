@@ -2,6 +2,10 @@ package supervisorweb.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import supervisorweb.domain.*;
 import supervisorweb.service.*;
 
-import java.util.Date;
 import java.util.Map;
 
 @Controller
@@ -32,38 +35,36 @@ public class AddressStatusController {
     private LastCompletedDateAddressService lastCompletedDateAddressService;
 
     @RequestMapping()
-    public String allWorks(@RequestParam(name = "cityFilter", required = false, defaultValue = "0") Integer cityFilter,
-                           @RequestParam(name = "streetFilter", required = false, defaultValue = "0") Integer streetFilter,
-                           @RequestParam(name = "regionFilter", required = false, defaultValue = "0") Integer regionFilter,
-                           @RequestParam(name = "priorityFilter", required = false, defaultValue = "0") Integer priorityFilter,
+    public String allWorks(@RequestParam(name = "cityFilter", required = false, defaultValue = "%") String cityFilter,
+                           @RequestParam(name = "streetFilter", required = false, defaultValue = "%") String streetFilter,
+                           @RequestParam(name = "regionFilter", required = false, defaultValue = "%") String regionFilter,
+                           @RequestParam(name = "priorityFilter", required = false, defaultValue = "%") String priorityFilter,
                            @RequestParam(name = "typeOfWorkFilter", required = false, defaultValue = "0") Integer typeOfWorkFilter,
                            @RequestParam(name = "relevance", required = false, defaultValue = "false") Boolean relevance,
+                           @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
                            Map<String, Object> model) {
         TypeOfWork typeOfWork= typeOfWorkService.findById(typeOfWorkFilter);
         model.put("typeOfWorkFilter", typeOfWork==null?0:typeOfWork.getIdTypeOfWork());
-
+        model.put("url", "/status");
 
         if(relevance==false) {
             if (typeOfWorkFilter != 0)
-                model.put("lastCompletedDateAddresses", lastCompletedDateAddressService.findAllAddressByTypeWork(typeOfWork));
+                model.put("page", lastCompletedDateAddressService.findAllAddressByTypeWork(typeOfWork, cityFilter, streetFilter, regionFilter, priorityFilter, pageable));
             else
-                model.put("lastCompletedDateAddresses", lastCompletedDateAddressService.findAllAddress());
+                model.put("page", lastCompletedDateAddressService.findAllAddress(cityFilter, streetFilter, regionFilter, priorityFilter, pageable));
         }
         else
-            model.put("lastCompletedDateAddresses", lastCompletedDateAddressService.findRelevance(typeOfWorkFilter));
+            model.put("page", lastCompletedDateAddressService.findRelevance(typeOfWork, cityFilter, streetFilter, regionFilter, priorityFilter, pageable));
+
         model.put("typesOfWork", typeOfWorkService.findAll());
         model.put("streets", streetService.findAll());
         model.put("cities", cityService.findAll());
         model.put("regions", regionService.findAll());
         model.put("priorities", priorityListService.findAll());
-        City city=cityService.findById(cityFilter);
-        model.put("cityFilter", city==null?0:city.getIdCity());
-        Street street= streetService.findById(streetFilter);
-        model.put("streetFilter", street==null?0:street.getIdStreet());
-        PriorityList priorityList1 =priorityListService.findById(priorityFilter);
-        model.put("priorityFilter", priorityList1==null?0:priorityList1.getIdPriorityList());
-        Region region=regionService.findById(regionFilter);
-        model.put("regionFilter", region==null?0:region.getIdRegion());
+        model.put("cityFilter", cityFilter);
+        model.put("streetFilter", streetFilter);
+        model.put("priorityFilter", priorityFilter);
+        model.put("regionFilter", regionFilter);
         model.put("relevance", relevance);
         return "addressStat";
     }

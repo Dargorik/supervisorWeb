@@ -25,7 +25,7 @@ public class User implements UserDetails {
     private String email;
     private String activationCode;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "position_id")
     private Position position;
 

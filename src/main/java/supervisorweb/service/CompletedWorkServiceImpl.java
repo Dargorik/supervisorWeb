@@ -1,6 +1,8 @@
 package supervisorweb.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import supervisorweb.domain.*;
 import supervisorweb.repos.*;
@@ -9,6 +11,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -123,6 +126,39 @@ public class CompletedWorkServiceImpl implements CompletedWorkService {
         }
     }
 
+    @Override
+    public Page<CompletedWork> findByDataAndPage(Date frome, Date to, Integer userFilter, String cityFilter, String streetFilter, String regionFilter, String typeOfWorkPerformedFilter, Pageable pageable) {User user=userRepos.findById(userFilter).orElse(null);
+        String firstName="%";
+        String lastName="%";
+        if(user!=null){
+            firstName+=user.getFirstName();
+            lastName+=user.getLastName();
+        }
+        List<CompletedWork> completedWorksList = completedWorkRepos.findAllByFilters(firstName,lastName,cityFilter,streetFilter,regionFilter,typeOfWorkPerformedFilter);
+        List<Integer> completedWorks = new ArrayList<>();
+        for (CompletedWork completedWork : completedWorksList) {
+            if(frome == null && to == null)
+                completedWorks.add(completedWork.getIdCompletedWork());
+            else {
+                if (frome == null) {
+                    if (completedWork.getTimestamp_send().getTime() <= to.getTime())
+                        completedWorks.add(completedWork.getIdCompletedWork());
+                } else if (to == null) {
+                    if (completedWork.getTimestamp_send().getTime() >= frome.getTime())
+                        completedWorks.add(completedWork.getIdCompletedWork());
+                } else if (completedWork.getTimestamp_send().getTime() <= to.getTime() && completedWork.getTimestamp_send().getTime() >= frome.getTime())
+                    completedWorks.add(completedWork.getIdCompletedWork());
+            }
+        }
+
+
+        if(completedWorks.size()==0)
+            completedWorks.add(0);
+
+        return completedWorkRepos.findAllByPage(completedWorks,pageable);
+    }
+
+
     public void addLastCompletedDataAddress(Address address, TypeOfWorkPerformed typeOfWorkPerformed, Timestamp lastData) {
         for (TypeOfWork typeOfWork : listTypesInPerfomedWorkRepos.findByTypeOfWorkPerformed(typeOfWorkPerformed).stream()
                 .map(x -> x.getTypeOfWork())
@@ -130,4 +166,7 @@ public class CompletedWorkServiceImpl implements CompletedWorkService {
             lastCompletedDateAddressRepos.findByAddressAndTypeOfWork(address, typeOfWork).setLastData(lastData);
         }
     }
+
+
+
 }

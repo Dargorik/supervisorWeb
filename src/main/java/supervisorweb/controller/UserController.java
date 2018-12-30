@@ -33,8 +33,11 @@ public class UserController {
         model.put("positions", positionService.findAll());
         model.put("beanUp", userService.findById(updId));
         Position position =positionService.findById(positionFilter);
-        model.put("positionFilter", position==null?0:position.getIdPosition());
-        model.put("activFilter", activFilter.equals("true")?1:activFilter.equals("false")?0:2);
+        if(positionFilter!=-1) {
+            model.put("positionFilter", position == null ? 0 : position.getIdPosition());
+        }
+        else model.put("positionFilter", -1);
+        model.put("activFilter", activFilter.equals("true") ? 1 : activFilter.equals("false") ? 0 : 2);
         return "usersList";
     }
 
@@ -53,7 +56,10 @@ public class UserController {
         model.put("positions", positionService.findAll());
         model.put("beanUp", userService.findById(updId));
         Position position =positionService.findById(positionFilter);
-        model.put("positionFilter", position==null?0:position.getIdPosition());
+        if(positionFilter!=-1) {
+            model.put("positionFilter", position == null ? 0 : position.getIdPosition());
+        }
+        else model.put("positionFilter", -1);
         model.put("activFilter", activFilter.equals("true")?1:activFilter.equals("false")?0:2);
         return "usersList";
     }
@@ -73,7 +79,10 @@ public class UserController {
         model.put("users", userService.findAllUser());
         model.put("positions", positionService.findAll());
         Position position =positionService.findById(positionFilter);
-        model.put("positionFilter", position==null?0:position.getIdPosition());
+        if(positionFilter!=-1) {
+            model.put("positionFilter", position == null ? 0 : position.getIdPosition());
+        }
+        else model.put("positionFilter", -1);
         model.put("activFilter", activFilter.equals("true")?1:activFilter.equals("false")?0:2);
         return "usersList";
     }
@@ -89,7 +98,10 @@ public class UserController {
         model.put("positions", positionService.findAll());
         model.put("beanUp", userService.findById(updId));
         Position position =positionService.findById(positionFilter);
-        model.put("positionFilter", position==null?0:position.getIdPosition());
+        if(positionFilter!=-1) {
+            model.put("positionFilter", position == null ? 0 : position.getIdPosition());
+        }
+        else model.put("positionFilter", -1);
         model.put("activFilter", activFilter.equals("true")?1:activFilter.equals("false")?0:2);
         return "usersList";
     }

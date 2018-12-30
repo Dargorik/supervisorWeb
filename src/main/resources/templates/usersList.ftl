@@ -7,7 +7,7 @@
 
 <form action="/users/add">
     <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-    <input hidden type="input" name="updId" value="${(beanUp.idAddress)!}"/>
+    <input hidden type="input" name="updId" value=<#if (beanUp)?has_content>"${beanUp.idusers}"<#else>"0"</#if>/>
     <h4 class="mt-4">Add new employee:</h4>
     <div class="row mb-4">
         <div class="col">
@@ -59,6 +59,7 @@
             <th scope="col">Password</th>
             <th scope="col"><select class="custom-select" id="positionSelect" name="Position">
                 <option name="0" value="all" selected>All positions</option>
+                <option name="-1" value="none" <#if positionFilter==(-1)>selected</#if>>none</option>
                 <#list positions as position >
                     <option name="${position.idPosition}" value="${position.name}"
                             <#if position.idPosition==positionFilter>selected</#if>>
@@ -83,7 +84,7 @@
             <td>${user.lastName}</td>
             <td>${user.username}</td>
             <td>${user.password}</td>
-            <td id="position${user ? counter}">${user.position.name}</td>
+            <td id="position${user ? counter}"><#if (user.position)?has_content>${user.position.name}<#else>none</#if> </td>
             <td><input disabled type="checkbox" name="a" value="true" <#if user.activ==true>checked</#if>></td>
             <td hidden id="activies${user ? counter}">${user.activ?c}</td>
             <td><a id="updButtom${user ? counter}" href="/users/list?updId=${user.idusers}" onclick="upd(${user ? counter}); return false;">Update</a></td>
@@ -179,7 +180,7 @@
                 if (index > 0) {
                     var fieldPosition = document.getElementById("position" + index);
                     var fieldActivies = document.getElementById("activies" + index);
-                    if (fieldPosition != null && fieldActivies) {
+                    if (fieldPosition != null && fieldActivies != null) {
                         allRows[index].removeAttribute("hidden");
                         if (!fieldPosition.innerHTML.startsWith(sellPosition.value) && !sellPosition.value.startsWith("all")) {
                             allRows[index].setAttribute("hidden", "hidden")
